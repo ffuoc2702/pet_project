@@ -1,0 +1,13 @@
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+TestResults/
+coverage/
+.idea/
+.vscode/
+*.DotSettings.user
+.env
+.env.*
+!.env.example

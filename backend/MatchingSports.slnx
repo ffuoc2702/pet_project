@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="src/MatchingSports.Api/MatchingSports.Api.csproj" />
+  <Project Path="src/MatchingSports.AppHost/MatchingSports.AppHost.csproj" />
+  <Project Path="src/MatchingSports.Application/MatchingSports.Application.csproj" />
+  <Project Path="src/MatchingSports.Domain/MatchingSports.Domain.csproj" />
+  <Project Path="src/MatchingSports.Infrastructure/MatchingSports.Infrastructure.csproj" />
+  <Project Path="src/MatchingSports.Migrator/MatchingSports.Migrator.csproj" />
+  <Project Path="tests/MatchingSports.Tests/MatchingSports.Tests.csproj" />
+</Solution>

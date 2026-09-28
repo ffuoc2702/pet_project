@@ -1,0 +1,28 @@
+root = true
+
+[*.{cs,csx}]
+charset = utf-8-bom
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+csharp_new_line_before_open_brace = all
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+[*.{json,yml,yaml,props,targets,csproj,slnx}]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+# Enum members intentionally match stable PostgreSQL/API wire values.
+[src/MatchingSports.Domain/Enums/DataEnums.cs]
+dotnet_diagnostic.CA1707.severity = none
+
+# EF migrations are generated code; keep them reproducible instead of hand-optimizing arrays.
+[src/MatchingSports.Infrastructure/Persistence/Migrations/*.cs]
+dotnet_diagnostic.CA1861.severity = none

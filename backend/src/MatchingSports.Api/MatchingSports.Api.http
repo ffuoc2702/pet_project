@@ -1,0 +1,20 @@
+@Api_HostAddress = http://localhost:5381
+
+GET {{Api_HostAddress}}/api/v1/
+Accept: application/json
+X-Correlation-ID: local-smoke-test
+
+###
+
+GET {{Api_HostAddress}}/api/v1/sport?pageNumber=1&pageSize=20
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/api/v1/sport?pageNumber=1&pageSize=10&sportCode=FOOTBALL&activeOnly=true
+Accept: application/json
+
+###
+
+GET {{Api_HostAddress}}/health
+Accept: application/json

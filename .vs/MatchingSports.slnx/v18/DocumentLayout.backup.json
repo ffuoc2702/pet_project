@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\workspace\\pet_project\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{10B86774-F468-2085-DC1E-8A51443D3360}|MatchingSports.Application\\MatchingSports.Application.csproj|d:\\workspace\\pet_project\\matchingsports.application\\catalog\\sportcatalogitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{10B86774-F468-2085-DC1E-8A51443D3360}|MatchingSports.Application\\MatchingSports.Application.csproj|solutionrelative:matchingsports.application\\catalog\\sportcatalogitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SportCatalogItem.cs",
+              "DocumentMoniker": "D:\\workspace\\pet_project\\MatchingSports.Application\\Catalog\\SportCatalogItem.cs",
+              "RelativeDocumentMoniker": "MatchingSports.Application\\Catalog\\SportCatalogItem.cs",
+              "ToolTip": "D:\\workspace\\pet_project\\MatchingSports.Application\\Catalog\\SportCatalogItem.cs",
+              "RelativeToolTip": "MatchingSports.Application\\Catalog\\SportCatalogItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-28T07:06:12.098Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

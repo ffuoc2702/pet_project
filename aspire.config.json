@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "src/MatchingSports.AppHost/MatchingSports.AppHost.csproj"
+  }
+}
