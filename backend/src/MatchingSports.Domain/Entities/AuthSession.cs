@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class AuthSession
+public sealed class AuthSession : IHasConcurrencyToken
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
@@ -14,6 +14,6 @@ public sealed class AuthSession
     public DateTimeOffset? RevokedAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-
+    public Guid ConcurrencyToken { get; set; }
     public User User { get; set; } = null!;
 }

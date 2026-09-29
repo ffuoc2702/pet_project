@@ -3,15 +3,17 @@ using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
 namespace MatchingSports.Infrastructure.Persistence;
 
-public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbContext> options) : DbContext(options)
+public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbContext> options)
+    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Sport> Sports => Set<Sport>();
     public DbSet<SportFormat> SportFormats => Set<SportFormat>();
-    public DbSet<User> Users => Set<User>();
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<UserSportProfile> UserSportProfiles => Set<UserSportProfile>();
     public DbSet<OtpChallenge> OtpChallenges => Set<OtpChallenge>();
@@ -27,18 +29,19 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<AdminAction> AdminActions => Set<AdminAction>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.HasPostgresExtension("pgcrypto");
-        modelBuilder.HasPostgresExtension("postgis");
+        base.OnModelCreating(builder);
+        builder.HasPostgresExtension("pgcrypto");
+        builder.HasPostgresExtension("postgis");
 
-        ConfigureCatalog(modelBuilder);
-        ConfigureIdentityAndProfiles(modelBuilder);
-        ConfigureTeams(modelBuilder);
-        ConfigureListingsAndMatching(modelBuilder);
-        ConfigureNotificationsAndSafety(modelBuilder);
+        ConfigureCatalog(builder);
+        ConfigureIdentityAndProfiles(builder);
+        ConfigureTeams(builder);
+        ConfigureListingsAndMatching(builder);
+        ConfigureNotificationsAndSafety(builder);
 
-        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        foreach (var entity in builder.Model.GetEntityTypes())
         {
             foreach (var property in entity.GetProperties())
             {
@@ -89,15 +92,32 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     private static void ConfigureIdentityAndProfiles(ModelBuilder modelBuilder)
     {
         var users = modelBuilder.Entity<User>();
-        users.ToTable("users", t => t.HasCheckConstraint("ck_users_phone_e164", "phone_e164 ~ '^\\+[1-9][0-9]{7,14}$'"));
+        users.ToTable("users");
         users.HasKey(x => x.Id);
         users.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
-        users.Property(x => x.PhoneE164).HasMaxLength(20);
+        users.Property(x => x.Email).HasMaxLength(256).IsRequired();
+        users.Property(x => x.NormalizedEmail).HasMaxLength(256).IsRequired();
+        users.Property(x => x.UserName).HasMaxLength(256).IsRequired();
+        users.Property(x => x.NormalizedUserName).HasMaxLength(256).IsRequired();
+        users.Ignore(x => x.PhoneNumber);
+        users.Ignore(x => x.PhoneNumberConfirmed);
         users.Property(x => x.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValueSql("'ACTIVE'").HasSentinel((UserStatus)(-1));
         users.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         users.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
-        users.HasIndex(x => x.PhoneE164).IsUnique().HasFilter("deleted_at IS NULL").HasDatabaseName("uq_users_phone_e164");
+        users.HasIndex(x => x.NormalizedEmail).IsUnique().HasFilter("deleted_at IS NULL").HasDatabaseName("uq_users_normalized_email");
+        users.HasIndex(x => x.NormalizedUserName).IsUnique().HasFilter("deleted_at IS NULL").HasDatabaseName("uq_users_normalized_user_name");
         users.HasQueryFilter(x => x.DeletedAt == null);
+
+        modelBuilder.Entity<IdentityRole<Guid>>(entity =>
+        {
+            entity.ToTable("roles");
+            entity.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+        });
+        modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
+        modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
+        modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
+        modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
 
         var profiles = modelBuilder.Entity<UserProfile>();
         profiles.ToTable("user_profiles");
@@ -126,14 +146,14 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         otp.ToTable("otp_challenges");
         otp.HasKey(x => x.Id);
         otp.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
-        otp.Property(x => x.PhoneE164).HasMaxLength(20);
+        otp.Property(x => x.NormalizedEmail).HasMaxLength(256);
         otp.Property(x => x.OtpHash).HasColumnType("char(64)");
-        otp.Property(x => x.Purpose).HasConversion<string>().HasMaxLength(20).HasDefaultValueSql("'LOGIN'").HasSentinel((OtpPurpose)(-1));
+        otp.Property(x => x.Purpose).HasConversion<string>().HasMaxLength(24).HasDefaultValueSql("'EMAIL_VERIFICATION'").HasSentinel((OtpPurpose)(-1));
         otp.Property(x => x.AttemptCount).HasDefaultValue((short)0);
         otp.Property(x => x.MaxAttempts).HasDefaultValue((short)5);
         otp.Property(x => x.RequestIp).HasColumnType("inet");
         otp.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
-        otp.HasIndex(x => new { x.PhoneE164, x.Purpose, x.CreatedAt }).IsDescending(false, false, true)
+        otp.HasIndex(x => new { x.NormalizedEmail, x.Purpose, x.CreatedAt }).IsDescending(false, false, true)
             .HasFilter("verified_at IS NULL").HasDatabaseName("ix_otp_challenges_lookup");
         otp.HasIndex(x => x.ExpiresAt).HasFilter("verified_at IS NULL").HasDatabaseName("ix_otp_challenges_expiry");
 
@@ -144,6 +164,9 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         sessions.Property(x => x.RefreshTokenHash).HasColumnType("char(64)");
         sessions.Property(x => x.DeviceInfo).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
         sessions.Property(x => x.IpAddress).HasColumnType("inet");
+        sessions.Property(x => x.ConcurrencyToken)
+            .HasDefaultValueSql("gen_random_uuid()")
+            .IsConcurrencyToken();
         sessions.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         sessions.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
         sessions.HasOne(x => x.User).WithMany(x => x.AuthSessions).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);

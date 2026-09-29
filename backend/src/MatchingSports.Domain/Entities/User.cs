@@ -1,12 +1,10 @@
-﻿using MatchingSports.Domain.Enums;
+using MatchingSports.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class User
+public sealed class User : IdentityUser<Guid>
 {
-    public Guid Id { get; set; }
-    public string PhoneE164 { get; set; } = null!;
-    public DateTimeOffset? PhoneVerifiedAt { get; set; }
     public UserStatus Status { get; set; } = UserStatus.ACTIVE;
     public DateTimeOffset? LastLoginAt { get; set; }
     public DateTimeOffset CreatedAt { get; set; }

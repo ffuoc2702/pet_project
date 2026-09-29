@@ -1,8 +1,7 @@
 ﻿using MatchingSports.Application.Common.Pagination;
 using MatchingSports.Application.Features.Sport.GetSport;
 using MatchingSports.Domain.Entities;
-
-namespace MatchingSports.Application.Abstractions.Persistence;
+namespace MatchingSports.Application.Abstractions;
 
 public interface ISportRepository
 {

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using MatchingSports.Application.Abstractions.Persistence;
 using MatchingSports.Application.Common.Pagination;
 using MatchingSports.Application.Common.Queries;
+using MatchingSports.Application.Abstractions;
 using MediatR;
-
 namespace MatchingSports.Application.Features.Sport.GetSport;
 
 public sealed class GetSportQuery : BaseQuery<SportItem>
@@ -12,25 +11,14 @@ public sealed class GetSportQuery : BaseQuery<SportItem>
     public string? SportCode { get; init; }
 }
 
-public sealed class GetSportQueryHandler
+public sealed class GetSportQueryHandler(ISportRepository sportRepository, IMapper mapper)
     : IRequestHandler<GetSportQuery, PaginatedResult<SportItem>>
 {
-    private readonly ISportRepository _repository;
-    private readonly IMapper _mapper;
-
-    public GetSportQueryHandler(
-        ISportRepository repository,
-        IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
-
     public async Task<PaginatedResult<SportItem>> Handle(
         GetSportQuery request,
         CancellationToken cancellationToken)
     {
-        var sports = await _repository.ListAsync(request, cancellationToken);
-        return sports.Map(sport => _mapper.Map<SportItem>(sport));
+        var sports = await sportRepository.ListAsync(request, cancellationToken);
+        return sports.Map(sport => mapper.Map<SportItem>(sport));
     }
 }

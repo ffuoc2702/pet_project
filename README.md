@@ -3,7 +3,7 @@
 Backend base cho nền tảng ghép đối và tìm người chơi đa môn, dựng từ bộ tài liệu Drive và data dictionary:
 
 - PostgreSQL/PostGIS, ASP.NET Core 10, EF Core/Npgsql và .NET Aspire.
-- 17 bảng, 187 cột, 27 khóa ngoại, các index/constraint/enum theo data dictionary.
+- Schema nghiệp vụ theo data dictionary, mở rộng bằng các bảng ASP.NET Core Identity và auth-session tự quản lý.
 - Seed idempotent cho `FOOTBALL`, `BADMINTON`, `PICKLEBALL` và 7 thể thức.
 - API convention `/api/v1`, Problem Details và `X-Correlation-ID`.
 
@@ -128,3 +128,29 @@ dotnet ef migrations add <Name> `
 - `GET /api/v1/catalog/sports` — danh mục môn và thể thức đã seed.
 - `GET /health`, `GET /alive` — health/liveness ở Development.
 - `GET /openapi/v1.json` — OpenAPI ở Development.
+
+## Identity và authentication
+
+Backend tự quản lý ASP.NET Core Identity, JWT access token, refresh-session và role trong PostgreSQL. Email là định danh duy nhất; module không dùng số điện thoại. Google được dùng như external OAuth provider, còn OTP xác thực email/đặt lại mật khẩu được gửi qua Gmail SMTP.
+
+Các secret không được commit vào `appsettings.json`. Cấu hình local bằng user-secrets trên project API:
+
+```powershell
+dotnet user-secrets set "Auth:Jwt:SigningKey" "<random-secret-at-least-32-bytes>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Otp:Pepper" "<independent-random-secret-at-least-32-bytes>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Google:ClientId" "<google-oauth-client-id>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Google:ClientSecret" "<google-oauth-client-secret>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:SenderEmail" "<gmail-address>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:Username" "<gmail-address>" --project .\backend\src\MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:AppPassword" "<gmail-app-password>" --project .\backend\src\MatchingSports.Api
+```
+
+Google OAuth client cần đăng ký redirect URI `https://<api-host>/signin-google`. Với Aspire local, dùng HTTPS URL thực tế của resource `api` hiển thị trên dashboard.
+
+Endpoint `/api/v1/auth`:
+
+- `POST /register`, `/verify-email`, `/resend-verification`
+- `POST /login`, `/refresh`, `/logout`
+- `POST /forgot-password`, `/reset-password`
+- `GET /google`, `/google/callback`
+- `GET /me` — yêu cầu bearer access token

@@ -1,4 +1,4 @@
-﻿using MatchingSports.Application.Abstractions.Persistence;
+﻿using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common.Pagination;
 using MatchingSports.Application.Features.Sport.GetSport;
 using MatchingSports.Domain.Entities;

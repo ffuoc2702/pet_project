@@ -1,4 +1,4 @@
-﻿using MatchingSports.Application.Abstractions.Persistence;
+﻿using MatchingSports.Application.Abstractions;
 
 namespace MatchingSports.Infrastructure.Persistence;
 
