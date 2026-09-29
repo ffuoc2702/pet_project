@@ -98,6 +98,18 @@ public sealed partial class GlobalExceptionHandler(
             "Không tìm thấy tài nguyên",
             notFound.Message),
 
+        UnauthorizedException unauthorized => new(
+            StatusCodes.Status401Unauthorized,
+            unauthorized.Code,
+            "Chưa xác thực",
+            unauthorized.Message),
+
+        ForbiddenException forbidden => new(
+            StatusCodes.Status403Forbidden,
+            forbidden.Code,
+            "Không có quyền truy cập",
+            forbidden.Message),
+
         ConflictException conflict => new(
             StatusCodes.Status409Conflict,
             conflict.Code,

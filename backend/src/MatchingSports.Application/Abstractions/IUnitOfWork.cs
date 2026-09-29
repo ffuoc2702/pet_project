@@ -1,4 +1,4 @@
-﻿namespace MatchingSports.Application.Abstractions.Persistence;
+﻿namespace MatchingSports.Application.Abstractions;
 
 public interface IUnitOfWork
 {

@@ -1,8 +1,8 @@
-﻿namespace MatchingSports.Domain.Enums;
+namespace MatchingSports.Domain.Enums;
 
 public enum UserStatus { ACTIVE, SUSPENDED, DELETED }
 public enum SportLevel { BEGINNER, INTERMEDIATE, ADVANCED }
-public enum OtpPurpose { LOGIN, PHONE_CHANGE }
+public enum OtpPurpose { EMAIL_VERIFICATION, PASSWORD_RESET }
 public enum TeamStatus { ACTIVE, INACTIVE, ARCHIVED }
 public enum TeamRole { CAPTAIN, MEMBER }
 public enum MemberStatus { ACTIVE, LEFT, REMOVED }

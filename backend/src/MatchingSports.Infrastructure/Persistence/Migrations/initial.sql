@@ -676,7 +676,7 @@ DO $EF$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928063847_InitialCreate') THEN
     INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-    VALUES ('20260928063847_InitialCreate', '10.0.4');
+    VALUES ('20260928063847_InitialCreate', '10.0.12');
     END IF;
 END $EF$;
 COMMIT;
@@ -743,7 +743,382 @@ DO $EF$
 BEGIN
     IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928160742_HardenDataIntegrity') THEN
     INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-    VALUES ('20260928160742_HardenDataIntegrity', '10.0.4');
+    VALUES ('20260928160742_HardenDataIntegrity', '10.0.12');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE matches DROP COLUMN version;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE listings DROP COLUMN version;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE listing_requests DROP COLUMN version;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE matches ADD concurrency_token uuid NOT NULL DEFAULT (gen_random_uuid());
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE listings ADD concurrency_token uuid NOT NULL DEFAULT (gen_random_uuid());
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    ALTER TABLE listing_requests ADD concurrency_token uuid NOT NULL DEFAULT (gen_random_uuid());
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260928165409_UseConcurrencyTokens') THEN
+    INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260928165409_UseConcurrencyTokens', '10.0.12');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    DROP INDEX uq_users_phone_e164;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users DROP CONSTRAINT ck_users_phone_e164;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    DROP INDEX ix_otp_challenges_lookup;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users DROP COLUMN phone_e164;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE otp_challenges DROP COLUMN phone_e164;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users DROP COLUMN phone_verified_at;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD lockout_end timestamp with time zone;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD access_failed_count integer NOT NULL DEFAULT 0;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD concurrency_stamp text;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD email character varying(256) NOT NULL DEFAULT '';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD email_confirmed boolean NOT NULL DEFAULT FALSE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD lockout_enabled boolean NOT NULL DEFAULT FALSE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD normalized_email character varying(256) NOT NULL DEFAULT '';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD normalized_user_name character varying(256) NOT NULL DEFAULT '';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD password_hash text;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD security_stamp text;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD two_factor_enabled boolean NOT NULL DEFAULT FALSE;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE users ADD user_name character varying(256) NOT NULL DEFAULT '';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    UPDATE users
+    SET email = 'legacy-' || replace(id::text, '-', '') || '@invalid.matchingsports.local',
+        normalized_email = upper('legacy-' || replace(id::text, '-', '') || '@invalid.matchingsports.local'),
+        user_name = 'legacy-' || replace(id::text, '-', '') || '@invalid.matchingsports.local',
+        normalized_user_name = upper('legacy-' || replace(id::text, '-', '') || '@invalid.matchingsports.local')
+    WHERE email = '';
+
+    DELETE FROM otp_challenges;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE otp_challenges ALTER COLUMN purpose TYPE character varying(24);
+    ALTER TABLE otp_challenges ALTER COLUMN purpose SET DEFAULT ('EMAIL_VERIFICATION');
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    ALTER TABLE otp_challenges ADD normalized_email character varying(256) NOT NULL DEFAULT '';
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE roles (
+        id uuid NOT NULL DEFAULT (gen_random_uuid()),
+        name character varying(256),
+        normalized_name character varying(256),
+        concurrency_stamp text,
+        CONSTRAINT "PK_roles" PRIMARY KEY (id)
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE user_claims (
+        id integer GENERATED BY DEFAULT AS IDENTITY,
+        user_id uuid NOT NULL,
+        claim_type text,
+        claim_value text,
+        CONSTRAINT "PK_user_claims" PRIMARY KEY (id),
+        CONSTRAINT "FK_user_claims_users_user_id" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE user_logins (
+        login_provider text NOT NULL,
+        provider_key text NOT NULL,
+        provider_display_name text,
+        user_id uuid NOT NULL,
+        CONSTRAINT "PK_user_logins" PRIMARY KEY (login_provider, provider_key),
+        CONSTRAINT "FK_user_logins_users_user_id" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE user_tokens (
+        user_id uuid NOT NULL,
+        login_provider text NOT NULL,
+        name text NOT NULL,
+        value text,
+        CONSTRAINT "PK_user_tokens" PRIMARY KEY (user_id, login_provider, name),
+        CONSTRAINT "FK_user_tokens_users_user_id" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE role_claims (
+        id integer GENERATED BY DEFAULT AS IDENTITY,
+        role_id uuid NOT NULL,
+        claim_type text,
+        claim_value text,
+        CONSTRAINT "PK_role_claims" PRIMARY KEY (id),
+        CONSTRAINT "FK_role_claims_roles_role_id" FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE TABLE user_roles (
+        user_id uuid NOT NULL,
+        role_id uuid NOT NULL,
+        CONSTRAINT "PK_user_roles" PRIMARY KEY (user_id, role_id),
+        CONSTRAINT "FK_user_roles_roles_role_id" FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE,
+        CONSTRAINT "FK_user_roles_users_user_id" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE UNIQUE INDEX uq_users_normalized_email ON users (normalized_email) WHERE deleted_at IS NULL;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE UNIQUE INDEX uq_users_normalized_user_name ON users (normalized_user_name) WHERE deleted_at IS NULL;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE INDEX ix_otp_challenges_lookup ON otp_challenges (normalized_email, purpose, created_at DESC) WHERE verified_at IS NULL;
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE INDEX "IX_role_claims_role_id" ON role_claims (role_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE UNIQUE INDEX "RoleNameIndex" ON roles (normalized_name);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE INDEX "IX_user_claims_user_id" ON user_claims (user_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE INDEX "IX_user_logins_user_id" ON user_logins (user_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    CREATE INDEX "IX_user_roles_role_id" ON user_roles (role_id);
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020156_AddIdentityModule') THEN
+    INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260929020156_AddIdentityModule', '10.0.12');
+    END IF;
+END $EF$;
+COMMIT;
+
+START TRANSACTION;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020346_HardenAuthSessions') THEN
+    ALTER TABLE auth_sessions ADD concurrency_token uuid NOT NULL DEFAULT (gen_random_uuid());
+    END IF;
+END $EF$;
+
+DO $EF$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM "__EFMigrationsHistory" WHERE "MigrationId" = '20260929020346_HardenAuthSessions') THEN
+    INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+    VALUES ('20260929020346_HardenAuthSessions', '10.0.12');
     END IF;
 END $EF$;
 COMMIT;

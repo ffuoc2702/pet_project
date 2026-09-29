@@ -1,4 +1,4 @@
-﻿namespace MatchingSports.Application.Common.Exceptions;
+namespace MatchingSports.Application.Common.Exceptions;
 
 public abstract class AppException(string code, string message) : Exception(message)
 {
@@ -9,6 +9,12 @@ public sealed class NotFoundException(string code, string message)
     : AppException(code, message);
 
 public sealed class ConflictException(string code, string message)
+    : AppException(code, message);
+
+public sealed class UnauthorizedException(string code, string message)
+    : AppException(code, message);
+
+public sealed class ForbiddenException(string code, string message)
     : AppException(code, message);
 
 public sealed class ServiceUnavailableException(string code, string message)
