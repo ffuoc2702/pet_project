@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using MatchingSports.Application.Features.Sport.Dtos;
+using MatchingSports.Application.Features.Sport;
+using MatchingSports.Application.Features.UserProfile;
 using MatchingSports.Domain.Entities;
 
-namespace MatchingSports.Application.Common.Mapping;
+namespace MatchingSports.Application.Common;
 
 public sealed class ApplicationMappingProfile : Profile
 {
@@ -10,5 +11,6 @@ public sealed class ApplicationMappingProfile : Profile
     {
         CreateMap<SportFormat, SportFormatDto>();
         CreateMap<Sport, SportDto>();
+        CreateMap<UserProfile, UserProfileDto>();
     }
 }

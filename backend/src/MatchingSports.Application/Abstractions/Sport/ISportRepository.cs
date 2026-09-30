@@ -1,4 +1,4 @@
-﻿using MatchingSports.Application.Common.Pagination;
+﻿using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Sport;
 using MatchingSports.Domain.Entities;
 namespace MatchingSports.Application.Abstractions;

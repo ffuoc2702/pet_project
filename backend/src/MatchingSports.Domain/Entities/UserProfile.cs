@@ -1,4 +1,6 @@
-﻿namespace MatchingSports.Domain.Entities;
+﻿using MatchingSports.Shared;
+
+namespace MatchingSports.Domain.Entities;
 
 public sealed class UserProfile
 {
@@ -11,4 +13,18 @@ public sealed class UserProfile
     public DateTimeOffset UpdatedAt { get; set; }
 
     public User User { get; set; } = null!;
+
+    public void UpdateDetails(
+        string displayName,
+        string? avatarUrl,
+        string? defaultArea,
+        string? contactNote)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
+
+        DisplayName = displayName.Trim();
+        AvatarUrl = StringNormalizer.StartEndSpaceTrim(avatarUrl);
+        DefaultArea = StringNormalizer.StartEndSpaceTrim(defaultArea);
+        ContactNote = StringNormalizer.StartEndSpaceTrim(contactNote);
+    }
 }

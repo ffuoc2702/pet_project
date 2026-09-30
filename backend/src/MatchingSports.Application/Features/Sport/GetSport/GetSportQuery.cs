@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using MatchingSports.Application.Common.Pagination;
-using MatchingSports.Application.Common.Queries;
+using MatchingSports.Application.Common;
 using MatchingSports.Application.Abstractions;
 using MediatR;
-using MatchingSports.Application.Features.Sport.Dtos;
 namespace MatchingSports.Application.Features.Sport;
 
 public sealed class GetSportQuery : BaseQuery<SportDto>

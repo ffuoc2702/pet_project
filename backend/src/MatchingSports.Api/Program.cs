@@ -8,6 +8,7 @@ using MatchingSports.Api.Middleware;
 using MatchingSports.Application;
 using MatchingSports.Infrastructure;
 using MatchingSports.Infrastructure.Persistence;
+using MatchingSports.Shared;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -49,7 +50,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         var problemDetails = ApiProblemDetailsFactory.Create(
             actionContext.HttpContext,
             StatusCodes.Status400BadRequest,
-            ApiErrorCodes.ValidationFailed,
+            ErrorCodes.ValidationFailed,
             "Dữ liệu không hợp lệ",
             "Vui lòng kiểm tra lại dữ liệu đã gửi.",
             errors);

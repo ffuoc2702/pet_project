@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using MatchingSports.Application.Features.Sport.Dtos;
+using MatchingSports.Application.Features.Sport;
+using MatchingSports.Application.Features.UserProfile;
 
 namespace MatchingSports.Api.Contracts;
 

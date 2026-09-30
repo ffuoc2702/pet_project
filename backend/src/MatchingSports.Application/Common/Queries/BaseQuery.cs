@@ -1,6 +1,5 @@
-﻿using MatchingSports.Application.Common.Pagination;
-
-namespace MatchingSports.Application.Common.Queries;
+﻿
+namespace MatchingSports.Application.Common;
 
 public interface IDateRangeQuery
 {

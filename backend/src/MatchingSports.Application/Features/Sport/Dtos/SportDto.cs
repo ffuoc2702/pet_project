@@ -1,6 +1,8 @@
-﻿namespace MatchingSports.Application.Features.Sport.Dtos;
+﻿using MatchingSports.Application.Common;
 
-public sealed class SportFormatDto
+namespace MatchingSports.Application.Features.Sport;
+
+public sealed class SportFormatDto : BaseDto
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;

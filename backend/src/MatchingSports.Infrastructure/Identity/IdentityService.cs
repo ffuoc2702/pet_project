@@ -1,14 +1,15 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using MatchingSports.Application.Abstractions;
-using MatchingSports.Application.Common.Exceptions;
+using MatchingSports.Application.Common;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
 using MatchingSports.Infrastructure.Persistence;
+using MatchingSports.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,7 @@ internal sealed class IdentityService(
         if (await userManager.FindByEmailAsync(canonicalEmail) is not null)
         {
             throw new ConflictException(
-                "EMAIL_ALREADY_REGISTERED",
+                ErrorCodes.EmailAlreadyRegistered,
                 "Địa chỉ email đã được đăng ký.");
         }
 
@@ -114,7 +115,7 @@ internal sealed class IdentityService(
         if (await userManager.IsLockedOutAsync(user))
         {
             throw new ForbiddenException(
-                "ACCOUNT_LOCKED",
+                ErrorCodes.AccountLocked,
                 "Tài khoản tạm thời bị khóa do đăng nhập sai quá nhiều lần.");
         }
 
@@ -130,7 +131,7 @@ internal sealed class IdentityService(
         if (!user.EmailConfirmed)
         {
             throw new UnauthorizedException(
-                "EMAIL_NOT_VERIFIED",
+                ErrorCodes.EmailNotVerified,
                 "Địa chỉ email chưa được xác thực.");
         }
 
@@ -272,7 +273,7 @@ internal sealed class IdentityService(
         var user = await db.Users
             .Include(item => item.Profile)
             .SingleOrDefaultAsync(item => item.Id == userId, cancellationToken)
-            ?? throw new NotFoundException("USER_NOT_FOUND", "Không tìm thấy người dùng.");
+            ?? throw new NotFoundException(ErrorCodes.UserNotFound, "Không tìm thấy người dùng.");
 
         var roles = await userManager.GetRolesAsync(user);
         return ToCurrentUser(user, roles.ToArray());
@@ -298,7 +299,7 @@ internal sealed class IdentityService(
             && latest.CreatedAt.AddSeconds(otpOptions.ResendCooldownSeconds) > now)
         {
             throw new ConflictException(
-                "OTP_RESEND_TOO_SOON",
+                ErrorCodes.OtpResendTooSoon,
                 "Vui lòng chờ trước khi yêu cầu gửi lại OTP.");
         }
 
@@ -310,7 +311,7 @@ internal sealed class IdentityService(
         if (sentInLastHour >= otpOptions.MaxSendsPerHour)
         {
             throw new ConflictException(
-                "OTP_SEND_LIMIT_REACHED",
+                ErrorCodes.OtpSendLimitReached,
                 "Bạn đã yêu cầu quá nhiều mã OTP. Vui lòng thử lại sau.");
         }
 
@@ -467,7 +468,7 @@ internal sealed class IdentityService(
 
     private async Task<User> FindUserByEmailAsync(string email) =>
         await userManager.FindByEmailAsync(CanonicalizeEmail(email))
-        ?? throw new NotFoundException("USER_NOT_FOUND", "Không tìm thấy người dùng.");
+        ?? throw new NotFoundException(ErrorCodes.UserNotFound, "Không tìm thấy người dùng.");
 
     private string HashOtp(OtpChallenge challenge, string otp)
     {
@@ -497,7 +498,7 @@ internal sealed class IdentityService(
         if (user.Status != UserStatus.ACTIVE)
         {
             throw new ForbiddenException(
-                "ACCOUNT_NOT_ACTIVE",
+                ErrorCodes.AccountNotActive,
                 "Tài khoản hiện không hoạt động.");
         }
     }
@@ -513,20 +514,20 @@ internal sealed class IdentityService(
                 group => group.Key,
                 group => group.Select(error => error.Description).Distinct().ToArray());
         throw new RequestValidationException(
-            "IDENTITY_VALIDATION_FAILED",
+            ErrorCodes.IdentityValidationFailed,
             "Thông tin tài khoản không đáp ứng yêu cầu bảo mật.",
             errors);
     }
 
     private static UnauthorizedException InvalidCredentials() => new(
-        "INVALID_CREDENTIALS",
+        ErrorCodes.InvalidCredentials,
         "Email hoặc mật khẩu không chính xác.");
 
     private static UnauthorizedException InvalidRefreshToken() => new(
-        "INVALID_REFRESH_TOKEN",
+        ErrorCodes.InvalidRefreshToken,
         "Refresh token không hợp lệ hoặc đã hết hạn.");
 
     private static UnauthorizedException InvalidOtp() => new(
-        "INVALID_OTP",
+        ErrorCodes.InvalidOtp,
         "Mã OTP không hợp lệ hoặc đã hết hạn.");
 }

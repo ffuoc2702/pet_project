@@ -535,6 +535,7 @@
         "dependencies": {
           "AutoMapper": "[16.2.0, )",
           "MatchingSports.Domain": "[1.0.0, )",
+          "MatchingSports.Shared": "[1.0.0, )",
           "MediatR": "[12.5.0, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.12, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.12, )"
@@ -543,8 +544,12 @@
       "matchingsports.domain": {
         "type": "Project",
         "dependencies": {
+          "MatchingSports.Shared": "[1.0.0, )",
           "Microsoft.Extensions.Identity.Stores": "[10.0.12, )"
         }
+      },
+      "matchingsports.shared": {
+        "type": "Project"
       }
     }
   }

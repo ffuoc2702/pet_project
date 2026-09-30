@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using MatchingSports.Application.Common.Mapping;
-using MatchingSports.Application.Common.Pagination;
-using MatchingSports.Application.Common.Queries;
+using MatchingSports.Application.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MatchingSports.Application;
