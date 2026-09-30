@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Elastic.CommonSchema.Serilog;
-using MatchingSports.Api.Contracts.Mapping;
+using MatchingSports.Api.Contracts;
 using MatchingSports.Api.ErrorHandling;
 using MatchingSports.Api.Middleware;
 using MatchingSports.Application;

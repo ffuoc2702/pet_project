@@ -1,4 +1,4 @@
-﻿namespace MatchingSports.Api.Contracts.Sport;
+﻿namespace MatchingSports.Api.Contracts;
 
 public sealed class SportFormatResponse
 {

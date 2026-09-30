@@ -1,6 +1,5 @@
 using System.Security.Claims;
-using MatchingSports.Api.Contracts.Common;
-using MatchingSports.Api.Contracts.Identity;
+using MatchingSports.Api.Contracts;
 using MatchingSports.Application.Common.Exceptions;
 using MatchingSports.Application.Features.Identity.ExternalLogin;
 using MatchingSports.Application.Features.Identity.GetCurrentUser;

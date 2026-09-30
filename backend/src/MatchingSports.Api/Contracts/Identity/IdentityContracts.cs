@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MatchingSports.Application.Abstractions;
 
-namespace MatchingSports.Api.Contracts.Identity;
+namespace MatchingSports.Api.Contracts;
 
 public sealed class RegisterRequest
 {

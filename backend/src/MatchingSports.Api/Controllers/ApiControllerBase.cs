@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MatchingSports.Api.Contracts.Common;
+using MatchingSports.Api.Contracts;
 using MatchingSports.Api.ErrorHandling;
 using MatchingSports.Api.Middleware;
 using MatchingSports.Application.Common.Pagination;

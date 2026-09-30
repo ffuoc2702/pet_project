@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using MatchingSports.Api.Contracts.Sport;
-using MatchingSports.Application.Features.Sport.GetSport;
+using MatchingSports.Application.Features.Sport.Dtos;
 
-namespace MatchingSports.Api.Contracts.Mapping;
+namespace MatchingSports.Api.Contracts;
 
 public sealed class ContractMappingProfile : Profile
 {
     public ContractMappingProfile()
     {
-        CreateMap<SportFormatItem, SportFormatResponse>();
-        CreateMap<SportItem, SportResponse>();
+        CreateMap<SportFormatDto, SportFormatResponse>();
+        CreateMap<SportDto, SportResponse>();
     }
 }

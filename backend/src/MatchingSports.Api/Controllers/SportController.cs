@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using MatchingSports.Api.Contracts.Common;
-using MatchingSports.Api.Contracts.Sport;
-using MatchingSports.Application.Features.Sport.GetSport;
+using MatchingSports.Api.Contracts;
+using MatchingSports.Application.Features.Sport;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
