@@ -1,7 +1,7 @@
-using MatchingSports.Application.Abstractions;
+﻿using MatchingSports.Application.Abstractions;
 using MediatR;
 
-namespace MatchingSports.Application.Features.Identity.Login;
+namespace MatchingSports.Application.Features.Identity;
 
 public sealed record LoginCommand(
     string Email,

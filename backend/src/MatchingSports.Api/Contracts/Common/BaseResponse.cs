@@ -1,4 +1,4 @@
-﻿namespace MatchingSports.Api.Contracts.Common;
+﻿namespace MatchingSports.Api.Contracts;
 
 public class BaseResponse<T>
 {

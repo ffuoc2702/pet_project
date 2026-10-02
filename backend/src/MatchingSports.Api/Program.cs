@@ -2,12 +2,13 @@
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Elastic.CommonSchema.Serilog;
-using MatchingSports.Api.Contracts.Mapping;
+using MatchingSports.Api.Contracts;
 using MatchingSports.Api.ErrorHandling;
 using MatchingSports.Api.Middleware;
 using MatchingSports.Application;
 using MatchingSports.Infrastructure;
 using MatchingSports.Infrastructure.Persistence;
+using MatchingSports.Shared;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -49,7 +50,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         var problemDetails = ApiProblemDetailsFactory.Create(
             actionContext.HttpContext,
             StatusCodes.Status400BadRequest,
-            ApiErrorCodes.ValidationFailed,
+            ErrorCodes.ValidationFailed,
             "Dữ liệu không hợp lệ",
             "Vui lòng kiểm tra lại dữ liệu đã gửi.",
             errors);

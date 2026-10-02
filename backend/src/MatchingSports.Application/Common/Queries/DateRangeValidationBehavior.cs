@@ -1,7 +1,8 @@
-﻿using MatchingSports.Application.Common.Exceptions;
-using MediatR;
+﻿using MediatR;
 
-namespace MatchingSports.Application.Common.Queries;
+using MatchingSports.Shared;
+
+namespace MatchingSports.Application.Common;
 
 public sealed class DateRangeValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
@@ -18,7 +19,7 @@ public sealed class DateRangeValidationBehavior<TRequest, TResponse>
             && dateRange.FromDate > dateRange.ToDate)
         {
             throw new RequestValidationException(
-                "INVALID_DATE_RANGE",
+                ErrorCodes.InvalidDateRange,
                 "Khoảng thời gian không hợp lệ.",
                 new Dictionary<string, string[]>
                 {

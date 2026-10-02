@@ -106,6 +106,7 @@ public static class DependencyInjection
         services.AddScoped<IOtpEmailSender, GmailOtpEmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISportRepository, SportRepository>();
+        services.AddScoped<IUserProfileRepository, UserProfileRepository>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PersistenceExceptionBehavior<,>));
 
         return services;

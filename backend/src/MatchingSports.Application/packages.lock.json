@@ -207,8 +207,12 @@
       "matchingsports.domain": {
         "type": "Project",
         "dependencies": {
+          "MatchingSports.Shared": "[1.0.0, )",
           "Microsoft.Extensions.Identity.Stores": "[10.0.12, )"
         }
+      },
+      "matchingsports.shared": {
+        "type": "Project"
       }
     }
   }

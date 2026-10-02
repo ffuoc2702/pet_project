@@ -22,5 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MatchingSports.Application\MatchingSports.Application.csproj" />
     <ProjectReference Include="..\MatchingSports.Infrastructure\MatchingSports.Infrastructure.csproj" />
+    <ProjectReference Include="..\MatchingSports.Shared\MatchingSports.Shared.csproj" />
   </ItemGroup>
 </Project>

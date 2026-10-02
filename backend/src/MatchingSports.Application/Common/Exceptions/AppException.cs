@@ -1,4 +1,4 @@
-namespace MatchingSports.Application.Common.Exceptions;
+﻿namespace MatchingSports.Application.Common;
 
 public abstract class AppException(string code, string message) : Exception(message)
 {

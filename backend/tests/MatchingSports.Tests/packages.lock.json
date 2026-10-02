@@ -569,6 +569,7 @@
           "Elastic.CommonSchema.Serilog": "[9.0.0, )",
           "MatchingSports.Application": "[1.0.0, )",
           "MatchingSports.Infrastructure": "[1.0.0, )",
+          "MatchingSports.Shared": "[1.0.0, )",
           "Microsoft.Extensions.Http.Resilience": "[10.8.0, )",
           "Microsoft.Extensions.ServiceDiscovery": "[10.8.0, )",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "[1.15.3, )",
@@ -585,23 +586,31 @@
         "dependencies": {
           "AutoMapper": "[16.2.0, )",
           "MatchingSports.Domain": "[1.0.0, )",
+          "MatchingSports.Shared": "[1.0.0, )",
           "MediatR": "[12.5.0, )"
         }
       },
       "matchingsports.domain": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "MatchingSports.Shared": "[1.0.0, )"
+        }
       },
       "matchingsports.infrastructure": {
         "type": "Project",
         "dependencies": {
           "MatchingSports.Application": "[1.0.0, )",
           "MatchingSports.Domain": "[1.0.0, )",
+          "MatchingSports.Shared": "[1.0.0, )",
           "Microsoft.AspNetCore.Authentication.Google": "[10.0.12, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[10.0.12, )",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[10.0.12, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite": "[10.0.3, )"
         }
+      },
+      "matchingsports.shared": {
+        "type": "Project"
       }
     }
   }

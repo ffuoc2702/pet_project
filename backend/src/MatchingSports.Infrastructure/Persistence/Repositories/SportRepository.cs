@@ -1,6 +1,6 @@
 ﻿using MatchingSports.Application.Abstractions;
-using MatchingSports.Application.Common.Pagination;
-using MatchingSports.Application.Features.Sport.GetSport;
+using MatchingSports.Application.Common;
+using MatchingSports.Application.Features.Sport;
 using MatchingSports.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

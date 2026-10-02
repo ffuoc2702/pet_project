@@ -1,7 +1,7 @@
-using MatchingSports.Application.Abstractions;
+﻿using MatchingSports.Application.Abstractions;
 using MediatR;
 
-namespace MatchingSports.Application.Features.Identity.RequestPasswordReset;
+namespace MatchingSports.Application.Features.Identity;
 
 public sealed record RequestPasswordResetCommand(string Email, string? IpAddress) : IRequest;
 

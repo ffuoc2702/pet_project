@@ -1,5 +1,6 @@
 ﻿using MatchingSports.Api.Middleware;
-using MatchingSports.Application.Common.Exceptions;
+using MatchingSports.Application.Common;
+using MatchingSports.Shared;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace MatchingSports.Api.ErrorHandling;
@@ -36,7 +37,7 @@ public sealed partial class GlobalExceptionHandler(
                 exception);
         }
         else if (error.StatusCode is StatusCodes.Status409Conflict
-                 or StatusCodes.Status429TooManyRequests)
+                or StatusCodes.Status429TooManyRequests)
         {
             LogRejectedRequestWarning(
                 logger,
@@ -124,13 +125,13 @@ public sealed partial class GlobalExceptionHandler(
 
         BadHttpRequestException => new(
             StatusCodes.Status400BadRequest,
-            ApiErrorCodes.BadRequest,
+            ErrorCodes.BadRequest,
             "Yêu cầu không hợp lệ",
             "Không thể đọc hoặc xử lý yêu cầu đã gửi."),
 
         _ => new(
             StatusCodes.Status500InternalServerError,
-            ApiErrorCodes.InternalServerError,
+            ErrorCodes.InternalServerError,
             "Lỗi hệ thống",
             "Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau.")
     };

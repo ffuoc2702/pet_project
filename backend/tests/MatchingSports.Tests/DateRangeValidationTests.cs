@@ -1,6 +1,6 @@
-﻿using MatchingSports.Application.Common.Exceptions;
-using MatchingSports.Application.Common.Queries;
+using MatchingSports.Application.Common;
 using MediatR;
+using MatchingSports.Shared;
 
 namespace MatchingSports.Tests;
 
@@ -22,7 +22,7 @@ public sealed class DateRangeValidationTests
                 _ => Task.FromResult(Unit.Value),
                 CancellationToken.None));
 
-        Assert.Equal("INVALID_DATE_RANGE", exception.Code);
+        Assert.Equal(ErrorCodes.InvalidDateRange, exception.Code);
         Assert.Contains("fromDate", exception.Errors.Keys);
     }
 

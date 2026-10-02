@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MatchingSports.Application.Common.Pagination;
+using MatchingSports.Application.Common;
 
-namespace MatchingSports.Api.Contracts.Common;
+namespace MatchingSports.Api.Contracts;
 
 public abstract class PaginatedRequest
 {

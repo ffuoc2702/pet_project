@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MatchingSports.Api.Contracts.Mapping;
+using MatchingSports.Api.Contracts;
 using MatchingSports.Application;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,17 +1,8 @@
-using System.Security.Claims;
-using MatchingSports.Api.Contracts.Common;
-using MatchingSports.Api.Contracts.Identity;
-using MatchingSports.Application.Common.Exceptions;
-using MatchingSports.Application.Features.Identity.ExternalLogin;
-using MatchingSports.Application.Features.Identity.GetCurrentUser;
-using MatchingSports.Application.Features.Identity.Login;
-using MatchingSports.Application.Features.Identity.Logout;
-using MatchingSports.Application.Features.Identity.Refresh;
-using MatchingSports.Application.Features.Identity.Register;
-using MatchingSports.Application.Features.Identity.RequestPasswordReset;
-using MatchingSports.Application.Features.Identity.ResendVerification;
-using MatchingSports.Application.Features.Identity.ResetPassword;
-using MatchingSports.Application.Features.Identity.VerifyEmail;
+﻿using System.Security.Claims;
+using MatchingSports.Api.Contracts;
+using MatchingSports.Application.Common;
+using MatchingSports.Application.Features.Identity;
+using MatchingSports.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -128,7 +119,7 @@ public sealed class AuthController(
         if (await authenticationSchemeProvider.GetSchemeAsync("Google") is null)
         {
             throw new ServiceUnavailableException(
-                "GOOGLE_AUTH_NOT_CONFIGURED",
+                ErrorCodes.GoogleAuthNotConfigured,
                 "Đăng nhập Google chưa được cấu hình.");
         }
 
@@ -146,7 +137,7 @@ public sealed class AuthController(
         if (!authentication.Succeeded || authentication.Principal is null)
         {
             throw new UnauthorizedException(
-                "GOOGLE_AUTHENTICATION_FAILED",
+                ErrorCodes.GoogleAuthenticationFailed,
                 "Không thể xác thực tài khoản Google.");
         }
 
@@ -158,7 +149,7 @@ public sealed class AuthController(
             if (string.IsNullOrWhiteSpace(providerKey) || string.IsNullOrWhiteSpace(email))
             {
                 throw new UnauthorizedException(
-                    "GOOGLE_ACCOUNT_DATA_MISSING",
+                    ErrorCodes.GoogleAccountDataMissing,
                     "Google không cung cấp đủ thông tin tài khoản cần thiết.");
             }
 
@@ -184,7 +175,7 @@ public sealed class AuthController(
         CancellationToken cancellationToken)
     {
         if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
-            throw new UnauthorizedException("INVALID_ACCESS_TOKEN", "Access token không hợp lệ.");
+            throw new UnauthorizedException(ErrorCodes.InvalidAccessToken, "Access token không hợp lệ.");
 
         var result = await mediator.Send(new GetCurrentUserQuery(userId), cancellationToken);
         return OkResponse(CurrentUserResponse.From(result));

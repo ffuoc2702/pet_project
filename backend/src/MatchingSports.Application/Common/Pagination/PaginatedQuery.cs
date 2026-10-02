@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MatchingSports.Application.Common.Pagination;
+namespace MatchingSports.Application.Common;
 
 public interface IPaginatedQuery
 {

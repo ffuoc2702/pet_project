@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\src\MatchingSports.Application\MatchingSports.Application.csproj" />
     <ProjectReference Include="..\..\src\MatchingSports.Domain\MatchingSports.Domain.csproj" />
     <ProjectReference Include="..\..\src\MatchingSports.Infrastructure\MatchingSports.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\MatchingSports.Shared\MatchingSports.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />

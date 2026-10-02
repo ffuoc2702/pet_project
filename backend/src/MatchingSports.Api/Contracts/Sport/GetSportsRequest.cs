@@ -1,6 +1,4 @@
-﻿using MatchingSports.Api.Contracts.Common;
-
-namespace MatchingSports.Api.Contracts.Sport;
+﻿namespace MatchingSports.Api.Contracts;
 
 public sealed class GetSportsRequest : BaseRequest
 {

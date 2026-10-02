@@ -1,5 +1,5 @@
 {
   "appHost": {
-    "path": "src/MatchingSports.AppHost/MatchingSports.AppHost.csproj"
+    "path": "backend/src/MatchingSports.AppHost/MatchingSports.AppHost.csproj"
   }
 }

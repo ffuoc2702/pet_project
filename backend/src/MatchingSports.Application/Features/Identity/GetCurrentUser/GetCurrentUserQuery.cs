@@ -1,7 +1,7 @@
-using MatchingSports.Application.Abstractions;
+﻿using MatchingSports.Application.Abstractions;
 using MediatR;
 
-namespace MatchingSports.Application.Features.Identity.GetCurrentUser;
+namespace MatchingSports.Application.Features.Identity;
 
 public sealed record GetCurrentUserQuery(Guid UserId) : IRequest<CurrentUserResult>;
 

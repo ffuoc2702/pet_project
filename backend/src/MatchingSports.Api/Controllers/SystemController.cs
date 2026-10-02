@@ -1,4 +1,4 @@
-﻿using MatchingSports.Api.Contracts.Common;
+﻿using MatchingSports.Api.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MatchingSports.Api.Controllers;

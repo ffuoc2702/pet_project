@@ -1,8 +1,9 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using MatchingSports.Application.Abstractions;
-using MatchingSports.Application.Common.Exceptions;
+using MatchingSports.Application.Common;
 using MatchingSports.Domain.Enums;
+using MatchingSports.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -25,7 +26,7 @@ internal sealed partial class GmailOtpEmailSender(
             || string.IsNullOrWhiteSpace(gmail.AppPassword))
         {
             throw new ServiceUnavailableException(
-                "EMAIL_NOT_CONFIGURED",
+                ErrorCodes.EmailNotConfigured,
                 "Dịch vụ gửi email chưa được cấu hình.");
         }
 
@@ -67,7 +68,7 @@ internal sealed partial class GmailOtpEmailSender(
         {
             LogSendFailed(logger, recipientEmail, exception);
             throw new ServiceUnavailableException(
-                "EMAIL_SEND_FAILED",
+                ErrorCodes.EmailSendFailed,
                 "Không thể gửi email OTP. Vui lòng thử lại sau.");
         }
     }

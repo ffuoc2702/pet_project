@@ -1,7 +1,8 @@
-﻿using MatchingSports.Application.Common.Exceptions;
-using MediatR;
+﻿using MediatR;
 
-namespace MatchingSports.Application.Common.Pagination;
+using MatchingSports.Shared;
+
+namespace MatchingSports.Application.Common;
 
 public sealed class PaginationValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
@@ -36,7 +37,7 @@ public sealed class PaginationValidationBehavior<TRequest, TResponse>
         if (errors.Count > 0)
         {
             throw new RequestValidationException(
-                "INVALID_PAGINATION",
+                ErrorCodes.InvalidPagination,
                 "Thông tin phân trang không hợp lệ.",
                 errors);
         }

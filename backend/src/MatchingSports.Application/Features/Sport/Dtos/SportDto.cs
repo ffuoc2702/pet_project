@@ -1,6 +1,8 @@
-﻿namespace MatchingSports.Application.Features.Sport.GetSport;
+﻿using MatchingSports.Application.Common;
 
-public sealed class SportFormatItem
+namespace MatchingSports.Application.Features.Sport;
+
+public sealed class SportFormatDto : BaseDto
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
@@ -8,10 +10,10 @@ public sealed class SportFormatItem
     public short SideSize { get; set; }
 }
 
-public sealed class SportItem
+public sealed class SportDto
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
     public string Name { get; set; } = null!;
-    public List<SportFormatItem> Formats { get; set; } = [];
+    public List<SportFormatDto> Formats { get; set; } = [];
 }

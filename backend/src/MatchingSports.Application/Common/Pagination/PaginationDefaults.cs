@@ -1,4 +1,4 @@
-﻿namespace MatchingSports.Application.Common.Pagination;
+﻿namespace MatchingSports.Application.Common;
 
 public static class PaginationDefaults
 {
