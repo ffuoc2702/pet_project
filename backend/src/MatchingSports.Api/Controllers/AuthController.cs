@@ -184,6 +184,7 @@ public sealed class AuthController(
         return OkResponse(CurrentUserResponse.From(result));
     }
 
+    [Authorize]
     [HttpPut("me")]
     [ProducesResponseType<BaseResponse<UserProfileDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
