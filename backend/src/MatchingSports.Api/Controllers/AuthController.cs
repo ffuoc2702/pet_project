@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using MatchingSports.Api.Contracts;
 using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Identity;
+using MatchingSports.Application.Features.UserProfile;
 using MatchingSports.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -16,6 +18,7 @@ namespace MatchingSports.Api.Controllers;
 [EnableRateLimiting("AuthStrict")]
 public sealed class AuthController(
     IMediator mediator,
+    IMapper mapper,
     IAuthenticationSchemeProvider authenticationSchemeProvider) : ApiControllerBase
 {
     [HttpPost("register")]
@@ -179,6 +182,30 @@ public sealed class AuthController(
 
         var result = await mediator.Send(new GetCurrentUserQuery(userId), cancellationToken);
         return OkResponse(CurrentUserResponse.From(result));
+    }
+
+    [Authorize]
+    [HttpPut("me")]
+    [ProducesResponseType<BaseResponse<UserProfileDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<BaseResponse<UserProfileDto>>> UpdateUserProfile(
+        [FromBody] UpdateUserProfileRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            throw new UnauthorizedException(ErrorCodes.InvalidAccessToken, "Access token không hợp lệ.");
+
+        var result = await mediator.Send(new UpdateUserProfileCommand(
+            userId,
+            request.DisplayName,
+            request.AvatarUrl,
+            request.DefaultArea,
+            request.ContactNote), cancellationToken);
+
+        return OkResponse(
+            mapper.Map<UserProfileDto>(result),
+            "Cập nhật hồ sơ thành công.");
     }
 
     private string? GetIpAddress() => HttpContext.Connection.RemoteIpAddress?.ToString();
