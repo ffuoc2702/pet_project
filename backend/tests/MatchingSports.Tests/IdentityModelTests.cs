@@ -1,4 +1,4 @@
-using MatchingSports.Domain.Entities;
+﻿using MatchingSports.Domain.Entities;
 using MatchingSports.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +26,7 @@ public sealed class IdentityModelTests
     {
         using var db = CreateDbContext();
 
-        Assert.Equal("roles", db.Model.FindEntityType(typeof(IdentityRole<Guid>))?.GetTableName());
+        Assert.Equal("roles", db.Model.FindEntityType(typeof(Role))?.GetTableName());
         Assert.Equal("user_roles", db.Model.FindEntityType(typeof(IdentityUserRole<Guid>))?.GetTableName());
         Assert.Equal("user_logins", db.Model.FindEntityType(typeof(IdentityUserLogin<Guid>))?.GetTableName());
         Assert.Equal("user_tokens", db.Model.FindEntityType(typeof(IdentityUserToken<Guid>))?.GetTableName());
@@ -39,6 +39,23 @@ public sealed class IdentityModelTests
         var session = db.Model.FindEntityType(typeof(AuthSession));
 
         Assert.True(session?.FindProperty(nameof(AuthSession.ConcurrencyToken))?.IsConcurrencyToken);
+    }
+
+    [Fact]
+    public void PermissionsHaveUniqueCodesAndRoleLinksUseCompositeKeys()
+    {
+        using var db = CreateDbContext();
+        var permission = db.Model.FindEntityType(typeof(Permission))!;
+        var link = db.Model.FindEntityType(typeof(RolePermission))!;
+
+        Assert.Equal("permissions", permission.GetTableName());
+        Assert.Contains(permission.GetIndexes(), index => index.IsUnique &&
+            index.Properties.Single().Name == nameof(Permission.Code));
+        Assert.Equal("role_permissions", link.GetTableName());
+        Assert.Equal([nameof(RolePermission.RoleId), nameof(RolePermission.PermissionId)],
+            link.FindPrimaryKey()!.Properties.Select(property => property.Name));
+        Assert.Equal(2, link.GetForeignKeys().Count());
+        Assert.Null(db.Model.FindEntityType(typeof(IdentityRole<Guid>)));
     }
 
     private static MatchingSportsDbContext CreateDbContext()

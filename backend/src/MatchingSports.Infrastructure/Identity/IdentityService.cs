@@ -23,7 +23,8 @@ internal sealed class IdentityService(
     MatchingSportsDbContext db,
     IOtpEmailSender emailSender,
     IOptions<AuthOptions> options,
-    TimeProvider timeProvider) : IIdentityService
+    TimeProvider timeProvider,
+    IUserRoleRepository userRoleRepository) : IIdentityService
 {
     private readonly AuthOptions _options = options.Value;
 
@@ -55,7 +56,12 @@ internal sealed class IdentityService(
             }
         };
 
-        ThrowIfFailed(await userManager.CreateAsync(user, password));
+        await using (var transaction = await db.Database.BeginTransactionAsync(cancellationToken))
+        {
+            ThrowIfFailed(await userManager.CreateAsync(user, password));
+            await AssignRegistrationRolesAsync(user, cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+        }
         var expiresAt = await CreateAndSendOtpAsync(
             user,
             OtpPurpose.EMAIL_VERIFICATION,
@@ -249,7 +255,10 @@ internal sealed class IdentityService(
                         DisplayName = NormalizeDisplayName(displayName, canonicalEmail)
                     }
                 };
+                await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
                 ThrowIfFailed(await userManager.CreateAsync(user));
+                await AssignRegistrationRolesAsync(user, cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
             }
             else if (!user.EmailConfirmed)
             {
@@ -275,8 +284,8 @@ internal sealed class IdentityService(
             .SingleOrDefaultAsync(item => item.Id == userId, cancellationToken)
             ?? throw new NotFoundException(ErrorCodes.UserNotFound, "Không tìm thấy người dùng.");
 
-        var roles = await userManager.GetRolesAsync(user);
-        return ToCurrentUser(user, roles.ToArray());
+        var authorization = await GetUserAuthorizationAsync(user.Id, cancellationToken);
+        return ToCurrentUser(user, authorization.Roles, authorization.Permissions);
     }
 
     private async Task<DateTimeOffset> CreateAndSendOtpAsync(
@@ -396,7 +405,8 @@ internal sealed class IdentityService(
         var now = timeProvider.GetUtcNow();
         var accessTokenExpiresAt = now.AddMinutes(jwt.AccessTokenMinutes);
         var refreshTokenExpiresAt = now.AddDays(jwt.RefreshTokenDays);
-        var roles = await userManager.GetRolesAsync(user);
+        var authorization = await GetUserAuthorizationAsync(user.Id, cancellationToken);
+        var roles = authorization.Roles;
         var displayName = user.Profile?.DisplayName;
         if (displayName is null)
         {
@@ -417,6 +427,7 @@ internal sealed class IdentityService(
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(authorization.Permissions.Select(permission => new Claim(AuthorizationClaimTypes.Permission, permission)));
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey)),
@@ -456,15 +467,30 @@ internal sealed class IdentityService(
                 user.Email!,
                 displayName,
                 user.EmailConfirmed,
-                roles.ToArray()));
+                roles.ToArray(),
+                authorization.Permissions));
     }
 
-    private static CurrentUserResult ToCurrentUser(User user, IReadOnlyCollection<string> roles) => new(
+    private static CurrentUserResult ToCurrentUser(User user, IReadOnlyCollection<string> roles, IReadOnlyCollection<string> permissions) => new(
         user.Id,
         user.Email!,
         user.Profile?.DisplayName ?? user.Email!,
         user.EmailConfirmed,
-        roles);
+        roles,
+        permissions);
+
+    private async Task AssignRegistrationRolesAsync(User user, CancellationToken cancellationToken)
+    {
+        var roleIds = await db.Roles.Where(role => role.IsActive && role.IsDefaultForRegistration)
+            .Select(role => role.Id).ToArrayAsync(cancellationToken);
+        foreach (var roleId in roleIds)
+            db.Add(new IdentityUserRole<Guid> { UserId = user.Id, RoleId = roleId });
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<UserRoleAssignment> GetUserAuthorizationAsync(Guid userId, CancellationToken cancellationToken) =>
+        await userRoleRepository.GetUserRolesAsync(userId, cancellationToken)
+        ?? throw new ForbiddenException(ErrorCodes.AccountNotActive, "Tài khoản hiện không hoạt động.");
 
     private async Task<User> FindUserByEmailAsync(string email) =>
         await userManager.FindByEmailAsync(CanonicalizeEmail(email))

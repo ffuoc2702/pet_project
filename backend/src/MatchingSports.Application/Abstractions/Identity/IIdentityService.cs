@@ -1,4 +1,4 @@
-namespace MatchingSports.Application.Abstractions;
+﻿namespace MatchingSports.Application.Abstractions;
 
 public interface IIdentityService
 {
@@ -72,4 +72,5 @@ public sealed record CurrentUserResult(
     string Email,
     string DisplayName,
     bool EmailVerified,
-    IReadOnlyCollection<string> Roles);
+    IReadOnlyCollection<string> Roles,
+    IReadOnlyCollection<string> Permissions);

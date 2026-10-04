@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+            configuration.AddOpenBehavior(typeof(PermissionAuthorizationBehavior<,>));
             configuration.AddOpenBehavior(typeof(PaginationValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(DateRangeValidationBehavior<,>));
         });

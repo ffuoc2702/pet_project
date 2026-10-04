@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MatchingSports.Application;
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
@@ -23,13 +23,13 @@ public sealed class UpdateUserProfileTests
         var repository = new StubUserProfileRepository(profile);
         var unitOfWork = new StubUnitOfWork();
         var handler = new UpdateUserProfileCommandHandler(
+            new StubCurrentUser(userId),
             repository,
             unitOfWork,
             CreateMapper());
 
         var result = await handler.Handle(
             new UpdateUserProfileCommand(
-                userId,
                 "  Nguyễn Văn A  ",
                 "  https://example.com/avatar.png  ",
                 "  Quận 1  ",
@@ -49,6 +49,7 @@ public sealed class UpdateUserProfileTests
     {
         var unitOfWork = new StubUnitOfWork();
         var handler = new UpdateUserProfileCommandHandler(
+            new StubCurrentUser(Guid.NewGuid()),
             new StubUserProfileRepository(null),
             unitOfWork,
             CreateMapper());
@@ -56,7 +57,6 @@ public sealed class UpdateUserProfileTests
         var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
             handler.Handle(
                 new UpdateUserProfileCommand(
-                    Guid.NewGuid(),
                     "Nguyễn Văn A",
                     null,
                     null,
@@ -67,6 +67,31 @@ public sealed class UpdateUserProfileTests
         Assert.Equal(0, unitOfWork.SaveCount);
     }
 
+    [Fact]
+    public async Task HandleRejectsInvalidIdentityBeforeReadingOrSaving()
+    {
+        var repository = new StubUserProfileRepository(null);
+        var unitOfWork = new StubUnitOfWork();
+        var handler = new UpdateUserProfileCommandHandler(
+            new InvalidCurrentUser(),
+            repository,
+            unitOfWork,
+            CreateMapper());
+
+        var exception = await Assert.ThrowsAsync<UnauthorizedException>(() => handler.Handle(
+            new UpdateUserProfileCommand("Name", null, null, null),
+            CancellationToken.None));
+
+        Assert.Equal(ErrorCodes.InvalidAccessToken, exception.Code);
+        Assert.Equal(0, repository.ReadCount);
+        Assert.Equal(0, unitOfWork.SaveCount);
+    }
+
+    private sealed class InvalidCurrentUser : ICurrentUser
+    {
+        public Guid UserId => throw new UnauthorizedException(ErrorCodes.InvalidAccessToken, "Access token không hợp lệ.");
+    }
+
     private static IMapper CreateMapper()
     {
         var services = new ServiceCollection();
@@ -75,13 +100,23 @@ public sealed class UpdateUserProfileTests
         return services.BuildServiceProvider().GetRequiredService<IMapper>();
     }
 
+    private sealed class StubCurrentUser(Guid userId) : ICurrentUser
+    {
+        public Guid UserId => userId;
+    }
+
     private sealed class StubUserProfileRepository(UserProfile? profile)
         : IUserProfileRepository
     {
+        public int ReadCount { get; private set; }
+
         public Task<UserProfile?> GetForUpdateAsync(
             Guid userId,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(profile?.UserId == userId ? profile : null);
+            CancellationToken cancellationToken = default)
+        {
+            ReadCount++;
+            return Task.FromResult(profile?.UserId == userId ? profile : null);
+        }
     }
 
     private sealed class StubUnitOfWork : IUnitOfWork

@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using Elastic.CommonSchema.Serilog;
 using MatchingSports.Api.Contracts;
 using MatchingSports.Api.ErrorHandling;
+using MatchingSports.Api.Identity;
 using MatchingSports.Api.Middleware;
 using MatchingSports.Application;
 using MatchingSports.Infrastructure;
@@ -29,6 +30,7 @@ builder.Services.AddApplication(
     builder.Configuration["AutoMapper:LicenseKey"],
     typeof(ContractMappingProfile).Assembly);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddCurrentUser();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
