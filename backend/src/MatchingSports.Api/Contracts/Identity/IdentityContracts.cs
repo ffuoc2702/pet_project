@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using MatchingSports.Application.Abstractions;
 
 namespace MatchingSports.Api.Contracts;
@@ -68,14 +68,16 @@ public sealed record CurrentUserResponse(
     string Email,
     string DisplayName,
     bool EmailVerified,
-    IReadOnlyCollection<string> Roles)
+    IReadOnlyCollection<string> Roles,
+    IReadOnlyCollection<string> Permissions)
 {
     public static CurrentUserResponse From(CurrentUserResult result) => new(
         result.Id,
         result.Email,
         result.DisplayName,
         result.EmailVerified,
-        result.Roles);
+        result.Roles,
+        result.Permissions);
 }
 
 public sealed record AuthTokenResponse(

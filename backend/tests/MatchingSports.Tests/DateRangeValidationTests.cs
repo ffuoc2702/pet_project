@@ -1,6 +1,6 @@
-using MatchingSports.Application.Common;
-using MediatR;
+﻿using MatchingSports.Application.Common;
 using MatchingSports.Shared;
+using MediatR;
 
 namespace MatchingSports.Tests;
 
@@ -44,5 +44,5 @@ public sealed class DateRangeValidationTests
         Assert.Equal(Unit.Value, result);
     }
 
-    private sealed class TestQuery : BaseQuery<Unit>;
+    private sealed record TestQuery : BaseQuery<Unit>;
 }

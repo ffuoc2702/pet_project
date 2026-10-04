@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
-using MatchingSports.Application.Common;
 using MatchingSports.Application.Abstractions;
+using MatchingSports.Application.Common;
+using MatchingSports.Shared;
 using MediatR;
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed class GetSportQuery : BaseQuery<SportDto>
+public sealed record GetSportQuery : BaseQuery<SportDto>, IPermissionAuthorizedRequest
 {
+    public Guid ActorUserId { get; init; }
+    IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.ListSports];
     public bool ActiveOnly { get; init; } = true;
     public string? SportCode { get; init; }
 }

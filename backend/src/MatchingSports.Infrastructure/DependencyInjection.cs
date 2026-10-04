@@ -1,11 +1,15 @@
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Infrastructure.Identity;
 using MatchingSports.Infrastructure.Persistence;
 using MatchingSports.Infrastructure.Persistence.Repositories;
+using MatchingSports.Infrastructure.Persistence.Seed;
+using MatchingSports.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -37,6 +41,17 @@ public static class DependencyInjection
                 "Auth:Otp:Pepper must contain at least 32 bytes.")
             .ValidateOnStart();
 
+        services.AddOptions<SeedAdminAccountOptions>()
+            .Bind(configuration.GetSection(SeedAdminAccountOptions.SectionName))
+            .Validate(options => !options.Enabled || (!string.IsNullOrWhiteSpace(options.Email)
+                && options.Email.Trim().Length <= 256 && new EmailAddressAttribute().IsValid(options.Email.Trim())),
+                "Seed:Admin:Email must be a valid email when administrator seeding is enabled.")
+            .Validate(options => !options.Enabled || !string.IsNullOrWhiteSpace(options.Password),
+                "Seed:Admin:Password must be supplied through a secret when administrator seeding is enabled.")
+            .Validate(options => !options.Enabled || (!string.IsNullOrWhiteSpace(options.DisplayName)
+                && options.DisplayName.Trim().Length <= 100),
+                "Seed:Admin:DisplayName must contain between 1 and 100 characters.");
+
         services.AddIdentityCore<User>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -50,7 +65,7 @@ public static class DependencyInjection
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             })
-            .AddRoles<IdentityRole<Guid>>()
+            .AddRoles<Role>()
             .AddEntityFrameworkStores<MatchingSportsDbContext>()
             .AddDefaultTokenProviders()
             .AddSignInManager();
@@ -77,6 +92,36 @@ public static class DependencyInjection
                     NameClaimType = System.Security.Claims.ClaimTypes.Name,
                     RoleClaimType = System.Security.Claims.ClaimTypes.Role
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var userIdClaim = context.Principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                        if (!Guid.TryParse(userIdClaim, out var userId))
+                        {
+                            context.Fail("Invalid user identifier.");
+                            return;
+                        }
+
+                        var repository = context.HttpContext.RequestServices.GetRequiredService<IUserRoleRepository>();
+                        var assignment = await repository.GetUserRolesAsync(userId, context.HttpContext.RequestAborted);
+                        if (assignment is null)
+                        {
+                            context.Fail("User is not active.");
+                            return;
+                        }
+
+                        var identity = (System.Security.Claims.ClaimsIdentity)context.Principal!.Identity!;
+                        foreach (var claim in identity.FindAll(identity.RoleClaimType).ToArray())
+                            identity.RemoveClaim(claim);
+                        foreach (var role in assignment.Roles)
+                            identity.AddClaim(new System.Security.Claims.Claim(identity.RoleClaimType, role));
+                        foreach (var claim in identity.FindAll(AuthorizationClaimTypes.Permission).ToArray())
+                            identity.RemoveClaim(claim);
+                        foreach (var permission in assignment.Permissions)
+                            identity.AddClaim(new System.Security.Claims.Claim(AuthorizationClaimTypes.Permission, permission));
+                    }
+                };
             })
             .AddCookie(IdentityConstants.ExternalScheme, options =>
             {
@@ -101,12 +146,17 @@ public static class DependencyInjection
         }
 
         services.AddAuthorization();
+        services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IOtpEmailSender, GmailOtpEmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISportRepository, SportRepository>();
         services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+        services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IAuthorizationAuditRepository, AuthorizationAuditRepository>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PersistenceExceptionBehavior<,>));
 
         return services;

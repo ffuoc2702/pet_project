@@ -7,13 +7,13 @@ using MediatR;
 namespace MatchingSports.Application.Features.UserProfile;
 
 public sealed record UpdateUserProfileCommand(
-    Guid UserId,
     string DisplayName,
     string? AvatarUrl,
     string? DefaultArea,
     string? ContactNote) : IRequest<UserProfileDto>;
 
 public sealed class UpdateUserProfileCommandHandler(
+    ICurrentUser currentUser,
     IUserProfileRepository userProfileRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper) : IRequestHandler<UpdateUserProfileCommand, UserProfileDto>
@@ -23,7 +23,7 @@ public sealed class UpdateUserProfileCommandHandler(
         CancellationToken cancellationToken)
     {
         var profile = await userProfileRepository.GetForUpdateAsync(
-            request.UserId,
+            currentUser.UserId,
             cancellationToken);
 
         if (profile is null)

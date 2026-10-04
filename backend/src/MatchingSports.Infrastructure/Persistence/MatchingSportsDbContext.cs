@@ -1,17 +1,19 @@
 ﻿using System.Text;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using NetTopologySuite.Geometries;
 
 namespace MatchingSports.Infrastructure.Persistence;
 
 public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbContext> options)
-    : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
+    : IdentityDbContext<User, Role, Guid>(options)
 {
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<Sport> Sports => Set<Sport>();
     public DbSet<SportFormat> SportFormats => Set<SportFormat>();
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
@@ -108,16 +110,55 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         users.HasIndex(x => x.NormalizedUserName).IsUnique().HasFilter("deleted_at IS NULL").HasDatabaseName("uq_users_normalized_user_name");
         users.HasQueryFilter(x => x.DeletedAt == null);
 
-        modelBuilder.Entity<IdentityRole<Guid>>(entity =>
+        modelBuilder.Entity<Role>(entity =>
         {
             entity.ToTable("roles");
             entity.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(x => x.PermissionsInitialized).HasDefaultValue(false);
+            entity.Property(x => x.Description).HasMaxLength(500);
+            entity.Property(x => x.IsActive).HasDefaultValue(true).HasSentinel(true);
+            entity.Property(x => x.IsDefaultForRegistration).HasDefaultValue(false);
+            entity.Property(x => x.RegistrationDefaultInitialized).HasDefaultValue(false);
+            entity.Property(x => x.SeedKey).HasMaxLength(100);
+            entity.Property(x => x.BootstrapCompleted).HasDefaultValue(false);
+            entity.HasIndex(x => x.SeedKey).IsUnique();
         });
         modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
         modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("user_claims");
         modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
         modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("user_tokens");
         modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
+
+        var permissions = modelBuilder.Entity<Permission>();
+        var authorizationAudit = modelBuilder.Entity<AuthorizationAuditEntry>();
+        authorizationAudit.ToTable("authorization_audit_entries");
+        authorizationAudit.HasKey(entry => entry.Id);
+        authorizationAudit.Property(entry => entry.Action).HasMaxLength(100).IsRequired();
+        authorizationAudit.Property(entry => entry.BeforeJson).HasColumnType("jsonb").IsRequired();
+        authorizationAudit.Property(entry => entry.AfterJson).HasColumnType("jsonb").IsRequired();
+        authorizationAudit.HasIndex(entry => new { entry.TargetId, entry.CreatedAt });
+        authorizationAudit.HasIndex(entry => new { entry.ActorUserId, entry.CreatedAt });
+
+        permissions.ToTable("permissions");
+        permissions.HasKey(x => x.Id);
+        permissions.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+        permissions.Property(x => x.Code).HasMaxLength(100).IsRequired();
+        permissions.Property(x => x.Name).HasMaxLength(150).IsRequired();
+        permissions.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
+        permissions.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
+        permissions.HasIndex(x => x.Code).IsUnique().HasDatabaseName("uq_permissions_code");
+
+        var rolePermissions = modelBuilder.Entity<RolePermission>();
+        rolePermissions.ToTable("role_permissions");
+        rolePermissions.HasKey(x => new { x.RoleId, x.PermissionId });
+        rolePermissions.HasOne(x => x.Role).WithMany(x => x.Permissions)
+            .HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Cascade);
+        rolePermissions.HasOne(x => x.Permission).WithMany(x => x.RolePermissions)
+            .HasForeignKey(x => x.PermissionId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Role>().Navigation(x => x.Permissions).HasField("_permissions")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+        permissions.Navigation(x => x.RolePermissions).HasField("_rolePermissions")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         var profiles = modelBuilder.Entity<UserProfile>();
         profiles.ToTable("user_profiles");

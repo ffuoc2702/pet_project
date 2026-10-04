@@ -54,7 +54,9 @@ Luồng chuẩn:
 ```text
 HTTP request + authenticated user ID
   -> Controller: tạo command, mediator.Send(command, cancellationToken)
-  -> Handler: repository.GetForUpdateAsync(id, cancellationToken)
+  -> MediatR pipeline: kiểm tra permission nếu request triển khai IPermissionAuthorizedRequest
+  -> Handler: lấy user ID qua ICurrentUser.UserId
+  -> Handler: repository.GetForUpdateAsync(userId, cancellationToken)
   -> Handler: xử lý không tìm thấy / quyền truy cập
   -> Domain: entity.UpdateDetails(...) hoặc hành vi nghiệp vụ tương ứng
   -> Handler: unitOfWork.SaveChangesAsync(cancellationToken)
@@ -62,10 +64,70 @@ HTTP request + authenticated user ID
   -> Controller: OkResponse(result)
 ```
 
-Command user profile lấy UserId từ claims đã xác thực, không từ request body.
+Command user profile chỉ chứa dữ liệu cần cập nhật, không chứa UserId.
+Handler lấy UserId qua ICurrentUser; implementation ở API đọc claims đã xác thực.
+Không lấy danh tính người thực hiện từ request body.
 `GetForUpdateAsync` trả entity tracked; đây không phải lời hứa khóa hàng database.
 Query chỉ đọc nên dùng projection hoặc `AsNoTracking()` trong Infrastructure.
 Repository không tự gọi SaveChanges; handler điều phối commit qua `IUnitOfWork`.
+
+### Danh tính người thực hiện: ICurrentUser
+
+- Abstraction nằm tại
+  `backend/src/MatchingSports.Application/Abstractions/Identity/ICurrentUser.cs`,
+  namespace `MatchingSports.Application.Abstractions`, cung cấp `Guid UserId { get; }`.
+- Implementation `CurrentUser` nằm trong `Api/Identity`, dùng `IHttpContextAccessor`.
+  Application không đọc HttpContext, ClaimsPrincipal hoặc phụ thuộc ASP.NET Core.
+- API đăng ký qua `AddCurrentUser()`: `AddHttpContextAccessor()` và
+  `AddScoped<ICurrentUser, CurrentUser>()`. Không giữ user ID trong singleton.
+- `CurrentUser` yêu cầu identity đã xác thực và claim `ClaimTypes.NameIdentifier`
+  parse được Guid. Thiếu context, identity chưa xác thực hoặc claim thiếu/sai thì
+  ném `UnauthorizedException` với `ErrorCodes.InvalidAccessToken`.
+- Use case thao tác hồ sơ của chính mình lấy ID trong handler qua `ICurrentUser`.
+  Các request quản trị hiện có giữ `ActorUserId`; controller lấy giá trị này qua
+  `ICurrentUser.UserId`, không tự viết lại `GetActorUserId()` hoặc parse claims.
+- Phân biệt `ActorUserId` (người thực hiện) với `UserId` (người dùng mục tiêu).
+  Không dùng ID mục tiêu để kiểm tra quyền của actor. Caller ngoài HTTP phải cung
+  cấp danh tính actor từ nguồn tin cậy; không giả định có HttpContext.
+- `ICurrentUser` xác định danh tính, không thay thế kiểm tra permission.
+
+### Phân quyền chung: MediatR pipeline
+
+Đọc các file sau khi thêm hoặc sửa use case có kiểm tra permission:
+
+- `backend/src/MatchingSports.Application/Common/Authorization/IPermissionAuthorizedRequest.cs`
+- `backend/src/MatchingSports.Application/Common/Authorization/PermissionAuthorizationBehavior.cs`
+- `backend/src/MatchingSports.Application/DependencyInjection.cs`
+- `backend/src/MatchingSports.Application/Features/Role/GetRoles/GetRolesQuery.cs`
+- `backend/tests/MatchingSports.Tests/PermissionAuthorizationBehaviorTests.cs`
+
+Quy tắc:
+
+- Command/query cần kiểm tra permission chung triển khai
+  `IPermissionAuthorizedRequest`, khai báo `ActorUserId` và `RequiredPermissions`.
+  Danh sách quyền cố định theo use case, dùng constants `PermissionCodes`; không
+  lấy danh sách quyền yêu cầu từ HTTP body. Ưu tiên explicit interface implementation
+  cho `RequiredPermissions` theo `GetRolesQuery`.
+- `PermissionAuthorizationBehavior<,>` được đăng ký bằng `AddOpenBehavior` trong
+  `AddApplication()`, trước các behavior validation. Behavior chỉ áp dụng cho
+  request triển khai `IPermissionAuthorizedRequest`.
+- Pipeline tải quyền actor qua `IUserRoleRepository.GetUserRolesAsync` một lần
+  cho mỗi request được kiểm tra và yêu cầu đủ **tất cả** permission đã khai báo.
+  Actor không tồn tại hoặc thiếu quyền thì ném `ForbiddenException` với
+  `ErrorCodes.Forbidden`; không gọi handler. Danh sách quyền rỗng hoặc chứa mã
+  whitespace là lỗi khai báo, không được dùng để bỏ qua phân quyền.
+- Gửi các request này qua `IMediator.Send(..., cancellationToken)`, kể cả khi gọi
+  từ worker hoặc use case khác. Gọi trực tiếp `handler.Handle` sẽ bỏ qua pipeline.
+- Không lặp lại `RequirePermissionAsync`, `RequirePermissionsAsync` hoặc tải quyền
+  actor chỉ để kiểm tra cùng permission trong handler. Handler giữ các kiểm tra
+  phụ thuộc dữ liệu như quyền trên bản ghi cụ thể và concurrency; invariant vẫn
+  thuộc Domain. Pipeline không thay thế các kiểm tra này.
+- `[Authorize(Policy = ...)]` bảo vệ endpoint HTTP; pipeline bảo vệ use case khi
+  được gọi qua MediatR. Giữ policy HTTP khớp permission của command/query.
+  Quyền `list` và `read` độc lập; truy vấn ma trận role yêu cầu cả
+  `PermissionCodes.ListRoles` và `PermissionCodes.ListPermissions`.
+- Request không triển khai interface không được pipeline này kiểm tra permission.
+  Không suy luận rằng mọi use case đã được bảo vệ chỉ vì đã đăng ký behavior.
 
 ### Đặt nghiệp vụ trong Domain
 
@@ -104,6 +166,68 @@ Repository không tự gọi SaveChanges; handler điều phối commit qua `IUn
 - Mã lỗi ổn định dùng `MatchingSports.Shared.ErrorCodes`; không hard-code chuỗi
   như `"INVALID_ACCESS_TOKEN"`. Constants dùng chung có tên rõ nghĩa và được
   nhóm theo mục đích; không biến mọi literal cục bộ thành constant.
+
+### Phân trang bắt buộc cho API list
+
+- Mọi API list/collection phải nhận `PageNumber` và `PageSize` qua query string,
+  kể cả danh sách dùng cho dropdown hoặc màn hình quản trị. Không thêm chế độ
+  trả toàn bộ dữ liệu hoặc phân trang sau khi đã tải toàn bộ danh sách.
+- Request HTTP kế thừa `BaseRequest` (kế thừa `PaginatedRequest`); mặc định trang 1, kích thước 20,
+  tối đa 100 theo `PaginationDefaults`. Dùng DataAnnotations ở API và
+  `IPaginatedQuery` với `PaginationValidationBehavior` trong Application để
+  bảo vệ cả caller ngoài HTTP; từ chối trang/kích thước không hợp lệ và offset
+  vượt `int.MaxValue` bằng `ErrorCodes.InvalidPagination`.
+- Query list trả `PaginatedResult<TDto>`. Handler chuyển thông số phân trang
+  xuống repository và map bằng `PaginatedResult.Map` để giữ nguyên metadata.
+  Controller dùng `OkPaginatedResponse` và khai báo
+  `PaginatedResponse<T>` đúng kiểu payload; không map lại DTO cùng kiểu.
+- Infrastructure áp dụng filter trước `LongCountAsync`, dùng cùng filter cho
+  dữ liệu trang, sắp xếp ổn định với khóa duy nhất (ví dụ `ThenBy(Id)`) trước
+  `Skip`/`Take`, và dùng projection hoặc `AsNoTracking()`. Truyền
+  `CancellationToken` cho cả count và truy vấn trang; không commit query đọc.
+- Metadata gồm `PageNumber`, `PageSize`, `TotalItems`, `TotalPages`,
+  `HasPreviousPage`, `HasNextPage`. Trang vượt tổng số trang trả danh sách
+  rỗng cùng tổng số mục thực tế, không tự đổi số trang được yêu cầu.
+- Ma trận role phân trang theo hàng role: `RolePermissionMatrixDto.Roles`
+  là `PaginatedResult<RoleDto>`; `Permissions` giữ đầy đủ cột (kể cả quyền
+  chưa được gán), response dùng `BaseResponse<RolePermissionMatrixDto>`.
+  Collection thuộc DTO chi tiết như quyền của một role hoặc role của một user
+  là dữ liệu của bản ghi đó, không phải API list độc lập. Repository nội bộ
+  phục vụ authorization hoặc tải tập ID/code cụ thể không bị cắt trang.
+- Khi thêm/sửa API list, kiểm thử trang mặc định, trang kế tiếp, trang rỗng,
+  metadata, validation qua MediatR, quyền và cancellation phù hợp mức rủi ro.
+  Đọc `SportController`, `GetSportQuery`, `SportRepository` và
+  `PaginationTests` làm convention hiện có.
+
+### BaseQuery và mapping request → query
+
+- Mọi query list dùng `sealed record` kế thừa `BaseQuery<TItem>`; request HTTP
+  kế thừa `BaseRequest`. `PageNumber`, `PageSize`, `SearchString`,
+  `FromDate` và `ToDate` được khai báo ở base, không lặp lại trong constructor
+  hoặc query feature. Query chi tiết trả một bản ghi giữ `IRequest<TDto>` riêng.
+- Với payload ghép như ma trận, kế thừa `BaseQuery` không generic và khai báo
+  đúng `IRequest<RolePermissionMatrixDto>`; không kế thừa hai kiểu MediatR
+  response khác nhau. `BaseQuery<TItem>` trả `PaginatedResult<TItem>`.
+- Khai báo mapping request → query trong `Api/Contracts/Mapping/ContractMappingProfile.cs`.
+  AutoMapper map property trùng tên, kể cả property kế thừa và filter feature.
+  Ignore `ActorUserId` trong mapping; controller dùng
+  `mapper.Map<GetRolesQuery>(request) with { ActorUserId = currentUser.UserId }`,
+  rồi `mediator.Send(query, cancellationToken)`. Không gán thủ công từng field
+  phân trang/tìm kiếm và không đưa HTTP request/AutoMapper contract vào Application.
+- Actor không nằm trong request HTTP; quyền yêu cầu vẫn cố định trên query.
+  Caller ngoài HTTP tạo query bằng object initializer với danh tính tin cậy;
+  không có HTTP context hoặc tự động đọc query string trong handler/pipeline.
+- Repository list nhận query/filter object từ Application cùng CancellationToken,
+  áp dụng search trước count và paging. Search whitespace tương đương không lọc;
+  sports tìm theo code/name, roles và hàng ma trận theo name/description,
+  permissions theo code/name, không phân biệt hoa thường.
+- Filter ngày dùng `UpdatedAt` với hai đầu bao gồm giá trị biên khi entity hỗ trợ.
+  Role hiện chưa có timestamp: `GetRolesQuery` và `GetRolePermissionMatrixQuery`
+  khai báo `SupportsDateRange = false`; `DateRangeValidationBehavior` từ chối
+  ngày được truyền bằng `ErrorCodes.InvalidDateRange`. Không nhận rồi bỏ qua
+  filter và không thêm schema ngoài phạm vi task chỉ để đáp ứng base class.
+- Khi thêm query list, khai báo mapping và kiểm tra cấu hình AutoMapper, field kế
+  thừa/default, filter riêng, actor tin cậy, filter thực tế và metadata sau lọc.
 
 ## Tên và tổ chức code
 
@@ -148,8 +272,17 @@ Infrastructure/Persistence/Repositories/<Feature>Repository.cs
 - Secret nằm trong user-secrets/environment; không commit token/password/OTP.
   Không log password, OTP, access token, refresh token hoặc dữ liệu riêng tư đầy đủ.
 - Test rule/normalization trực tiếp ở Domain khi thêm hoặc thay đổi nghiệp vụ.
-  Test handler cho điều phối, not found, authorization và số lần commit khi cần.
-  Dùng UpdateUserProfileTests làm mẫu stub repository/unit of work.
+  Test handler cho điều phối, not found, quyền phụ thuộc dữ liệu và số lần commit
+  khi cần. Dùng UpdateUserProfileTests làm mẫu stub repository/unit of work và
+  ICurrentUser.
+- Test permission chung đi qua `IMediator.Send` với `AddApplication()` để kiểm tra
+  cả DI và pipeline; không gọi trực tiếp handler rồi kỳ vọng pipeline chạy.
+  Kiểm tra thiếu actor/permission không gọi handler hoặc commit, đủ tất cả quyền
+  mới cho phép, truyền đúng actor ID và CancellationToken, và request không cần
+  permission vẫn chạy khi không đăng ký repository phân quyền. Dùng
+  PermissionAuthorizationBehaviorTests và ListReadPermissionTests làm mẫu.
+- Khi sửa `ICurrentUser`, kiểm tra claims hợp lệ/thiếu/sai, identity chưa xác thực,
+  thiếu HttpContext và scoped lifetime theo CurrentUserTests.
 - Với thay đổi ranh giới tầng, chạy ArchitectureTests. Với API/persistence, kiểm
   tra contract và integration phù hợp mức rủi ro. Không tạo test chỉ lặp lại code.
 

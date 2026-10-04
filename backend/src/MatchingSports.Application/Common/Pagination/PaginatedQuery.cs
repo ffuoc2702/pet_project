@@ -8,8 +8,10 @@ public interface IPaginatedQuery
     int PageSize { get; }
 }
 
-public abstract class PaginatedQuery<TItem> : IRequest<PaginatedResult<TItem>>, IPaginatedQuery
+public abstract record PaginatedQuery : IPaginatedQuery
 {
     public int PageNumber { get; init; } = PaginationDefaults.DefaultPageNumber;
     public int PageSize { get; init; } = PaginationDefaults.DefaultPageSize;
 }
+
+public abstract record PaginatedQuery<TItem> : PaginatedQuery, IRequest<PaginatedResult<TItem>>;

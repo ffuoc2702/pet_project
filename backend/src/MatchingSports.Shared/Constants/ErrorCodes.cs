@@ -31,6 +31,11 @@ public static class ErrorCodes
     public const string AccountNotActive = "ACCOUNT_NOT_ACTIVE";
     public const string UserNotFound = "USER_NOT_FOUND";
     public const string UserProfileNotFound = "USER_PROFILE_NOT_FOUND";
+    public const string InvalidRole = "INVALID_ROLE";
+    public const string InvalidPermission = "INVALID_PERMISSION";
+    public const string RoleNotFound = "ROLE_NOT_FOUND";
+    public const string PermissionNotFound = "PERMISSION_NOT_FOUND";
+    public const string SportNotFound = "SPORT_NOT_FOUND";
     public const string OtpResendTooSoon = "OTP_RESEND_TOO_SOON";
     public const string OtpSendLimitReached = "OTP_SEND_LIMIT_REACHED";
     public const string IdentityValidationFailed = "IDENTITY_VALIDATION_FAILED";

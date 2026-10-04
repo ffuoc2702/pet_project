@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using AutoMapper;
 using MatchingSports.Api.Contracts;
 using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Identity;
@@ -18,7 +17,6 @@ namespace MatchingSports.Api.Controllers;
 [EnableRateLimiting("AuthStrict")]
 public sealed class AuthController(
     IMediator mediator,
-    IMapper mapper,
     IAuthenticationSchemeProvider authenticationSchemeProvider) : ApiControllerBase
 {
     [HttpPost("register")]
@@ -171,20 +169,17 @@ public sealed class AuthController(
         }
     }
 
-    [Authorize]
+    [Authorize(Policy = PermissionCodes.ReadOwnProfile)]
     [HttpGet("me")]
     [ProducesResponseType<BaseResponse<CurrentUserResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<BaseResponse<CurrentUserResponse>>> Me(
         CancellationToken cancellationToken)
     {
-        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
-            throw new UnauthorizedException(ErrorCodes.InvalidAccessToken, "Access token không hợp lệ.");
-
-        var result = await mediator.Send(new GetCurrentUserQuery(userId), cancellationToken);
+        var result = await mediator.Send(new GetCurrentUserQuery(), cancellationToken);
         return OkResponse(CurrentUserResponse.From(result));
     }
 
-    [Authorize]
+    [Authorize(Policy = PermissionCodes.UpdateOwnProfile)]
     [HttpPut("me")]
     [ProducesResponseType<BaseResponse<UserProfileDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -193,18 +188,14 @@ public sealed class AuthController(
         [FromBody] UpdateUserProfileRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
-            throw new UnauthorizedException(ErrorCodes.InvalidAccessToken, "Access token không hợp lệ.");
-
         var result = await mediator.Send(new UpdateUserProfileCommand(
-            userId,
             request.DisplayName,
             request.AvatarUrl,
             request.DefaultArea,
             request.ContactNote), cancellationToken);
 
         return OkResponse(
-            mapper.Map<UserProfileDto>(result),
+            result,
             "Cập nhật hồ sơ thành công.");
     }
 
