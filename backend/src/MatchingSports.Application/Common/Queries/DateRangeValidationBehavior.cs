@@ -1,6 +1,5 @@
-﻿using MediatR;
-
-using MatchingSports.Shared;
+﻿using MatchingSports.Shared;
+using MediatR;
 
 namespace MatchingSports.Application.Common;
 

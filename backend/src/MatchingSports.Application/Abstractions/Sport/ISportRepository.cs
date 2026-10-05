@@ -5,6 +5,7 @@ namespace MatchingSports.Application.Abstractions;
 
 public interface ISportRepository
 {
+    Task<Sport?> GetByIdAsync(Guid sportId, CancellationToken cancellationToken);
     Task<PaginatedResult<Sport>> ListAsync(
         GetSportQuery query,
         CancellationToken cancellationToken = default);

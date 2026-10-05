@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
 using MatchingSports.Application.Features.UserProfile;
 using MatchingSports.Domain.Entities;
@@ -12,5 +13,9 @@ public sealed class ApplicationMappingProfile : Profile
         CreateMap<SportFormat, SportFormatDto>();
         CreateMap<Sport, SportDto>();
         CreateMap<UserProfile, UserProfileDto>();
+        CreateMap<Permission, PermissionDto>();
+        CreateMap<Role, RoleDto>()
+            .ForCtorParam(nameof(RoleDto.Permissions), options => options.MapFrom(role =>
+                role.Permissions.OrderBy(item => item.Permission.Code).Select(item => item.Permission)));
     }
 }

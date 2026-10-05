@@ -9,6 +9,9 @@ namespace MatchingSports.Infrastructure.Persistence.Repositories;
 internal sealed class SportRepository(MatchingSportsDbContext db)
     : ISportRepository
 {
+    public Task<Sport?> GetByIdAsync(Guid sportId, CancellationToken cancellationToken) =>
+        db.Sports.AsNoTracking().Include(sport => sport.Formats.OrderByDescending(format => format.UpdatedAt))
+            .SingleOrDefaultAsync(sport => sport.Id == sportId, cancellationToken);
     public async Task<PaginatedResult<Sport>> ListAsync(
         GetSportQuery query,
         CancellationToken cancellationToken = default)

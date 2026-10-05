@@ -1,4 +1,5 @@
-﻿
+﻿using MediatR;
+
 namespace MatchingSports.Application.Common;
 
 public interface IDateRangeQuery
@@ -7,9 +8,16 @@ public interface IDateRangeQuery
     DateTimeOffset? ToDate { get; }
 }
 
-public abstract class BaseQuery<TItem> : PaginatedQuery<TItem>, IDateRangeQuery
+public interface IBaseQuery : IDateRangeQuery
+{
+    string? SearchString { get; }
+}
+
+public abstract record BaseQuery : PaginatedQuery, IBaseQuery
 {
     public string? SearchString { get; init; }
     public DateTimeOffset? FromDate { get; init; }
     public DateTimeOffset? ToDate { get; init; }
 }
+
+public abstract record BaseQuery<TItem> : BaseQuery, IRequest<PaginatedResult<TItem>>;
