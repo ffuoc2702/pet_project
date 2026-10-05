@@ -4,9 +4,9 @@ namespace MatchingSports.Api.Contracts;
 
 public sealed class ReplaceUserRolesRequest
 {
-    [Required]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc.")]
     public Guid[] RoleIds { get; set; } = null!;
 
-    [Required]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc.")]
     public string ConcurrencyStamp { get; set; } = null!;
 }

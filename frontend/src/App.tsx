@@ -23,14 +23,18 @@ function App() {
       const response = await fetch('/api/weatherforecast');
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Yêu cầu HTTP thất bại. Mã trạng thái: ${response.status}`);
       }
       
       const data: WeatherForecast[] = await response.json();
       setWeatherData(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch weather data');
-      console.error('Error fetching weather forecast:', err);
+      setError(err instanceof TypeError
+        ? 'Không thể kết nối để tải dữ liệu thời tiết.'
+        : err instanceof SyntaxError
+          ? 'Dữ liệu thời tiết trả về không hợp lệ.'
+          : err instanceof Error ? err.message : 'Không thể tải dữ liệu thời tiết.');
+      console.error('Lỗi khi tải dự báo thời tiết:', err);
     } finally {
       setLoading(false);
     }

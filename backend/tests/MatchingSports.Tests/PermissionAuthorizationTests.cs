@@ -162,7 +162,7 @@ public sealed class PermissionAuthorizationTests
         public Task<Role?> GetByIdWithPermissionsAsync(Guid roleId, CancellationToken cancellationToken) => GetForUpdateAsync(roleId, cancellationToken);
         public Task<Role?> GetForUpdateAsync(Guid roleId, CancellationToken cancellationToken) =>
             Task.FromResult<Role?>(roleId == Role.Id ? Role : null);
-        public Task<PaginatedResult<Role>> ListAsync(BaseQuery query, CancellationToken cancellationToken) =>
+        public Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken) =>
             Task.FromResult(new PaginatedResult<Role>([Role], query.PageNumber, query.PageSize, 1));
         public Task<Permission?> GetByIdAsync(Guid id, CancellationToken cancellationToken) => Task.FromResult(permissions.SingleOrDefault(permission => permission.Id == id));
         Task<PaginatedResult<Permission>> IPermissionRepository.ListAsync(BaseQuery query, CancellationToken cancellationToken) =>

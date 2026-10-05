@@ -9,11 +9,42 @@ namespace MatchingSports.Infrastructure.Persistence.Repositories;
 internal sealed class SportRepository(MatchingSportsDbContext db)
     : ISportRepository
 {
+    public void Add(Sport sport) => db.Sports.Add(sport);
+
+    public Task<bool> HasActiveDuplicateAsync(string code, string name, Guid? excludedSportId, CancellationToken cancellationToken)
+    {
+        var normalizedName = name.ToLowerInvariant();
+        return db.Sports.AnyAsync(sport => sport.IsActive && sport.Id != excludedSportId
+            && (sport.Code == code || EF.Property<string>(sport, "NormalizedName") == normalizedName), cancellationToken);
+    }
+
+    public void Update(Sport sport)
+    {
+        var autoDetectChanges = db.ChangeTracker.AutoDetectChangesEnabled;
+        try
+        {
+            // DetectChanges would classify new children with assigned IDs as updates.
+            db.ChangeTracker.AutoDetectChangesEnabled = false;
+            foreach (var format in sport.Formats.Where(format => db.Entry(format).State == EntityState.Detached))
+                db.SportFormats.Add(format);
+            // A format-only update also changes the aggregate timestamp.
+            db.Entry(sport).Property(item => item.UpdatedAt).IsModified = true;
+        }
+        finally
+        {
+            db.ChangeTracker.AutoDetectChangesEnabled = autoDetectChanges;
+        }
+    }
+
+    public Task<Sport?> GetForUpdateAsync(Guid sportId, CancellationToken cancellationToken) =>
+        db.Sports.Include(sport => sport.Formats.OrderByDescending(format => format.UpdatedAt).ThenBy(format => format.Id))
+            .SingleOrDefaultAsync(sport => sport.Id == sportId, cancellationToken);
+
     public Task<Sport?> GetByIdAsync(Guid sportId, CancellationToken cancellationToken) =>
         db.Sports.AsNoTracking().Include(sport => sport.Formats.OrderByDescending(format => format.UpdatedAt))
             .SingleOrDefaultAsync(sport => sport.Id == sportId, cancellationToken);
     public async Task<PaginatedResult<Sport>> ListAsync(
-        GetSportQuery query,
+        GetSportsQuery query,
         CancellationToken cancellationToken = default)
     {
         IQueryable<Sport> sports = db.Sports.AsNoTracking();

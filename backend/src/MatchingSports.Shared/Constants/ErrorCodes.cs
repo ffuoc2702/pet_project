@@ -35,6 +35,7 @@ public static class ErrorCodes
     public const string InvalidPermission = "INVALID_PERMISSION";
     public const string RoleNotFound = "ROLE_NOT_FOUND";
     public const string PermissionNotFound = "PERMISSION_NOT_FOUND";
+    public const string InvalidSport = "INVALID_SPORT";
     public const string SportNotFound = "SPORT_NOT_FOUND";
     public const string OtpResendTooSoon = "OTP_RESEND_TOO_SOON";
     public const string OtpSendLimitReached = "OTP_SEND_LIMIT_REACHED";

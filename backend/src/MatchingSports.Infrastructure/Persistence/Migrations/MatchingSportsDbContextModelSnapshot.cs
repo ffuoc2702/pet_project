@@ -1132,6 +1132,12 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
+                    b.Property<string>("NormalizedName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_name")
+                        .HasComputedColumnSql("lower(btrim(name))", true);
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -1142,7 +1148,13 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique()
-                        .HasDatabaseName("uq_sports_code");
+                        .HasDatabaseName("uq_sports_code")
+                        .HasFilter("is_active");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("uq_sports_name")
+                        .HasFilter("is_active");
 
                     b.ToTable("sports", (string)null);
                 });
@@ -1179,6 +1191,12 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
+                    b.Property<string>("NormalizedName")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("text")
+                        .HasColumnName("normalized_name")
+                        .HasComputedColumnSql("lower(btrim(display_name))", true);
+
                     b.Property<short>("SideSize")
                         .HasColumnType("smallint")
                         .HasColumnName("side_size");
@@ -1201,6 +1219,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.HasIndex("SportId", "Code")
                         .IsUnique()
                         .HasDatabaseName("uq_sport_formats_sport_code");
+
+                    b.HasIndex("SportId", "NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("uq_sport_formats_sport_name");
 
                     b.ToTable("sport_formats", null, t =>
                         {

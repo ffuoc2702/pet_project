@@ -10,7 +10,8 @@ public sealed class ContractMappingProfile : Profile
 {
     public ContractMappingProfile()
     {
-        CreateMap<GetSportsRequest, GetSportQuery>()
+        CreateMap<SportFormatRequest, SportFormatInput>();
+        CreateMap<GetSportsRequest, GetSportsQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());
         CreateMap<GetRolesRequest, GetRolesQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());
@@ -20,7 +21,5 @@ public sealed class ContractMappingProfile : Profile
             .ForMember(query => query.ActorUserId, option => option.Ignore());
 
         CreateMap<GetRolesQuery, GetRolePermissionMatrixQuery>().ReverseMap();
-        CreateMap<SportFormatDto, SportFormatResponse>();
-        CreateMap<SportDto, SportResponse>();
     }
 }

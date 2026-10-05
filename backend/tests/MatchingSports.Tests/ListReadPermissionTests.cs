@@ -25,7 +25,7 @@ public sealed class ListReadPermissionTests
         var mediator = provider.GetRequiredService<IMediator>();
         Task operation = listCode switch
         {
-            PermissionCodes.ListSports => mediator.Send(new GetSportQuery { ActorUserId = Guid.NewGuid() }),
+            PermissionCodes.ListSports => mediator.Send(new GetSportsQuery { ActorUserId = Guid.NewGuid() }),
             PermissionCodes.ListRoles => mediator.Send(new GetRolesQuery { ActorUserId = Guid.NewGuid() }),
             _ => mediator.Send(new GetPermissionsQuery { ActorUserId = Guid.NewGuid() })
         };
@@ -71,6 +71,9 @@ public sealed class ListReadPermissionTests
     [Theory]
     [InlineData(typeof(SportController), nameof(SportController.GetSports), PermissionCodes.ListSports)]
     [InlineData(typeof(SportController), nameof(SportController.GetSport), PermissionCodes.ReadSports)]
+    [InlineData(typeof(SportController), nameof(SportController.CreateSport), PermissionCodes.CreateSports)]
+    [InlineData(typeof(SportController), nameof(SportController.UpdateSport), PermissionCodes.UpdateSports)]
+    [InlineData(typeof(SportController), nameof(SportController.DeactivateSport), PermissionCodes.DeactivateSports)]
     [InlineData(typeof(RoleController), nameof(RoleController.GetRoles), PermissionCodes.ListRoles)]
     [InlineData(typeof(RoleController), nameof(RoleController.GetRole), PermissionCodes.ReadRoles)]
     [InlineData(typeof(PermissionController), nameof(PermissionController.GetPermissions), PermissionCodes.ListPermissions)]
@@ -102,7 +105,7 @@ public sealed class ListReadPermissionTests
         public Task ReplaceUserRolesAsync(UserRoleAssignment assignment, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<Role?> GetByIdWithPermissionsAsync(Guid roleId, CancellationToken cancellationToken) => Task.FromResult<Role?>(null);
         public Task<Role?> GetForUpdateAsync(Guid roleId, CancellationToken cancellationToken) => Task.FromResult<Role?>(null);
-        public Task<PaginatedResult<Role>> ListAsync(BaseQuery query, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<IReadOnlyCollection<Role>> GetByIdsAsync(IReadOnlyCollection<Guid> roleIds, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<bool> ExistsByNormalizedNameAsync(string normalizedName, Guid? excludedRoleId, CancellationToken cancellationToken) => throw new NotSupportedException();
         public void Add(Role role) => throw new NotSupportedException();
@@ -111,7 +114,11 @@ public sealed class ListReadPermissionTests
         public Task<IReadOnlyCollection<Permission>> GetPermissionsAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<IReadOnlyCollection<Permission>> GetByCodesAsync(IReadOnlyCollection<string> codes, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<Permission?> GetByIdAsync(Guid permissionId, CancellationToken cancellationToken) => Task.FromResult<Permission?>(null);
+        public Task<bool> HasActiveDuplicateAsync(string code, string name, Guid? excludedSportId, CancellationToken cancellationToken) => throw new NotSupportedException();
+        public void Add(Sport sport) => throw new NotSupportedException();
+        public void Update(Sport sport) => throw new NotSupportedException();
+        Task<Sport?> ISportRepository.GetForUpdateAsync(Guid sportId, CancellationToken cancellationToken) => throw new NotSupportedException();
         Task<Sport?> ISportRepository.GetByIdAsync(Guid sportId, CancellationToken cancellationToken) => Task.FromResult<Sport?>(null);
-        public Task<PaginatedResult<Sport>> ListAsync(GetSportQuery query, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<PaginatedResult<Sport>> ListAsync(GetSportsQuery query, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 }

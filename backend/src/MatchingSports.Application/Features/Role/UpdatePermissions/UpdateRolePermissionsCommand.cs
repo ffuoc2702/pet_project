@@ -22,10 +22,10 @@ public sealed class UpdateRolePermissionsCommandHandler(
     public async Task<RoleDto> Handle(UpdateRolePermissionsCommand request, CancellationToken cancellationToken)
     {
         var role = await roleRepository.GetForUpdateAsync(request.RoleId, cancellationToken)
-            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy role.");
+            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy vai trò.");
         RoleAuthorization.RequireCurrentVersion(role.ConcurrencyStamp, request.ConcurrencyStamp);
         if (request.PermissionCodes is null || request.PermissionCodes.Any(string.IsNullOrWhiteSpace))
-            throw InvalidPermissions(["Danh sách mã permission không hợp lệ."]);
+            throw InvalidPermissions(["Danh sách mã quyền không hợp lệ."]);
 
         var codes = request.PermissionCodes.Distinct(StringComparer.Ordinal).ToArray();
         var permissions = await permissionRepository.GetByCodesAsync(codes, cancellationToken);
@@ -43,6 +43,6 @@ public sealed class UpdateRolePermissionsCommandHandler(
     }
 
     private static RequestValidationException InvalidPermissions(string[] errors) =>
-        new(ErrorCodes.InvalidPermission, "Permission không tồn tại hoặc không hợp lệ.",
+        new(ErrorCodes.InvalidPermission, "Quyền không tồn tại hoặc không hợp lệ.",
             new Dictionary<string, string[]> { ["permissionCodes"] = errors });
 }

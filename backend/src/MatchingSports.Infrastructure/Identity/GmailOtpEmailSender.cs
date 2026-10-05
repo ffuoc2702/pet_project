@@ -73,6 +73,6 @@ internal sealed partial class GmailOtpEmailSender(
         }
     }
 
-    [LoggerMessage(2101, LogLevel.Error, "Failed to send OTP email to {RecipientEmail}")]
+    [LoggerMessage(2101, LogLevel.Error, "Không thể gửi email OTP đến {RecipientEmail}")]
     private static partial void LogSendFailed(ILogger logger, string recipientEmail, Exception exception);
 }

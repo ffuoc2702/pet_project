@@ -20,7 +20,7 @@ public sealed class CreateRoleCommandHandler(IRoleRepository roles, IAuthorizati
     {
         var role = RoleAuthorization.ValidateRoleInput(() => RoleEntity.Create(request.Name, request.Description, request.IsDefaultForRegistration));
         if (await roles.ExistsByNormalizedNameAsync(role.NormalizedName!, null, cancellationToken))
-            throw new ConflictException(ErrorCodes.DuplicateResource, "Tên role đã tồn tại.");
+            throw new ConflictException(ErrorCodes.DuplicateResource, "Tên vai trò đã tồn tại.");
         roles.Add(role);
         var result = mapper.Map<RoleDto>(role);
         RoleAuthorization.RecordChange(auditRepository, request.ActorUserId, PermissionCodes.CreateRoles, role.Id, null, result);

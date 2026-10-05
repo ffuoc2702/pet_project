@@ -16,24 +16,33 @@ public sealed class Permission
 
     public void UpdateDisplayName(string name)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (name is null)
+            throw new ArgumentNullException(nameof(name), "Tên không được để trống.");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Tên không được để trống.", nameof(name));
         var normalizedName = name.Trim();
         if (normalizedName.Length > 150)
-            throw new ArgumentException("Permission name must contain at most 150 characters.", nameof(name));
+            throw new ArgumentException("Tên quyền không được vượt quá 150 ký tự.", nameof(name));
         Name = normalizedName;
     }
 
     public static Permission Create(string code, string name)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(code);
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (code is null)
+            throw new ArgumentNullException(nameof(code), "Mã không được để trống.");
+        if (string.IsNullOrWhiteSpace(code))
+            throw new ArgumentException("Mã không được để trống.", nameof(code));
+        if (name is null)
+            throw new ArgumentNullException(nameof(name), "Tên không được để trống.");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Tên không được để trống.", nameof(name));
         var normalizedCode = code.Trim().ToLowerInvariant();
         var normalizedName = name.Trim();
         if (normalizedCode.Length > 100 || normalizedCode.Any(character =>
                 !char.IsAsciiLetterOrDigit(character) && character is not ('.' or '_' or '-')))
-            throw new ArgumentException("Permission code must contain at most 100 ASCII letters, digits, dots, underscores or hyphens.", nameof(code));
+            throw new ArgumentException("Mã quyền chỉ được chứa tối đa 100 chữ cái ASCII, chữ số, dấu chấm, dấu gạch dưới hoặc dấu gạch ngang.", nameof(code));
         if (normalizedName.Length > 150)
-            throw new ArgumentException("Permission name must contain at most 150 characters.", nameof(name));
+            throw new ArgumentException("Tên quyền không được vượt quá 150 ký tự.", nameof(name));
 
         return new Permission { Id = Guid.NewGuid(), Code = normalizedCode, Name = normalizedName };
     }

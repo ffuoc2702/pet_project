@@ -551,7 +551,7 @@ internal sealed class IdentityService(
 
     private static UnauthorizedException InvalidRefreshToken() => new(
         ErrorCodes.InvalidRefreshToken,
-        "Refresh token không hợp lệ hoặc đã hết hạn.");
+        "Mã làm mới phiên đăng nhập không hợp lệ hoặc đã hết hạn.");
 
     private static UnauthorizedException InvalidOtp() => new(
         ErrorCodes.InvalidOtp,

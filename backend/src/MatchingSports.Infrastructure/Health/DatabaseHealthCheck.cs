@@ -18,11 +18,11 @@ public sealed class DatabaseHealthCheck(IServiceScopeFactory scopeFactory) : IHe
 
             return canConnect
                 ? HealthCheckResult.Healthy()
-                : HealthCheckResult.Unhealthy("PostgreSQL is unavailable.");
+                : HealthCheckResult.Unhealthy("Không thể kết nối đến PostgreSQL.");
         }
         catch (Exception exception)
         {
-            return HealthCheckResult.Unhealthy("PostgreSQL health check failed.", exception);
+            return HealthCheckResult.Unhealthy("Kiểm tra trạng thái PostgreSQL thất bại.", exception);
         }
     }
 }

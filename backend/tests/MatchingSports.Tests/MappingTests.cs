@@ -12,7 +12,7 @@ namespace MatchingSports.Tests;
 public sealed class MappingTests
 {
     [Theory]
-    [InlineData(typeof(GetSportsRequest), typeof(GetSportQuery))]
+    [InlineData(typeof(GetSportsRequest), typeof(GetSportsQuery))]
     [InlineData(typeof(GetRolesRequest), typeof(GetRolesQuery))]
     [InlineData(typeof(GetPermissionsRequest), typeof(GetPermissionsQuery))]
     [InlineData(typeof(GetRolePermissionMatrixRequest), typeof(GetRolePermissionMatrixQuery))]
@@ -43,10 +43,10 @@ public sealed class MappingTests
         Assert.Equal(PaginationDefaults.DefaultPageNumber, defaults.PageNumber);
         Assert.Equal(PaginationDefaults.DefaultPageSize, defaults.PageSize);
         Assert.Null(defaults.SearchString);
-        if (query is GetSportQuery sport)
+        if (query is GetSportsQuery sport)
         {
             Assert.True(sport.ActiveOnly);
-            var filters = mapper.Map<GetSportQuery>(new GetSportsRequest { ActiveOnly = false, SportCode = "FOOTBALL" });
+            var filters = mapper.Map<GetSportsQuery>(new GetSportsRequest { ActiveOnly = false, SportCode = "FOOTBALL" });
             Assert.False(filters.ActiveOnly);
             Assert.Equal("FOOTBALL", filters.SportCode);
         }

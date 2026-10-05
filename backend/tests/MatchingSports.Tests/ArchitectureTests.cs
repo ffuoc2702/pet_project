@@ -17,7 +17,7 @@ public sealed class ArchitectureTests
     [Fact]
     public void ApplicationHasNoDependencyOnInfrastructureOrApi() =>
         AssertDoesNotReference(
-            typeof(GetSportQuery).Assembly,
+            typeof(GetSportsQuery).Assembly,
             "MatchingSports.Infrastructure",
             "MatchingSports.Api");
 

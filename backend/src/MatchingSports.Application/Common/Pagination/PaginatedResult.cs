@@ -8,10 +8,14 @@ public sealed class PaginatedResult<T>
         int pageSize,
         long totalItems)
     {
-        ArgumentNullException.ThrowIfNull(items);
-        ArgumentOutOfRangeException.ThrowIfLessThan(pageNumber, 1);
-        ArgumentOutOfRangeException.ThrowIfLessThan(pageSize, 1);
-        ArgumentOutOfRangeException.ThrowIfNegative(totalItems);
+        if (items is null)
+            throw new ArgumentNullException(nameof(items), "Danh sách dữ liệu không được là null.");
+        if (pageNumber < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageNumber), "Số trang phải lớn hơn hoặc bằng 1.");
+        if (pageSize < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageSize), "Kích thước trang phải lớn hơn hoặc bằng 1.");
+        if (totalItems < 0)
+            throw new ArgumentOutOfRangeException(nameof(totalItems), "Tổng số phần tử không được âm.");
 
         Items = items;
         PageNumber = pageNumber;

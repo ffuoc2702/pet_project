@@ -5,7 +5,7 @@ using MatchingSports.Shared;
 using MediatR;
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed record GetSportQuery : BaseQuery<SportDto>, IPermissionAuthorizedRequest
+public sealed record GetSportsQuery : BaseQuery<SportDto>, IPermissionAuthorizedRequest
 {
     public Guid ActorUserId { get; init; }
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.ListSports];
@@ -13,11 +13,11 @@ public sealed record GetSportQuery : BaseQuery<SportDto>, IPermissionAuthorizedR
     public string? SportCode { get; init; }
 }
 
-public sealed class GetSportQueryHandler(ISportRepository sportRepository, IMapper mapper)
-    : IRequestHandler<GetSportQuery, PaginatedResult<SportDto>>
+public sealed class GetSportsQueryHandler(ISportRepository sportRepository, IMapper mapper)
+    : IRequestHandler<GetSportsQuery, PaginatedResult<SportDto>>
 {
     public async Task<PaginatedResult<SportDto>> Handle(
-        GetSportQuery request,
+        GetSportsQuery request,
         CancellationToken cancellationToken)
     {
         var sports = await sportRepository.ListAsync(request, cancellationToken);

@@ -334,7 +334,7 @@ public sealed class RoleManagementTests
         public Task ReplaceUserRolesAsync(UserRoleAssignment assignment, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<Role?> GetByIdWithPermissionsAsync(Guid roleId, CancellationToken cancellationToken) => GetForUpdateAsync(roleId, cancellationToken);
         public Task<Role?> GetForUpdateAsync(Guid roleId, CancellationToken cancellationToken) => Task.FromResult(Roles.SingleOrDefault(role => role.Id == roleId));
-        public Task<PaginatedResult<Role>> ListAsync(BaseQuery query, CancellationToken cancellationToken)
+        public Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken)
         {
             LastListQuery = query;
             ListCount++;

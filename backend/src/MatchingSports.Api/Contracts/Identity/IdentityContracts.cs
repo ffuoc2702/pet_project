@@ -5,55 +5,55 @@ namespace MatchingSports.Api.Contracts;
 
 public sealed class RegisterRequest
 {
-    [Required, EmailAddress, MaxLength(256)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), EmailAddress(ErrorMessage = "Trường {0} phải là địa chỉ email hợp lệ."), MaxLength(256, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Email { get; init; } = string.Empty;
 
-    [Required, MinLength(10), MaxLength(128)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), MinLength(10, ErrorMessage = "Trường {0} phải có ít nhất {1} ký tự hoặc phần tử."), MaxLength(128, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Password { get; init; } = string.Empty;
 
-    [Required, MinLength(2), MaxLength(100)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), MinLength(2, ErrorMessage = "Trường {0} phải có ít nhất {1} ký tự hoặc phần tử."), MaxLength(100, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string DisplayName { get; init; } = string.Empty;
 }
 
 public sealed class EmailOtpRequest
 {
-    [Required, EmailAddress, MaxLength(256)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), EmailAddress(ErrorMessage = "Trường {0} phải là địa chỉ email hợp lệ."), MaxLength(256, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Email { get; init; } = string.Empty;
 
-    [Required, RegularExpression("^[0-9]{6}$")]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), RegularExpression("^[0-9]{6}$", ErrorMessage = "Trường {0} không đúng định dạng yêu cầu.")]
     public string Otp { get; init; } = string.Empty;
 }
 
 public sealed class EmailRequest
 {
-    [Required, EmailAddress, MaxLength(256)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), EmailAddress(ErrorMessage = "Trường {0} phải là địa chỉ email hợp lệ."), MaxLength(256, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Email { get; init; } = string.Empty;
 }
 
 public sealed class LoginRequest
 {
-    [Required, EmailAddress, MaxLength(256)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), EmailAddress(ErrorMessage = "Trường {0} phải là địa chỉ email hợp lệ."), MaxLength(256, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Email { get; init; } = string.Empty;
 
-    [Required, MaxLength(128)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), MaxLength(128, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Password { get; init; } = string.Empty;
 }
 
 public sealed class RefreshTokenRequest
 {
-    [Required, MaxLength(512)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), MaxLength(512, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string RefreshToken { get; init; } = string.Empty;
 }
 
 public sealed class ResetPasswordRequest
 {
-    [Required, EmailAddress, MaxLength(256)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), EmailAddress(ErrorMessage = "Trường {0} phải là địa chỉ email hợp lệ."), MaxLength(256, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string Email { get; init; } = string.Empty;
 
-    [Required, RegularExpression("^[0-9]{6}$")]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), RegularExpression("^[0-9]{6}$", ErrorMessage = "Trường {0} không đúng định dạng yêu cầu.")]
     public string Otp { get; init; } = string.Empty;
 
-    [Required, MinLength(10), MaxLength(128)]
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), MinLength(10, ErrorMessage = "Trường {0} phải có ít nhất {1} ký tự hoặc phần tử."), MaxLength(128, ErrorMessage = "Trường {0} không được vượt quá {1} ký tự hoặc phần tử.")]
     public string NewPassword { get; init; } = string.Empty;
 }
 

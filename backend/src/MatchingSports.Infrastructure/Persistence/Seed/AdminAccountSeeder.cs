@@ -26,10 +26,10 @@ internal static class AdminAccountSeeder
         if (!seed.Enabled && string.IsNullOrWhiteSpace(legacyEmail))
             return;
         if (!adminRole.IsActive)
-            throw new InvalidOperationException("Cannot bootstrap an administrator with an inactive seed role.");
+            throw new InvalidOperationException("Không thể khởi tạo quản trị viên bằng vai trò mặc định đã vô hiệu hóa.");
         if (seed.Enabled && !string.IsNullOrWhiteSpace(legacyEmail)
             && !string.Equals(seed.Email.Trim(), legacyEmail.Trim(), StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Configure either Seed:Admin or a matching Auth:BootstrapAdminEmail, not two different bootstrap accounts.");
+            throw new InvalidOperationException("Cấu hình Seed:Admin hoặc Auth:BootstrapAdminEmail phải dùng cùng một tài khoản khởi tạo quản trị viên.");
 
         var email = (seed.Enabled ? seed.Email : legacyEmail!).Trim().ToLowerInvariant();
         var manager = services.GetRequiredService<UserManager<User>>();
@@ -37,18 +37,18 @@ internal static class AdminAccountSeeder
         if (admin is null)
         {
             if (!seed.Enabled)
-                throw new InvalidOperationException("Bootstrap administrator must be an existing account when using Auth:BootstrapAdminEmail.");
+                throw new InvalidOperationException("Tài khoản quản trị viên phải tồn tại khi sử dụng Auth:BootstrapAdminEmail.");
             var normalizedEmail = manager.NormalizeEmail(email);
             if (await db.Users.IgnoreQueryFilters().AnyAsync(user => user.NormalizedEmail == normalizedEmail, cancellationToken))
-                throw new InvalidOperationException("Cannot recreate a deleted bootstrap account.");
+                throw new InvalidOperationException("Không thể tạo lại tài khoản quản trị viên khởi tạo đã bị xóa.");
 
             admin = User.CreateVerifiedAccount(email, seed.DisplayName);
             var result = await manager.CreateAsync(admin, seed.Password);
             if (!result.Succeeded)
-                throw new InvalidOperationException($"Cannot create the initial administrator: {string.Join(", ", result.Errors.Select(error => error.Code))}");
+                throw new InvalidOperationException($"Không thể tạo quản trị viên ban đầu: {string.Join(", ", result.Errors.Select(error => error.Code))}");
         }
         if (!admin.CanReceiveInitialAdministratorRole())
-            throw new InvalidOperationException("Bootstrap administrator must be active with a verified email.");
+            throw new InvalidOperationException("Tài khoản quản trị viên khởi tạo phải đang hoạt động và đã xác minh email.");
 
         // Explicit one-time provisioning. Preserve existing roles and never reset a password.
         db.Add(new IdentityUserRole<Guid> { UserId = admin.Id, RoleId = adminRole.Id });

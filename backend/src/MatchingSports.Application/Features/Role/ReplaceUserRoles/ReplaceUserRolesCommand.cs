@@ -41,6 +41,6 @@ public sealed class ReplaceUserRolesCommandHandler(
     }
 
     private static RequestValidationException InvalidRoles() =>
-        new(ErrorCodes.InvalidRole, "Role không tồn tại hoặc đã bị vô hiệu hóa.",
-            new Dictionary<string, string[]> { ["roleIds"] = ["Chỉ được gán role đang hoạt động trong database."] });
+        new(ErrorCodes.InvalidRole, "Vai trò không tồn tại hoặc đã bị vô hiệu hóa.",
+            new Dictionary<string, string[]> { ["roleIds"] = ["Chỉ được gán vai trò đang hoạt động trong cơ sở dữ liệu."] });
 }

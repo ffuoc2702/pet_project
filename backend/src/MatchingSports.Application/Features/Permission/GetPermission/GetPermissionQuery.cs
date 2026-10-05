@@ -18,7 +18,7 @@ public sealed class GetPermissionQueryHandler(IPermissionRepository permissions,
     public async Task<PermissionDto> Handle(GetPermissionQuery request, CancellationToken cancellationToken)
     {
         var permission = await permissions.GetByIdAsync(request.PermissionId, cancellationToken)
-            ?? throw new NotFoundException(ErrorCodes.PermissionNotFound, "Không tìm thấy permission.");
+            ?? throw new NotFoundException(ErrorCodes.PermissionNotFound, "Không tìm thấy quyền.");
         return mapper.Map<PermissionDto>(permission);
     }
 }
