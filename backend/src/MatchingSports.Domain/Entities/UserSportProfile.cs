@@ -8,7 +8,7 @@ public sealed class UserSportProfile
     public Guid UserId { get; set; }
     public Guid SportId { get; set; }
     public SportLevel Level { get; set; } = SportLevel.BEGINNER;
-    public string[]? PreferredFormatCodes { get; set; }
+    public ICollection<SportFormat> PreferredFormats { get; set; } = [];
     public string? Bio { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
