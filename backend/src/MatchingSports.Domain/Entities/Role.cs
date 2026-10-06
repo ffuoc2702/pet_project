@@ -23,9 +23,12 @@ public sealed class Role : IdentityRole<Guid>
 
     public void InitializeSeedIdentity(string seedKey)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(seedKey);
+        if (seedKey is null)
+            throw new ArgumentNullException(nameof(seedKey), "Định danh khởi tạo không được để trống.");
+        if (string.IsNullOrWhiteSpace(seedKey))
+            throw new ArgumentException("Định danh khởi tạo không được để trống.", nameof(seedKey));
         if (SeedKey is not null && SeedKey != seedKey)
-            throw new InvalidOperationException("The seed identity of a role cannot change.");
+            throw new InvalidOperationException("Không thể thay đổi định danh khởi tạo của vai trò.");
         SeedKey = seedKey;
     }
 
@@ -41,7 +44,8 @@ public sealed class Role : IdentityRole<Guid>
 
     public void UpdateDetails(RoleDetails details)
     {
-        ArgumentNullException.ThrowIfNull(details);
+        if (details is null)
+            throw new ArgumentNullException(nameof(details), "Thông tin chi tiết không được là null.");
         Name = details.Name;
         NormalizedName = details.Name;
         Description = details.Description;
@@ -62,7 +66,8 @@ public sealed class Role : IdentityRole<Guid>
 
     public void GrantPermission(Permission permission)
     {
-        ArgumentNullException.ThrowIfNull(permission);
+        if (permission is null)
+            throw new ArgumentNullException(nameof(permission), "Quyền không được là null.");
         if (_permissions.Any(item => item.PermissionId == permission.Id))
             return;
 
@@ -87,10 +92,11 @@ public sealed class Role : IdentityRole<Guid>
 
     public void ReplacePermissions(IEnumerable<Permission> permissions)
     {
-        ArgumentNullException.ThrowIfNull(permissions);
+        if (permissions is null)
+            throw new ArgumentNullException(nameof(permissions), "Danh sách quyền không được là null.");
         var requested = permissions.ToArray();
         if (requested.Any(permission => permission is null))
-            throw new ArgumentException("Permissions cannot contain null entries.", nameof(permissions));
+            throw new ArgumentException("Danh sách quyền không được chứa phần tử null.", nameof(permissions));
         var ids = requested.Select(permission => permission.Id).ToHashSet();
         foreach (var removed in _permissions.Where(item => !ids.Contains(item.PermissionId)).ToArray())
             RevokePermission(removed.PermissionId);

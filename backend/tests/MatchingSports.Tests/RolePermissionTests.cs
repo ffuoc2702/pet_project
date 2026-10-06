@@ -79,7 +79,7 @@ public sealed class RolePermissionTests
 
     private sealed class StubRoleRepository(Role role) : IRoleRepository
     {
-        public Task<PaginatedResult<Role>> ListAsync(BaseQuery query, CancellationToken cancellationToken) =>
+        public Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken) =>
             Task.FromResult(new PaginatedResult<Role>([role], query.PageNumber, query.PageSize, 1));
 
         public Task<IReadOnlyCollection<Role>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>

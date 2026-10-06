@@ -11,45 +11,69 @@ using Microsoft.AspNetCore.Mvc;
 namespace MatchingSports.Api.Controllers;
 
 [Route("api/v1/sports")]
-public sealed class SportController : ApiControllerBase
+public sealed class SportController(IMediator mediator, IMapper mapper, ICurrentUser currentUser) : ApiControllerBase
 {
-    private readonly ICurrentUser _currentUser;
-    private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
-
-    public SportController(
-        IMediator mediator,
-        IMapper mapper,
-        ICurrentUser currentUser)
-    {
-        _currentUser = currentUser;
-        _mediator = mediator;
-        _mapper = mapper;
-    }
 
     [HttpGet]
     [Authorize(Policy = PermissionCodes.ListSports)]
-    [ProducesResponseType<PaginatedResponse<SportResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<PaginatedResponse<SportResponse>>> GetSports(
+    [ProducesResponseType<PaginatedResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PaginatedResponse<SportDto>>> GetSports(
         [FromQuery] GetSportsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = _mapper.Map<GetSportQuery>(request) with
+        var query = mapper.Map<GetSportsQuery>(request) with
         {
-            ActorUserId = _currentUser.UserId
+            ActorUserId = currentUser.UserId
         };
 
-        var result = await _mediator.Send(query, cancellationToken);
-        return OkPaginatedResponse(result, _mapper.Map<SportResponse>);
+        var result = await mediator.Send(query, cancellationToken);
+        return OkPaginatedResponse(result, item => item);
+    }
+
+    [HttpPost]
+    [Authorize(Policy = PermissionCodes.CreateSports)]
+    [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseResponse<SportDto>>> CreateSport(
+        [FromBody] CreateSportRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateSportCommand(
+            currentUser.UserId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats)), cancellationToken);
+        return OkResponse(result);
+    }
+
+    [HttpPut("{sportId:guid}")]
+    [Authorize(Policy = PermissionCodes.UpdateSports)]
+    [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseResponse<SportDto>>> UpdateSport(
+        Guid sportId,
+        [FromBody] UpdateSportRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new UpdateSportCommand(
+            currentUser.UserId, sportId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats)), cancellationToken);
+        return OkResponse(result);
+    }
+
+    [HttpDelete("{sportId:guid}")]
+    [Authorize(Policy = PermissionCodes.DeactivateSports)]
+    [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseResponse<SportDto>>> DeactivateSport(
+        Guid sportId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeactivateSportCommand(
+            currentUser.UserId, sportId), cancellationToken);
+        return OkResponse(result);
     }
 
     [HttpGet("{sportId:guid}")]
     [Authorize(Policy = PermissionCodes.ReadSports)]
-    [ProducesResponseType<BaseResponse<SportResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<BaseResponse<SportResponse>>> GetSport(Guid sportId, CancellationToken cancellationToken)
+    [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseResponse<SportDto>>> GetSport(Guid sportId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetSportByIdQuery(_currentUser.UserId, sportId), cancellationToken);
-        return OkResponse(_mapper.Map<SportResponse>(result));
+        var result = await mediator.Send(new GetSportByIdQuery(currentUser.UserId, sportId), cancellationToken);
+        return OkResponse(result);
     }
 
 }

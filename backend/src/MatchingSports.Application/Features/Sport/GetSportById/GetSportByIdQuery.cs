@@ -11,12 +11,12 @@ public sealed record GetSportByIdQuery(Guid ActorUserId, Guid SportId) : IReques
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.ReadSports];
 }
 
-public sealed class GetSportByIdQueryHandler(ISportRepository sports, IMapper mapper)
+public sealed class GetSportByIdQueryHandler(ISportRepository sportRepository, IMapper mapper)
     : IRequestHandler<GetSportByIdQuery, SportDto>
 {
     public async Task<SportDto> Handle(GetSportByIdQuery request, CancellationToken cancellationToken)
     {
-        var sport = await sports.GetByIdAsync(request.SportId, cancellationToken)
+        var sport = await sportRepository.GetByIdAsync(request.SportId, cancellationToken)
             ?? throw new NotFoundException(ErrorCodes.SportNotFound, "Không tìm thấy môn thể thao.");
         return mapper.Map<SportDto>(sport);
     }

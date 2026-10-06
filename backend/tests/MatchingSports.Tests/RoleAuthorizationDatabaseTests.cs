@@ -82,6 +82,7 @@ public sealed class RoleAuthorizationDatabaseTests
         }
 
         await VerifyListFiltersAsync(provider, actorId);
+        await VerifySportCrudAsync(provider, actorId);
 
         RoleDto customRole;
         await using (var scope = provider.CreateAsyncScope())
@@ -186,6 +187,86 @@ public sealed class RoleAuthorizationDatabaseTests
         await VerifyAdminSeedDoesNotResetOrRepromoteAsync(provider, actorId, adminRoleId);
     }
 
+    private static async Task VerifySportCrudAsync(IServiceProvider provider, Guid actorId)
+    {
+        var code = $"CRUD_{Guid.NewGuid():N}"[..30];
+        Guid sportId;
+        await using (var scope = provider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var created = await mediator.Send(new CreateSportCommand(actorId, $"  {code.ToLowerInvariant()}  ", "  Test sport  ",
+                [new SportFormatInput(null, "SINGLES", "Singles", 1, "NEW"), new SportFormatInput(null, "OLD", "Old format", 2, "NEW")]));
+            sportId = created.Id;
+            Assert.Equal(code, created.Code);
+            Assert.True(created.IsActive);
+        }
+
+        await using (var scope = provider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var db = scope.ServiceProvider.GetRequiredService<MatchingSportsDbContext>();
+            var repository = scope.ServiceProvider.GetRequiredService<ISportRepository>();
+            var read = await repository.GetByIdAsync(sportId, CancellationToken.None);
+            Assert.NotNull(read);
+            Assert.DoesNotContain(db.ChangeTracker.Entries<Sport>(), entry => entry.Entity.Id == sportId);
+            var tracked = await repository.GetForUpdateAsync(sportId, CancellationToken.None);
+            Assert.NotNull(tracked);
+            Assert.Equal(EntityState.Unchanged, db.Entry(tracked).State);
+            var updated = await mediator.Send(new UpdateSportCommand(actorId, sportId, code, "  Updated sport  ",
+                [new SportFormatInput(tracked.Formats.Single(format => format.Code == "SINGLES").Id, "DOUBLES", "Doubles", 2, "MODIFY"),
+                 new SportFormatInput(null, "TEAM", "Team", 5, "NEW"),
+                 new SportFormatInput(tracked.Formats.Single(format => format.Code == "OLD").Id, null, null, 0, "DELETE")]));
+            Assert.Equal("Updated sport", updated.Name);
+            Assert.Equal(3, updated.Formats.Count);
+            Assert.False(updated.Formats.Single(format => format.Code == "OLD").IsActive);
+            Assert.True(updated.Formats.Single(format => format.Code == "TEAM").IsActive);
+        }
+
+        await using (var scope = provider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var query = new GetSportsQuery { ActorUserId = actorId, SearchString = code.ToLowerInvariant(), PageSize = 1 };
+            var page = await mediator.Send(query);
+            Assert.Equal(sportId, Assert.Single(page.Items).Id);
+            Assert.Equal(1, page.TotalItems);
+            Assert.Equal(1, page.TotalPages);
+            var empty = await mediator.Send(query with { PageNumber = 2 });
+            Assert.Empty(empty.Items);
+            Assert.Equal(2, empty.PageNumber);
+            Assert.Equal(1, empty.TotalItems);
+            var deactivated = await mediator.Send(new DeactivateSportCommand(actorId, sportId));
+            Assert.False(deactivated.IsActive);
+        }
+
+        await using (var scope = provider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var detail = await mediator.Send(new GetSportByIdQuery(actorId, sportId));
+            Assert.False(detail.IsActive);
+            Assert.Equal("Updated sport", detail.Name);
+            Assert.Equal(3, detail.Formats.Count);
+            Assert.Equal(2, detail.Formats.Single(format => format.Code == "DOUBLES").SideSize);
+            Assert.Equal(5, detail.Formats.Single(format => format.Code == "TEAM").SideSize);
+            Assert.False(detail.Formats.Single(format => format.Code == "OLD").IsActive);
+            var query = new GetSportsQuery { ActorUserId = actorId, SportCode = code };
+            var active = await mediator.Send(query);
+            Assert.Empty(active.Items);
+            Assert.Equal(0, active.TotalItems);
+            var all = await mediator.Send(query with { ActiveOnly = false });
+            Assert.False(Assert.Single(all.Items).IsActive);
+            Assert.Equal(1, all.TotalItems);
+        }
+
+        await using (var scope = provider.CreateAsyncScope())
+        {
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var reused = await mediator.Send(new CreateSportCommand(actorId, code.ToLowerInvariant(), "Duplicate",
+                [new SportFormatInput(null, "DEFAULT", "Default", 1, "NEW")]));
+            Assert.True(reused.IsActive);
+            Assert.NotEqual(sportId, reused.Id);
+        }
+    }
+
     private static async Task VerifyListFiltersAsync(IServiceProvider provider, Guid actorId)
     {
         await using var scope = provider.CreateAsyncScope();
@@ -219,7 +300,7 @@ public sealed class RoleAuthorizationDatabaseTests
         Assert.Empty(outsideDate.Items);
         Assert.Equal(0, outsideDate.TotalItems);
         var sport = await db.Sports.OrderBy(item => item.Code).FirstAsync();
-        var sports = await mediator.Send(new GetSportQuery
+        var sports = await mediator.Send(new GetSportsQuery
         {
             ActorUserId = actorId,
             SportCode = sport.Code,

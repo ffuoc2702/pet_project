@@ -14,9 +14,12 @@ public sealed class AuthorizationAuditEntry
     public static AuthorizationAuditEntry Create(Guid actorUserId, string action, Guid targetId,
         string beforeJson, string afterJson)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(action);
+        if (action is null)
+            throw new ArgumentNullException(nameof(action), "Thao tác không được để trống.");
+        if (string.IsNullOrWhiteSpace(action))
+            throw new ArgumentException("Thao tác không được để trống.", nameof(action));
         if (actorUserId == Guid.Empty || targetId == Guid.Empty)
-            throw new ArgumentException("Audit actor and target identifiers are required.");
+            throw new ArgumentException("ID người thực hiện và ID đối tượng được ghi nhật ký là bắt buộc.");
         return new AuthorizationAuditEntry
         {
             Id = Guid.NewGuid(),

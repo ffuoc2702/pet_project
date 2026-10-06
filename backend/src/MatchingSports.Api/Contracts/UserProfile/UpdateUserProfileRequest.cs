@@ -1,7 +1,8 @@
-
+﻿
 using System.ComponentModel.DataAnnotations;
 
 namespace MatchingSports.Api.Contracts;
+
 public sealed class UpdateUserProfileRequest
 {
     [Required]

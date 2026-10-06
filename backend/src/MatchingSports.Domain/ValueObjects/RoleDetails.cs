@@ -19,16 +19,19 @@ public sealed record RoleDetails
 
     public static RoleDetails Create(string name, string? description, bool isActive, bool isDefaultForRegistration)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (name is null)
+            throw new ArgumentNullException(nameof(name), "Tên không được để trống.");
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Tên không được để trống.", nameof(name));
         var normalizedName = name.Trim().ToUpperInvariant();
         var normalizedDescription = StringNormalizer.StartEndSpaceTrim(description);
         if (normalizedName.Length > 100 || normalizedName.Any(character =>
             !char.IsAsciiLetterOrDigit(character) && character is not '_' and not '-'))
-            throw new ArgumentException("Role name must contain at most 100 ASCII letters, digits, underscores or hyphens.", nameof(name));
+            throw new ArgumentException("Tên vai trò chỉ được chứa tối đa 100 chữ cái ASCII, chữ số, dấu gạch dưới hoặc dấu gạch ngang.", nameof(name));
         if (normalizedDescription?.Length > 500)
-            throw new ArgumentException("Role description must contain at most 500 characters.", nameof(description));
+            throw new ArgumentException("Mô tả vai trò không được vượt quá 500 ký tự.", nameof(description));
         if (!isActive && isDefaultForRegistration)
-            throw new ArgumentException("An inactive role cannot be assigned to new users.", nameof(isDefaultForRegistration));
+            throw new ArgumentException("Không thể gán vai trò đã vô hiệu hóa cho người dùng mới.", nameof(isDefaultForRegistration));
         return new RoleDetails(normalizedName, normalizedDescription, isActive, isDefaultForRegistration);
     }
 }

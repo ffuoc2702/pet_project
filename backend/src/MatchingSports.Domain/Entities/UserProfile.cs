@@ -20,7 +20,10 @@ public sealed class UserProfile
         string? defaultArea,
         string? contactNote)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
+        if (displayName is null)
+            throw new ArgumentNullException(nameof(displayName), "Tên hiển thị không được để trống.");
+        if (string.IsNullOrWhiteSpace(displayName))
+            throw new ArgumentException("Tên hiển thị không được để trống.", nameof(displayName));
 
         DisplayName = displayName.Trim();
         AvatarUrl = StringNormalizer.StartEndSpaceTrim(avatarUrl);

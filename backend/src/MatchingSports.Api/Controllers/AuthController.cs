@@ -125,7 +125,7 @@ public sealed class AuthController(
         }
 
         var callbackUrl = Url.ActionLink(nameof(GoogleCallback), values: null)
-            ?? throw new InvalidOperationException("Cannot create Google callback URL.");
+            ?? throw new InvalidOperationException("Không thể tạo URL nhận phản hồi từ Google.");
         return Challenge(new AuthenticationProperties { RedirectUri = callbackUrl }, ["Google"]);
     }
 

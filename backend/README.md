@@ -111,8 +111,66 @@ cờ này. Có thể chọn nhiều role mặc định hoặc không chọn role
 | PUT /api/v1/role/{roleId}/permissions | roles.permissions.update | Thay thế tập permission của một role |
 | GET /api/v1/role/users/{userId} | users.read | Đọc membership và phiên bản của một user |
 | PUT /api/v1/role/users/{userId} | roles.assign | Thay thế toàn bộ role của user bằng roleIds |
-| GET /api/v1/sport | sports.list | Danh sách môn thể thao có phân trang |
-| GET /api/v1/sport/{sportId} | sports.read | Chi tiết một môn thể thao |
+| GET /api/v1/sports | sports.list | Danh sách môn thể thao có phân trang |
+| GET /api/v1/sports/{sportId} | sports.read | Chi tiết một môn thể thao |
+| POST /api/v1/sports | sports.create | Tạo môn thể thao và danh sách formats |
+| PUT /api/v1/sports/{sportId} | sports.update | Cập nhật môn thể thao và danh sách formats |
+| DELETE /api/v1/sports/{sportId} | sports.deactivate | Vô hiệu hóa môn thể thao, giữ dữ liệu tham chiếu |
+
+Sport chuẩn hóa code bằng trim và uppercase, name bằng trim trong Domain.
+Code và name bắt buộc, giới hạn lần lượt 32 và 100 ký tự. Response có IsActive.
+DELETE đặt IsActive = false; gọi lại vẫn trả Sport đã vô hiệu hóa. PUT cập nhật
+code/name và formats, giữ trạng thái hoạt động của Sport. Danh sách mặc định chỉ lấy Sport đang hoạt động;
+truyền ActiveOnly=false để xem cả Sport đã vô hiệu hóa. Code hoặc name trùng
+với Sport đang active trả 409 với DUPLICATE_RESOURCE (bỏ khoảng trắng hai đầu,
+không phân biệt hoa/thường). Sport không tồn tại trả 404 với SPORT_NOT_FOUND.
+
+POST và PUT bắt buộc có formats với ít nhất một phần tử. Mỗi format có action
+bắt buộc, nhận chính xác NEW, MODIFY hoặc DELETE:
+
+- NEW: không có id; bắt buộc code, displayName, sideSize. POST chỉ nhận NEW.
+- MODIFY: id thuộc Sport đang cập nhật; bắt buộc code, displayName, sideSize.
+  Cập nhật format hiện có và kích hoạt lại nếu đã vô hiệu hóa.
+- DELETE: chỉ cần action và id thuộc Sport; vô hiệu hóa format, giữ ID/tham chiếu.
+
+Format không xuất hiện trong PUT giữ nguyên. Mỗi ID chỉ được gửi một lần.
+Code tối đa 32 ký tự, displayName tối đa 100, sideSize từ 1 đến 32767.
+Domain trim/uppercase code, trim displayName; code và displayName không trùng
+trong cùng Sport, kể cả format đã vô hiệu hóa, không phân biệt hoa/thường.
+Sport phải còn ít nhất một format active. Sport và formats commit cùng transaction;
+dữ liệu không hợp lệ trả 400 với INVALID_SPORT và không cập nhật một phần dữ liệu.
+Database cũng bảo vệ uniqueness; conflict khi commit trả 409 DUPLICATE_RESOURCE.
+
+Ví dụ POST:
+
+```json
+{
+  "code": "BADMINTON",
+  "name": "Cầu lông",
+  "formats": [
+    { "action": "NEW", "code": "SINGLES", "displayName": "Đánh đơn", "sideSize": 1 },
+    { "action": "NEW", "code": "DOUBLES", "displayName": "Đánh đôi", "sideSize": 2 }
+  ]
+}
+```
+
+Ví dụ PUT (thay các ID bằng ID format thuộc Sport):
+
+```json
+{
+  "code": "BADMINTON",
+  "name": "Cầu lông",
+  "formats": [
+    { "action": "MODIFY", "id": "11111111-1111-1111-1111-111111111111", "code": "SINGLES", "displayName": "Đơn", "sideSize": 1 },
+    { "action": "DELETE", "id": "22222222-2222-2222-2222-222222222222" },
+    { "action": "NEW", "code": "TEAM", "displayName": "Đồng đội", "sideSize": 4 }
+  ]
+}
+```
+
+Migration `EnforceSportNameUniqueness` bổ sung unique index cho name và chỉ giữ
+unique code/name giữa các Sport active. Dữ liệu cũ trùng name phải được xử lý trước
+khi áp dụng migration; migration không tự sửa/xóa dữ liệu.
 
 Các resource collection đã có cặp list/read trong catalog: sports, roles,
 permissions, sport_profiles, sport_formats, teams, listings, requests, matches,

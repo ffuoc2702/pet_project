@@ -15,7 +15,7 @@ public sealed class PermissionAuthorizationBehavior<TRequest, TResponse>(IUserRo
     {
         var permissions = request.RequiredPermissions;
         if (permissions.Count == 0 || permissions.Any(string.IsNullOrWhiteSpace))
-            throw new InvalidOperationException("A permission-authorized request must declare its required permissions.");
+            throw new InvalidOperationException("Yêu cầu có kiểm tra phân quyền phải khai báo đầy đủ các quyền cần thiết.");
 
         var actor = await userRoleRepository.GetUserRolesAsync(request.ActorUserId, cancellationToken);
         if (actor is null || !permissions.All(permission => actor.HasPermission(permission)))

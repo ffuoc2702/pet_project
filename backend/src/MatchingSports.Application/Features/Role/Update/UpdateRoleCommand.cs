@@ -19,12 +19,12 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roles, IAuthorizati
     public async Task<RoleDto> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await roles.GetForUpdateAsync(request.RoleId, cancellationToken)
-            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy role.");
+            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy vai trò.");
         RoleAuthorization.RequireCurrentVersion(role.ConcurrencyStamp, request.ConcurrencyStamp);
         var details = RoleAuthorization.ValidateRoleInput(() => RoleDetails.Create(request.Name, request.Description,
             request.IsActive, request.IsDefaultForRegistration));
         if (await roles.ExistsByNormalizedNameAsync(details.Name, role.Id, cancellationToken))
-            throw new ConflictException(ErrorCodes.DuplicateResource, "Tên role đã tồn tại.");
+            throw new ConflictException(ErrorCodes.DuplicateResource, "Tên vai trò đã tồn tại.");
         var before = mapper.Map<RoleDto>(role);
         role.UpdateDetails(details);
         var result = mapper.Map<RoleDto>(role);

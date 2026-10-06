@@ -18,10 +18,11 @@ public sealed class UserRoleAssignment(Guid userId, IReadOnlyCollection<string> 
 
     public void ReplaceRoles(IEnumerable<Role> roles)
     {
-        ArgumentNullException.ThrowIfNull(roles);
+        if (roles is null)
+            throw new ArgumentNullException(nameof(roles), "Danh sách vai trò không được là null.");
         var requested = roles.ToArray();
         if (requested.Any(role => role is null || !role.IsActive))
-            throw new ArgumentException("Only active roles can be assigned to a user.", nameof(roles));
+            throw new ArgumentException("Chỉ có thể gán vai trò đang hoạt động cho người dùng.", nameof(roles));
         RoleIds = Array.AsReadOnly(requested.Select(role => role.Id).Distinct().Order().ToArray());
         Roles = Array.AsReadOnly(requested.Select(role => role.Name!).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray());
         ConcurrencyStamp = Guid.NewGuid().ToString();

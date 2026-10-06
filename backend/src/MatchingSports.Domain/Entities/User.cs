@@ -7,13 +7,19 @@ public sealed class User : IdentityUser<Guid>
 {
     public static User CreateVerifiedAccount(string email, string displayName)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(email);
-        ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
+        if (email is null)
+            throw new ArgumentNullException(nameof(email), "Email không được để trống.");
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Email không được để trống.", nameof(email));
+        if (displayName is null)
+            throw new ArgumentNullException(nameof(displayName), "Tên hiển thị không được để trống.");
+        if (string.IsNullOrWhiteSpace(displayName))
+            throw new ArgumentException("Tên hiển thị không được để trống.", nameof(displayName));
         var canonicalEmail = email.Trim().ToLowerInvariant();
         if (canonicalEmail.Length > 256)
-            throw new ArgumentException("Email must contain at most 256 characters.", nameof(email));
+            throw new ArgumentException("Email không được vượt quá 256 ký tự.", nameof(email));
         if (displayName.Trim().Length > 100)
-            throw new ArgumentException("Display name must contain at most 100 characters.", nameof(displayName));
+            throw new ArgumentException("Tên hiển thị không được vượt quá 100 ký tự.", nameof(displayName));
         var userId = Guid.NewGuid();
         var profile = new UserProfile { UserId = userId };
         profile.UpdateDetails(displayName, null, null, null);

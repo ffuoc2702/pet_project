@@ -75,7 +75,9 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         sports.Property(x => x.IsActive).HasDefaultValue(true);
         sports.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         sports.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
-        sports.HasIndex(x => x.Code).IsUnique().HasDatabaseName("uq_sports_code");
+        sports.HasIndex(x => x.Code).IsUnique().HasFilter("is_active").HasDatabaseName("uq_sports_code");
+        sports.Property<string>("NormalizedName").HasComputedColumnSql("lower(btrim(name))", stored: true);
+        sports.HasIndex("NormalizedName").IsUnique().HasFilter("is_active").HasDatabaseName("uq_sports_name");
 
         var formats = modelBuilder.Entity<SportFormat>();
         formats.ToTable("sport_formats", t => t.HasCheckConstraint("ck_sport_formats_side_size", "side_size > 0"));
@@ -88,6 +90,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         formats.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
         formats.HasOne(x => x.Sport).WithMany(x => x.Formats).HasForeignKey(x => x.SportId).OnDelete(DeleteBehavior.Restrict);
         formats.HasIndex(x => new { x.SportId, x.Code }).IsUnique().HasDatabaseName("uq_sport_formats_sport_code");
+        formats.Property<string>("NormalizedName").HasComputedColumnSql("lower(btrim(display_name))", stored: true);
+        formats.HasIndex(nameof(SportFormat.SportId), "NormalizedName").IsUnique().HasDatabaseName("uq_sport_formats_sport_name");
         formats.HasAlternateKey(x => new { x.Id, x.SportId }).HasName("ak_sport_formats_id_sport_id");
     }
 
@@ -457,7 +461,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
             {
                 Listing listing => (listing.Latitude, listing.Longitude),
                 Match match => (match.Latitude, match.Longitude),
-                _ => throw new InvalidOperationException($"Unsupported geospatial entity {typeof(TEntity).Name}.")
+                _ => throw new InvalidOperationException($"Không hỗ trợ thực thể dữ liệu địa lý {typeof(TEntity).Name}.")
             };
 
             entry.Property<Point>("LocationGeography").CurrentValue = new Point(

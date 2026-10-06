@@ -166,7 +166,7 @@ public sealed class UserRoleTests
         }
         public Task<IReadOnlyCollection<Role>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyCollection<Role>>(roles.Where(role => ids.Contains(role.Id)).ToArray());
-        public Task<PaginatedResult<Role>> ListAsync(BaseQuery query, CancellationToken cancellationToken) =>
+        public Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken) =>
             Task.FromResult(new PaginatedResult<Role>(roles.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToArray(), query.PageNumber, query.PageSize, roles.Length));
         public Task<Role?> GetByIdWithPermissionsAsync(Guid roleId, CancellationToken cancellationToken) => GetForUpdateAsync(roleId, cancellationToken);
         public Task<Role?> GetForUpdateAsync(Guid roleId, CancellationToken cancellationToken) => Task.FromResult<Role?>(null);

@@ -23,7 +23,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("matchingsports")
-            ?? throw new InvalidOperationException("Connection string 'matchingsports' is not configured.");
+            ?? throw new InvalidOperationException("Chưa cấu hình chuỗi kết nối 'matchingsports'.");
 
         services.AddDbContext<MatchingSportsDbContext>(options =>
             options.UseNpgsql(connectionString, npgsql => npgsql.UseNetTopologySuite()));
@@ -35,22 +35,22 @@ public static class DependencyInjection
             .Bind(configuration.GetSection(AuthOptions.SectionName))
             .Validate(
                 options => Encoding.UTF8.GetByteCount(options.Jwt.SigningKey) >= 32,
-                "Auth:Jwt:SigningKey must contain at least 32 bytes.")
+                "Auth:Jwt:SigningKey phải có ít nhất 32 byte.")
             .Validate(
                 options => Encoding.UTF8.GetByteCount(options.Otp.Pepper) >= 32,
-                "Auth:Otp:Pepper must contain at least 32 bytes.")
+                "Auth:Otp:Pepper phải có ít nhất 32 byte.")
             .ValidateOnStart();
 
         services.AddOptions<SeedAdminAccountOptions>()
             .Bind(configuration.GetSection(SeedAdminAccountOptions.SectionName))
             .Validate(options => !options.Enabled || (!string.IsNullOrWhiteSpace(options.Email)
                 && options.Email.Trim().Length <= 256 && new EmailAddressAttribute().IsValid(options.Email.Trim())),
-                "Seed:Admin:Email must be a valid email when administrator seeding is enabled.")
+                "Seed:Admin:Email phải là email hợp lệ khi bật khởi tạo quản trị viên.")
             .Validate(options => !options.Enabled || !string.IsNullOrWhiteSpace(options.Password),
-                "Seed:Admin:Password must be supplied through a secret when administrator seeding is enabled.")
+                "Seed:Admin:Password phải được cung cấp qua cấu hình bí mật khi bật khởi tạo quản trị viên.")
             .Validate(options => !options.Enabled || (!string.IsNullOrWhiteSpace(options.DisplayName)
                 && options.DisplayName.Trim().Length <= 100),
-                "Seed:Admin:DisplayName must contain between 1 and 100 characters.");
+                "Seed:Admin:DisplayName phải có từ 1 đến 100 ký tự.");
 
         services.AddIdentityCore<User>(options =>
             {
@@ -65,6 +65,7 @@ public static class DependencyInjection
                 options.Lockout.MaxFailedAccessAttempts = 5;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             })
+            .AddErrorDescriber<VietnameseIdentityErrorDescriber>()
             .AddRoles<Role>()
             .AddEntityFrameworkStores<MatchingSportsDbContext>()
             .AddDefaultTokenProviders()
@@ -99,7 +100,7 @@ public static class DependencyInjection
                         var userIdClaim = context.Principal?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                         if (!Guid.TryParse(userIdClaim, out var userId))
                         {
-                            context.Fail("Invalid user identifier.");
+                            context.Fail("ID người dùng không hợp lệ.");
                             return;
                         }
 
@@ -107,7 +108,7 @@ public static class DependencyInjection
                         var assignment = await repository.GetUserRolesAsync(userId, context.HttpContext.RequestAborted);
                         if (assignment is null)
                         {
-                            context.Fail("User is not active.");
+                            context.Fail("Tài khoản người dùng hiện không hoạt động.");
                             return;
                         }
 

@@ -76,8 +76,12 @@ public sealed partial class GlobalExceptionHandler(
 
         if (!written && !httpContext.Response.HasStarted)
         {
-            httpContext.Response.ContentType = "application/problem+json";
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(
+                problemDetails,
+                problemDetails.GetType(),
+                options: null,
+                contentType: "application/problem+json",
+                cancellationToken: cancellationToken);
             written = true;
         }
 
@@ -143,13 +147,13 @@ public sealed partial class GlobalExceptionHandler(
         string Detail,
         IDictionary<string, string[]>? Errors = null);
 
-    [LoggerMessage(1001, LogLevel.Information, "Client cancelled request {RequestMethod} {RequestPath}")]
+    [LoggerMessage(1001, LogLevel.Information, "Người dùng đã hủy yêu cầu {RequestMethod} {RequestPath}")]
     private static partial void LogClientCancelled(
         ILogger logger,
         string requestMethod,
         string requestPath);
 
-    [LoggerMessage(1002, LogLevel.Error, "Unhandled exception while processing {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
+    [LoggerMessage(1002, LogLevel.Error, "Lỗi chưa được xử lý khi thực hiện {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
     private static partial void LogUnhandledException(
         ILogger logger,
         string requestMethod,
@@ -158,7 +162,7 @@ public sealed partial class GlobalExceptionHandler(
         int httpStatusCode,
         Exception exception);
 
-    [LoggerMessage(1003, LogLevel.Warning, "Request rejected while processing {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
+    [LoggerMessage(1003, LogLevel.Warning, "Yêu cầu bị từ chối khi thực hiện {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
     private static partial void LogRejectedRequestWarning(
         ILogger logger,
         string requestMethod,
@@ -166,7 +170,7 @@ public sealed partial class GlobalExceptionHandler(
         string errorCode,
         int httpStatusCode);
 
-    [LoggerMessage(1004, LogLevel.Information, "Request rejected while processing {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
+    [LoggerMessage(1004, LogLevel.Information, "Yêu cầu bị từ chối khi thực hiện {RequestMethod} {RequestPath}; {ErrorCode} {HttpStatusCode}")]
     private static partial void LogRejectedRequestInformation(
         ILogger logger,
         string requestMethod,

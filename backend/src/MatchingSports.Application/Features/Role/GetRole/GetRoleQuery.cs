@@ -17,7 +17,7 @@ public sealed class GetRoleQueryHandler(IRoleRepository roles, IMapper mapper)
     public async Task<RoleDto> Handle(GetRoleQuery request, CancellationToken cancellationToken)
     {
         var role = await roles.GetByIdWithPermissionsAsync(request.RoleId, cancellationToken)
-            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy role.");
+            ?? throw new NotFoundException(ErrorCodes.RoleNotFound, "Không tìm thấy vai trò.");
         return mapper.Map<RoleDto>(role);
     }
 }

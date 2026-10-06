@@ -31,9 +31,14 @@ builder.Services.AddApplication(
     typeof(ContractMappingProfile).Assembly);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddCurrentUser();
-builder.Services.AddControllers()
+builder.Services.PostConfigure<MvcOptions>(VietnameseModelBindingMessages.LocalizeImplicitRequiredFields);
+builder.Services.AddControllers(options =>
+        VietnameseModelBindingMessages.Configure(options.ModelBindingMessageProvider))
     .AddJsonOptions(options =>
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    {
+        options.AllowInputFormatterExceptionMessages = false;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = actionContext =>
