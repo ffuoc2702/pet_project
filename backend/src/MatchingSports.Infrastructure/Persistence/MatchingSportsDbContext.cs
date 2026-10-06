@@ -179,13 +179,28 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         sportProfiles.HasKey(x => x.Id);
         sportProfiles.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
         sportProfiles.Property(x => x.Level).HasConversion<string>().HasMaxLength(20).HasDefaultValueSql("'BEGINNER'").HasSentinel((SportLevel)(-1));
-        sportProfiles.Property(x => x.PreferredFormatCodes).HasColumnType("varchar(32)[]");
         sportProfiles.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         sportProfiles.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
         sportProfiles.HasOne(x => x.User).WithMany(x => x.SportProfiles).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         sportProfiles.HasOne(x => x.Sport).WithMany(x => x.UserSportProfiles).HasForeignKey(x => x.SportId).OnDelete(DeleteBehavior.Restrict);
         sportProfiles.HasIndex(x => new { x.UserId, x.SportId }).IsUnique().HasDatabaseName("uq_user_sport_profiles_user_sport");
         sportProfiles.HasQueryFilter(x => x.User.DeletedAt == null);
+        sportProfiles.HasAlternateKey(x => new { x.Id, x.SportId }).HasName("ak_user_sport_profiles_id_sport_id");
+        sportProfiles.HasMany(x => x.PreferredFormats).WithMany()
+            .UsingEntity<UserSportProfileFormat>(
+                formats => formats.HasOne<SportFormat>().WithMany()
+                    .HasForeignKey(x => new { x.FormatId, x.SportId })
+                    .HasPrincipalKey(x => new { x.Id, x.SportId })
+                    .OnDelete(DeleteBehavior.Restrict),
+                profiles => profiles.HasOne<UserSportProfile>().WithMany()
+                    .HasForeignKey(x => new { x.UserSportProfileId, x.SportId })
+                    .HasPrincipalKey(x => new { x.Id, x.SportId })
+                    .OnDelete(DeleteBehavior.Cascade),
+                preferences =>
+                {
+                    preferences.ToTable("user_sport_profile_formats");
+                    preferences.HasKey(x => new { x.UserSportProfileId, x.FormatId });
+                });
 
         var otp = modelBuilder.Entity<OtpChallenge>();
         otp.ToTable("otp_challenges");

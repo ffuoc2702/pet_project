@@ -1533,10 +1533,6 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnName("level")
                         .HasDefaultValueSql("'BEGINNER'");
 
-                    b.PrimitiveCollection<string[]>("PreferredFormatCodes")
-                        .HasColumnType("varchar(32)[]")
-                        .HasColumnName("preferred_format_codes");
-
                     b.Property<Guid>("SportId")
                         .HasColumnType("uuid")
                         .HasColumnName("sport_id");
@@ -1553,6 +1549,9 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Id", "SportId")
+                        .HasName("ak_user_sport_profiles_id_sport_id");
+
                     b.HasIndex("SportId");
 
                     b.HasIndex("UserId", "SportId")
@@ -1560,6 +1559,29 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("uq_user_sport_profiles_user_sport");
 
                     b.ToTable("user_sport_profiles", (string)null);
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.UserSportProfileFormat", b =>
+                {
+                    b.Property<Guid>("UserSportProfileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_sport_profile_id");
+
+                    b.Property<Guid>("FormatId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("format_id");
+
+                    b.Property<Guid>("SportId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sport_id");
+
+                    b.HasKey("UserSportProfileId", "FormatId");
+
+                    b.HasIndex("FormatId", "SportId");
+
+                    b.HasIndex("UserSportProfileId", "SportId");
+
+                    b.ToTable("user_sport_profile_formats", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -1947,6 +1969,23 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.Navigation("Sport");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.UserSportProfileFormat", b =>
+                {
+                    b.HasOne("MatchingSports.Domain.Entities.SportFormat", null)
+                        .WithMany()
+                        .HasForeignKey("FormatId", "SportId")
+                        .HasPrincipalKey("Id", "SportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.UserSportProfile", null)
+                        .WithMany()
+                        .HasForeignKey("UserSportProfileId", "SportId")
+                        .HasPrincipalKey("Id", "SportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

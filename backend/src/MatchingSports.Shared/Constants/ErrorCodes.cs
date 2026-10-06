@@ -31,6 +31,8 @@ public static class ErrorCodes
     public const string AccountNotActive = "ACCOUNT_NOT_ACTIVE";
     public const string UserNotFound = "USER_NOT_FOUND";
     public const string UserProfileNotFound = "USER_PROFILE_NOT_FOUND";
+    public const string UserSportProfileNotFound = "USER_SPORT_PROFILE_NOT_FOUND";
+    public const string InvalidUserSportProfile = "INVALID_USER_SPORT_PROFILE";
     public const string InvalidRole = "INVALID_ROLE";
     public const string InvalidPermission = "INVALID_PERMISSION";
     public const string RoleNotFound = "ROLE_NOT_FOUND";

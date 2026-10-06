@@ -73,4 +73,7 @@ public sealed record CurrentUserResult(
     string DisplayName,
     bool EmailVerified,
     IReadOnlyCollection<string> Roles,
-    IReadOnlyCollection<string> Permissions);
+    IReadOnlyCollection<string> Permissions)
+{
+    public IReadOnlyCollection<Features.UserSportProfile.UserSportProfileDto> SportProfiles { get; init; } = [];
+}
