@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using MatchingSports.Api.Contracts;
+using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Identity;
 using MatchingSports.Application.Features.UserProfile;
@@ -17,7 +18,8 @@ namespace MatchingSports.Api.Controllers;
 [EnableRateLimiting("AuthStrict")]
 public sealed class AuthController(
     IMediator mediator,
-    IAuthenticationSchemeProvider authenticationSchemeProvider) : ApiControllerBase
+    IAuthenticationSchemeProvider authenticationSchemeProvider,
+    ICurrentUser currentUser) : ApiControllerBase
 {
     [HttpPost("register")]
     [ProducesResponseType<BaseResponse<RegistrationResponse>>(StatusCodes.Status200OK)]
@@ -175,7 +177,7 @@ public sealed class AuthController(
     public async Task<ActionResult<BaseResponse<CurrentUserResponse>>> Me(
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new GetCurrentUserQuery(), cancellationToken);
+        var result = await mediator.Send(new GetCurrentUserQuery { ActorUserId = currentUser.UserId }, cancellationToken);
         return OkResponse(CurrentUserResponse.From(result));
     }
 

@@ -71,13 +71,16 @@ public sealed record CurrentUserResponse(
     IReadOnlyCollection<string> Roles,
     IReadOnlyCollection<string> Permissions)
 {
+    public IReadOnlyCollection<MatchingSports.Application.Features.UserSportProfile.UserSportProfileDto> SportProfiles { get; init; } = [];
+
     public static CurrentUserResponse From(CurrentUserResult result) => new(
         result.Id,
         result.Email,
         result.DisplayName,
         result.EmailVerified,
         result.Roles,
-        result.Permissions);
+        result.Permissions)
+    { SportProfiles = result.SportProfiles };
 }
 
 public sealed record AuthTokenResponse(
