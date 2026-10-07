@@ -26,7 +26,8 @@ public sealed class UpdateUserProfileTests
             new StubCurrentUser(userId),
             repository,
             unitOfWork,
-            CreateMapper());
+            CreateMapper(),
+            new AuditActorContext());
 
         var result = await handler.Handle(
             new UpdateUserProfileCommand(
@@ -52,7 +53,8 @@ public sealed class UpdateUserProfileTests
             new StubCurrentUser(Guid.NewGuid()),
             new StubUserProfileRepository(null),
             unitOfWork,
-            CreateMapper());
+            CreateMapper(),
+            new AuditActorContext());
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
             handler.Handle(
@@ -76,7 +78,8 @@ public sealed class UpdateUserProfileTests
             new InvalidCurrentUser(),
             repository,
             unitOfWork,
-            CreateMapper());
+            CreateMapper(),
+            new AuditActorContext());
 
         var exception = await Assert.ThrowsAsync<UnauthorizedException>(() => handler.Handle(
             new UpdateUserProfileCommand("Name", null, null, null),

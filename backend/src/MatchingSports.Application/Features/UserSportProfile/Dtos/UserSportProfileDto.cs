@@ -4,7 +4,7 @@ using MatchingSports.Domain.Enums;
 
 namespace MatchingSports.Application.Features.UserSportProfile;
 
-public sealed class UserSportProfileDto : BaseDto
+public sealed record UserSportProfileDto : BaseDto
 {
     public Guid Id { get; set; }
     public Guid SportId { get; set; }

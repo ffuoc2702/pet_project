@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class SportFormat
+public sealed class SportFormat : AuditableEntity
 {
     public Guid Id { get; set; }
     public Guid SportId { get; set; }
@@ -10,8 +10,6 @@ public sealed class SportFormat
     public string DisplayName { get; set; } = null!;
     public short SideSize { get; set; }
     public bool IsActive { get; set; } = true;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
 
     public static SportFormat Create(Guid sportId, SportFormatDetails details)
     {

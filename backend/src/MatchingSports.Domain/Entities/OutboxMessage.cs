@@ -1,6 +1,6 @@
 ﻿namespace MatchingSports.Domain.Entities;
 
-public sealed class OutboxMessage
+public sealed class OutboxMessage : AuditableEntity
 {
     public Guid Id { get; set; }
     public string AggregateType { get; set; } = null!;
@@ -13,7 +13,6 @@ public sealed class OutboxMessage
     public int RetryCount { get; set; }
     public string? LastError { get; set; }
     public DateTimeOffset? LockedUntil { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset PurgeAfter { get; private set; }
     public DateTimeOffset? FailedAt { get; private set; }
 

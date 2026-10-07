@@ -16,14 +16,17 @@ public sealed class UpdateUserProfileCommandHandler(
     ICurrentUser currentUser,
     IUserProfileRepository userProfileRepository,
     IUnitOfWork unitOfWork,
-    IMapper mapper) : IRequestHandler<UpdateUserProfileCommand, UserProfileDto>
+    IMapper mapper,
+    IAuditActorContext auditActorContext) : IRequestHandler<UpdateUserProfileCommand, UserProfileDto>
 {
     public async Task<UserProfileDto> Handle(
         UpdateUserProfileCommand request,
         CancellationToken cancellationToken)
     {
+        var actorUserId = currentUser.UserId;
+        using var auditScope = auditActorContext.BeginScope(actorUserId);
         var profile = await userProfileRepository.GetForUpdateAsync(
-            currentUser.UserId,
+            actorUserId,
             cancellationToken);
 
         if (profile is null)

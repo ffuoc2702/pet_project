@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using MatchingSports.Application.Abstractions;
+using MatchingSports.Application.Common;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Infrastructure.Identity;
 using MatchingSports.Infrastructure.Persistence;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MatchingSports.Infrastructure;
@@ -22,6 +24,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.TryAddScoped<IAuditActorContext, AuditActorContext>();
         var connectionString = configuration.GetConnectionString("matchingsports")
             ?? throw new InvalidOperationException("Chưa cấu hình chuỗi kết nối 'matchingsports'.");
 

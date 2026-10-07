@@ -1,4 +1,6 @@
-﻿namespace MatchingSports.Application.Features.SystemSettings;
+﻿using MatchingSports.Application.Common;
+
+namespace MatchingSports.Application.Features.SystemSettings;
 
 public sealed record SystemSettingsDto(
     int OutboxMaxRetryCount,
@@ -11,7 +13,4 @@ public sealed record SystemSettingsDto(
     int OutboxRetryInitialDelaySeconds,
     int OutboxRetryMaxDelaySeconds,
     int ProcessedOutboxRetentionDays,
-    int NotificationRetentionDays,
-    Guid ConcurrencyToken,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    int NotificationRetentionDays) : ConcurrentBaseDto;

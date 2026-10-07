@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class User : IdentityUser<Guid>
+public sealed class User : IdentityUser<Guid>, IAuditableEntity
 {
     public static User CreateVerifiedAccount(string email, string displayName)
     {
@@ -39,8 +39,10 @@ public sealed class User : IdentityUser<Guid>
 
     public UserStatus Status { get; set; } = UserStatus.ACTIVE;
     public DateTimeOffset? LastLoginAt { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
+    public Guid? CreatedBy { get; private set; }
+    public Guid? UpdatedBy { get; private set; }
     public DateTimeOffset? DeletedAt { get; set; }
 
     public UserProfile? Profile { get; set; }

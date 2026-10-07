@@ -1,5 +1,8 @@
 # Persistence và bảo mật
 
+Entity base, nguồn actor và quy tắc stamp audit được mô tả trong
+[audit](auditing.md). Metadata audit do Infrastructure ghi, không nhận từ body.
+
 - EF configuration và migration nằm ở Infrastructure. Không sửa migration đã
   triển khai; tạo migration mới khi schema thay đổi.
 - Giữ convention concurrency token hiện có khi cập nhật entity có cạnh tranh ghi.

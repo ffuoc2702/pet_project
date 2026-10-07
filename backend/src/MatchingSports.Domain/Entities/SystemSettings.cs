@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class SystemSettings : IHasConcurrencyToken
+public sealed class SystemSettings : ConcurrentAuditableEntity
 {
     public static Guid SingletonId { get; } = Guid.Parse("00000000-0000-0000-0002-000000000001");
 
@@ -20,9 +20,6 @@ public sealed class SystemSettings : IHasConcurrencyToken
     public int OutboxRetryMaxDelaySeconds { get; private set; }
     public int ProcessedOutboxRetentionDays { get; private set; }
     public int NotificationRetentionDays { get; private set; }
-    public Guid ConcurrencyToken { get; private set; }
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
 
     public static SystemSettings CreateDefaults()
     {
@@ -48,7 +45,7 @@ public sealed class SystemSettings : IHasConcurrencyToken
         ProcessedOutboxRetentionDays = values.ProcessedOutboxRetentionDays;
         NotificationRetentionDays = values.NotificationRetentionDays;
         // Even an unchanged submission must participate in optimistic concurrency and auditing.
-        ConcurrencyToken = Guid.NewGuid();
+        RenewConcurrencyToken();
     }
 
     public SystemSettingsValues GetValues() => new(OutboxMaxRetryCount, MaxCaptainTeamsPerUser,

@@ -29,8 +29,7 @@ public sealed class AdminActionMigrationTests
             var actor = User.CreateVerifiedAccount("audit@example.test", "Audit actor");
             actor.NormalizedEmail = actor.Email!.ToUpperInvariant();
             actor.NormalizedUserName = actor.UserName!.ToUpperInvariant();
-            db.Users.Add(actor);
-            await db.SaveChangesAsync();
+            await MigrationTestData.InsertUserAsync(db, actor);
             var moderationId = Guid.NewGuid();
             var targetId = Guid.NewGuid();
             var createdAt = new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
@@ -85,7 +84,8 @@ public sealed class AdminActionMigrationTests
             Assert.Null(await db.Database.SqlQueryRaw<string>(
                 "SELECT to_regclass('authorization_audit_entries')::text AS \"Value\"").SingleAsync());
 
-            actor.DeletedAt = DateTimeOffset.UtcNow;
+            var persistedActor = await db.Users.SingleAsync(user => user.Id == actor.Id);
+            persistedActor.DeletedAt = DateTimeOffset.UtcNow;
             await db.SaveChangesAsync();
             Assert.Equal(5, await db.AdminActions.CountAsync());
 

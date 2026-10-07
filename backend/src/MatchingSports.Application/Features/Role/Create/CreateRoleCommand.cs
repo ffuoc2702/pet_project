@@ -26,6 +26,6 @@ public sealed class CreateRoleCommandHandler(IRoleRepository roles, IAdminAction
         var result = mapper.Map<RoleDto>(role);
         RoleAuthorization.RecordChange(auditRepository, request.ActorUserId, AdminActionType.CREATE_ROLE, EntityTypes.Role, role.Id, null, result);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return result;
+        return mapper.Map<RoleDto>(role);
     }
 }

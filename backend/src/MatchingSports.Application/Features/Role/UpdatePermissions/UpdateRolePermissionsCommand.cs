@@ -40,7 +40,7 @@ public sealed class UpdateRolePermissionsCommandHandler(
         RoleAuthorization.RecordChange(audit, request.ActorUserId, AdminActionType.UPDATE_ROLE_PERMISSIONS, EntityTypes.Role,
             role.Id, before, result);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return result;
+        return mapper.Map<RoleDto>(role);
     }
 
     private static RequestValidationException InvalidPermissions(string[] errors) =>

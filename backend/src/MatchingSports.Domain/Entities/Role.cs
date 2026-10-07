@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Role : IdentityRole<Guid>
+public sealed class Role : IdentityRole<Guid>, IAuditableEntity
 {
+    public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset UpdatedAt { get; private set; }
+    public Guid? CreatedBy { get; private set; }
+    public Guid? UpdatedBy { get; private set; }
     private readonly List<RolePermission> _permissions = [];
 
     private Role() { }

@@ -36,8 +36,7 @@ public sealed class SystemSettingsPersistenceTests
             var actor = User.CreateVerifiedAccount("settings@example.test", "Settings admin");
             actor.NormalizedEmail = actor.Email!.ToUpperInvariant();
             actor.NormalizedUserName = actor.UserName!.ToUpperInvariant();
-            db.Users.Add(actor);
-            await db.SaveChangesAsync();
+            await MigrationTestData.InsertUserAsync(db, actor);
             var oldCreatedAt = new DateTimeOffset(2026, 9, 1, 0, 0, 0, TimeSpan.Zero);
             var oldMessageId = Guid.NewGuid();
             var oldNotificationId = Guid.NewGuid();
@@ -50,8 +49,18 @@ public sealed class SystemSettingsPersistenceTests
                 VALUES ({{oldNotificationId}}, {{actor.Id}}, 'MATCH_REMINDER', 'Reminder', 'Details', {{oldCreatedAt}})
                 """);
             await migrator.MigrateAsync();
-            Assert.Equal(oldCreatedAt.AddDays(30), (await db.OutboxMessages.SingleAsync()).PurgeAfter);
-            Assert.Equal(oldCreatedAt.AddDays(90), (await db.Notifications.SingleAsync()).PurgeAfter);
+            var migratedMessage = await db.OutboxMessages.SingleAsync();
+            var migratedNotification = await db.Notifications.SingleAsync();
+            Assert.Equal(oldCreatedAt.AddDays(30), migratedMessage.PurgeAfter);
+            Assert.Equal(oldCreatedAt.AddDays(90), migratedNotification.PurgeAfter);
+            Assert.Equal(oldCreatedAt, migratedMessage.CreatedAt);
+            Assert.Equal(oldCreatedAt, migratedMessage.UpdatedAt);
+            Assert.Null(migratedMessage.CreatedBy);
+            Assert.Null(migratedMessage.UpdatedBy);
+            Assert.Equal(oldCreatedAt, migratedNotification.CreatedAt);
+            Assert.Equal(oldCreatedAt, migratedNotification.UpdatedAt);
+            Assert.Null(migratedNotification.CreatedBy);
+            Assert.Null(migratedNotification.UpdatedBy);
             Assert.Single(await db.SystemSettings.ToListAsync());
 
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
@@ -83,11 +92,11 @@ public sealed class SystemSettingsPersistenceTests
                     UserId = actor.Id,
                     Type = NotificationType.MATCH_REMINDER,
                     Title = "New",
-                    Body = "Details",
-                    CreatedAt = oldCreatedAt
+                    Body = "Details"
                 };
                 var message = NewMessage(actor.Id);
                 context.AddRange(notification, message);
+                context.Entry(notification).Property(item => item.CreatedAt).CurrentValue = oldCreatedAt;
                 await context.SaveChangesAsync();
                 // SaveChanges stamps CreatedAt; the expiry must use that final value, not the caller's value.
                 Assert.Equal(notification.CreatedAt.AddDays(14), notification.PurgeAfter);

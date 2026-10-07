@@ -293,16 +293,20 @@ public sealed class RoleManagementTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async Task RoleQueriesRejectUnsupportedDateFiltersBeforeRepository(bool matrix)
+    public async Task RoleQueriesForwardAuditDateFiltersToRepository(bool matrix)
     {
         var repository = new StubRepository(PermissionCodes.ListRoles, PermissionCodes.ListPermissions);
         using var provider = CreateProvider(repository);
         var mediator = provider.GetRequiredService<IMediator>();
-        var error = matrix
-            ? await Assert.ThrowsAsync<RequestValidationException>(() => mediator.Send(new GetRolePermissionMatrixQuery { ActorUserId = repository.Actor.UserId, FromDate = DateTimeOffset.UtcNow }))
-            : await Assert.ThrowsAsync<RequestValidationException>(() => mediator.Send(new GetRolesQuery { ActorUserId = repository.Actor.UserId, ToDate = DateTimeOffset.UtcNow }));
-        Assert.Equal(ErrorCodes.InvalidDateRange, error.Code);
-        Assert.Equal(0, repository.ListCount);
+        var date = DateTimeOffset.UtcNow;
+        if (matrix)
+            await mediator.Send(new GetRolePermissionMatrixQuery { ActorUserId = repository.Actor.UserId, FromDate = date, ToDate = date });
+        else
+            await mediator.Send(new GetRolesQuery { ActorUserId = repository.Actor.UserId, FromDate = date, ToDate = date });
+        Assert.Equal(date, repository.LastListQuery!.FromDate);
+        Assert.Equal(date, repository.LastListQuery.ToDate);
+        Assert.Equal(repository.Actor.UserId, ((IPermissionAuthorizedRequest)repository.LastListQuery).ActorUserId);
+        Assert.Equal(1, repository.ListCount);
     }
 
     private sealed class StubCurrentUser(Guid userId) : ICurrentUser

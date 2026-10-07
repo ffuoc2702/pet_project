@@ -22,11 +22,11 @@
   áp dụng search trước count và paging. Search whitespace tương đương không lọc;
   sports tìm theo code/name, roles và hàng ma trận theo name/description,
   permissions theo code/name, không phân biệt hoa thường.
-- Filter ngày dùng `UpdatedAt` với hai đầu bao gồm giá trị biên khi entity hỗ trợ.
-  Role hiện chưa có timestamp: `GetRolesQuery` và `GetRolePermissionMatrixQuery`
-  khai báo `SupportsDateRange = false`; `DateRangeValidationBehavior` từ chối
-  ngày được truyền bằng `ErrorCodes.InvalidDateRange`. Không nhận rồi bỏ qua
-  filter và không thêm schema ngoài phạm vi task chỉ để đáp ứng base class.
+- Filter ngày dùng `UpdatedAt` với hai đầu bao gồm giá trị biên. Role đã có audit
+  timestamp: `GetRolesQuery` và `GetRolePermissionMatrixQuery` lọc ngày trước count
+  và paging. Mapping ma trận → query role giữ actor và toàn bộ filter kế thừa.
+  `DateRangeValidationBehavior` từ chối khoảng ngày đảo ngược bằng
+  `ErrorCodes.InvalidDateRange`. Không nhận rồi bỏ qua filter.
 - Khi thêm query list, khai báo mapping và kiểm tra cấu hình AutoMapper, field kế
   thừa/default, filter riêng, actor tin cậy, filter thực tế và metadata sau lọc.
 
