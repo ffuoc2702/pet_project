@@ -134,15 +134,6 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
 
         var permissions = modelBuilder.Entity<Permission>();
-        var authorizationAudit = modelBuilder.Entity<AuthorizationAuditEntry>();
-        authorizationAudit.ToTable("authorization_audit_entries");
-        authorizationAudit.HasKey(entry => entry.Id);
-        authorizationAudit.Property(entry => entry.Action).HasMaxLength(100).IsRequired();
-        authorizationAudit.Property(entry => entry.BeforeJson).HasColumnType("jsonb").IsRequired();
-        authorizationAudit.Property(entry => entry.AfterJson).HasColumnType("jsonb").IsRequired();
-        authorizationAudit.HasIndex(entry => new { entry.TargetId, entry.CreatedAt });
-        authorizationAudit.HasIndex(entry => new { entry.ActorUserId, entry.CreatedAt });
-
         permissions.ToTable("permissions");
         permissions.HasKey(x => x.Id);
         permissions.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
@@ -429,10 +420,13 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         actions.Property(x => x.ActionType).HasConversion<string>().HasMaxLength(40);
         actions.Property(x => x.TargetType).HasMaxLength(30);
         actions.Property(x => x.MetadataJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
+        actions.Property(x => x.BeforeJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb").IsRequired();
+        actions.Property(x => x.AfterJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb").IsRequired();
+        actions.HasIndex(x => new { x.AdminUserId, x.CreatedAt });
         actions.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
+        // Audit history remains visible when the actor is soft-deleted.
         actions.HasOne(x => x.AdminUser).WithMany(x => x.AdminActions).HasForeignKey(x => x.AdminUserId).OnDelete(DeleteBehavior.Restrict);
         actions.HasIndex(x => new { x.TargetType, x.TargetId, x.CreatedAt }).IsDescending(false, false, true).HasDatabaseName("ix_admin_actions_target");
-        actions.HasQueryFilter(x => x.AdminUser.DeletedAt == null);
     }
 
     private void ApplyPersistenceConventions()

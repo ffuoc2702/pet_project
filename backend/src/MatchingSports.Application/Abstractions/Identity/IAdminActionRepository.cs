@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Application.Abstractions;
 
-public interface IAuthorizationAuditRepository
+public interface IAdminActionRepository
 {
-    void Add(AuthorizationAuditEntry entry);
+    void Add(AdminAction entry);
 }

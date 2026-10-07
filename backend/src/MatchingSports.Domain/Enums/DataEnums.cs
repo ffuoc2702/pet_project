@@ -1,4 +1,4 @@
-namespace MatchingSports.Domain.Enums;
+﻿namespace MatchingSports.Domain.Enums;
 
 public enum UserStatus { ACTIVE, SUSPENDED, DELETED }
 public enum SportLevel { BEGINNER, INTERMEDIATE, ADVANCED }
@@ -33,5 +33,9 @@ public enum AdminActionType
     REACTIVATE_USER,
     HIDE_LISTING,
     CANCEL_MATCH,
-    RESOLVE_REPORT
+    RESOLVE_REPORT,
+    CREATE_ROLE,
+    UPDATE_ROLE,
+    UPDATE_ROLE_PERMISSIONS,
+    ASSIGN_USER_ROLES
 }

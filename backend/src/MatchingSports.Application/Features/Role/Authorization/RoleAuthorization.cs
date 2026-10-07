@@ -2,6 +2,7 @@
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Domain.Entities;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Shared;
 
 namespace MatchingSports.Application.Features.Role;
@@ -17,9 +18,9 @@ internal static class RoleAuthorization
             throw new ConflictException(ErrorCodes.ConcurrencyConflict, "Dữ liệu đã thay đổi. Vui lòng tải lại trước khi cập nhật.");
     }
 
-    public static void RecordChange(IAuthorizationAuditRepository repository, Guid actorUserId,
-        string action, Guid targetId, object? before, object after) =>
-        repository.Add(AuthorizationAuditEntry.Create(actorUserId, action, targetId,
+    public static void RecordChange(IAdminActionRepository repository, Guid actorUserId,
+        AdminActionType actionType, string targetType, Guid targetId, object? before, object after) =>
+        repository.Add(AdminAction.Create(actorUserId, actionType, targetType, targetId,
             JsonSerializer.Serialize(before), JsonSerializer.Serialize(after)));
 
     public static T ValidateRoleInput<T>(Func<T> createValidatedValue)

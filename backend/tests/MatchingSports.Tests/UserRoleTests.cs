@@ -3,6 +3,7 @@ using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Domain.Entities;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Shared;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +58,13 @@ public sealed class UserRoleTests
         Assert.Equal(["MODERATOR", "SUPPORT"], result.Roles);
         Assert.Equal(1, repository.SaveCount);
         Assert.Equal(1, repository.ReplaceCount);
-        Assert.Single(repository.AuditEntries);
+        var audit = Assert.Single(repository.AuditEntries);
+        Assert.Equal(AdminActionType.ASSIGN_USER_ROLES, audit.ActionType);
+        Assert.Equal("USER", audit.TargetType);
+        Assert.Equal(actor.UserId, audit.AdminUserId);
+        Assert.Equal(target.UserId, audit.TargetId);
+        Assert.Equal("[]", audit.BeforeJson);
+        Assert.All(roles, role => Assert.Contains(role.Id.ToString(), audit.AfterJson, StringComparison.Ordinal));
     }
 
     [Fact]
@@ -146,17 +153,17 @@ public sealed class UserRoleTests
         services.AddApplication();
         services.AddSingleton<IUserRoleRepository>(repository);
         services.AddSingleton<IRoleRepository>(repository);
-        services.AddSingleton<IAuthorizationAuditRepository>(repository);
+        services.AddSingleton<IAdminActionRepository>(repository);
         services.AddSingleton<IUnitOfWork>(repository);
         return services.BuildServiceProvider();
     }
 
     private sealed class StubRepository(UserRoleAssignment[] users, Role[] roles)
-        : IUserRoleRepository, IRoleRepository, IAuthorizationAuditRepository, IUnitOfWork
+        : IUserRoleRepository, IRoleRepository, IAdminActionRepository, IUnitOfWork
     {
         public int ReplaceCount { get; private set; }
         public int SaveCount { get; private set; }
-        public List<AuthorizationAuditEntry> AuditEntries { get; } = [];
+        public List<AdminAction> AuditEntries { get; } = [];
         public Task<UserRoleAssignment?> GetUserRolesAsync(Guid userId, CancellationToken cancellationToken) =>
             Task.FromResult(users.SingleOrDefault(user => user.UserId == userId));
         public Task ReplaceUserRolesAsync(UserRoleAssignment assignment, CancellationToken cancellationToken)
@@ -172,7 +179,7 @@ public sealed class UserRoleTests
         public Task<Role?> GetForUpdateAsync(Guid roleId, CancellationToken cancellationToken) => Task.FromResult<Role?>(null);
         public Task<bool> ExistsByNormalizedNameAsync(string name, Guid? excludedRoleId, CancellationToken cancellationToken) => Task.FromResult(false);
         public void Add(Role role) => throw new NotSupportedException();
-        public void Add(AuthorizationAuditEntry entry) => AuditEntries.Add(entry);
+        public void Add(AdminAction entry) => AuditEntries.Add(entry);
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             SaveCount++;
