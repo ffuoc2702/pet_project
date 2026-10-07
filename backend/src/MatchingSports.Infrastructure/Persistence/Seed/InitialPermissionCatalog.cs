@@ -8,6 +8,8 @@ public static class InitialPermissionCatalog
 {
     public static IReadOnlyList<InitialPermissionDefinition> All { get; } = Array.AsReadOnly<InitialPermissionDefinition>(
     [
+        new(PermissionCodes.ReadSystemSettings, "Xem cấu hình hệ thống", false),
+        new(PermissionCodes.UpdateSystemSettings, "Cập nhật cấu hình hệ thống", false),
         new(PermissionCodes.ReadOwnProfile, "Xem hồ sơ của mình", true),
         new(PermissionCodes.UpdateOwnProfile, "Cập nhật hồ sơ của mình", true),
         new(PermissionCodes.ListSports, "Xem danh sách môn thể thao", true, PermissionCodes.ReadSports),

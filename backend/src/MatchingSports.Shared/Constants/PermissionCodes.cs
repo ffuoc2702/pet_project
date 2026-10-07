@@ -2,6 +2,8 @@
 
 public static class PermissionCodes
 {
+    public const string ReadSystemSettings = "system_settings.read";
+    public const string UpdateSystemSettings = "system_settings.update";
     public const string ReadRoles = "roles.read";
     public const string ListRoles = "roles.list";
     public const string CreateRoles = "roles.create";

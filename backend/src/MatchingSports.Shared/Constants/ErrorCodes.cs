@@ -2,6 +2,8 @@
 
 public static class ErrorCodes
 {
+    public const string InvalidSystemSettings = "INVALID_SYSTEM_SETTINGS";
+    public const string SystemSettingsNotFound = "SYSTEM_SETTINGS_NOT_FOUND";
     public const string ValidationFailed = "VALIDATION_FAILED";
     public const string BadRequest = "BAD_REQUEST";
     public const string Unauthorized = "UNAUTHORIZED";
