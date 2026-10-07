@@ -52,6 +52,47 @@ Query chỉ đọc không commit. Repository không tự gọi SaveChanges.
 Danh tính người thực hiện lấy từ nguồn tin cậy, không lấy từ HTTP body;
 phân biệt actor với người dùng mục tiêu. Identity không thay thế permission.
 
+## Entity base, audit và concurrency
+
+- Entity nghiệp vụ có audit kế thừa `AuditableEntity`, gồm `CreatedAt`, `UpdatedAt`,
+  `CreatedBy`, `UpdatedBy`. Entity cần optimistic concurrency kế thừa
+  `ConcurrentAuditableEntity`; base này kế thừa `AuditableEntity` và triển khai
+  `IHasConcurrencyToken`. Không khai báo lại các property đã kế thừa.
+- Không đưa `Id` vào base: entity có thể có khóa đơn hoặc khóa ghép. Base nằm trong
+  Domain, không đọc claims, DbContext hoặc gọi I/O. EF configuration ở Infrastructure
+  giữ các entity thành bảng độc lập; không tạo bảng base hoặc discriminator.
+- `User` và `Role` giữ base Identity, triển khai `IAuditableEntity` với property audit
+  riêng. Giữ concurrency stamp của Identity; không thay bằng GUID token của base.
+  `AdminAction` là lịch sử bất biến, giữ cấu trúc riêng; các bảng liên kết thuần
+  `RolePermission`, `UserSportProfileFormat` và Identity giữ cấu trúc hiện có.
+- Metadata audit có private setter, không nhận từ HTTP body. Infrastructure stamp
+  audit cho cả SaveChanges sync/async: tạo ghi cả hai timestamp và actor; sửa giữ
+  nguyên `CreatedAt`/`CreatedBy`, chỉ cập nhật `UpdatedAt`/`UpdatedBy`.
+- `IAuditActorContext` có lifetime scoped; `BeginScope(actorUserId)` phải được dispose
+  bằng `using`, hỗ trợ scope lồng nhau và tách actor giữa các luồng async. Không dùng
+  singleton hoặc suy luận actor từ owner, recipient, user mục tiêu hay ID trong body.
+- Request có `IPermissionAuthorizedRequest` được `AuditActorBehavior` thiết lập actor
+  sau khi permission pipeline cho phép. Use case của chính mình không có interface
+  này lấy ID qua `ICurrentUser` và mở scope audit trong handler trước khi ghi.
+  Không thay permission bằng audit context; khi gọi qua MediatR không lặp scope chỉ
+  để lấy lại cùng actor đã được behavior thiết lập.
+- Luồng Identity anonymous dùng actor null cho đăng ký và các thao tác chưa chứng
+  minh danh tính. Chỉ mở scope user sau khi kiểm tra password, OTP, refresh token
+  hoặc xác thực external provider thành công. Email/user ID mục tiêu chưa đủ làm actor.
+- Worker/seed/dữ liệu cũ không xác định được actor dùng null; không dùng `Guid.Empty`
+  hoặc tự gán người nhận làm người tạo. Caller nền có actor tin cậy mở scope rõ ràng.
+  Các cột actor là UUID lịch sử, không có FK cascade làm mất dấu vết khi xóa user.
+- GUID concurrency token vẫn cần `.IsConcurrencyToken()` ở Infrastructure và được
+  xoay khi thêm/sửa. Domain dùng `RenewConcurrencyToken()` nếu cần một cập nhật
+  không đổi nội dung vẫn tham gia kiểm tra concurrency. Không ghi đè khi conflict.
+- Resource DTO trả metadata audit sau commit; không nhận audit trong request.
+  DTO audit kế thừa `BaseDto`; DTO dùng GUID concurrency kế thừa
+  `ConcurrentBaseDto : BaseDto`. Các base và DTO kế thừa dùng `record`, không
+  khai báo lại audit/token trong constructor hoặc property của DTO feature.
+  `RoleDto` giữ `ConcurrencyStamp` của Identity, không dùng GUID concurrency base.
+  Snapshot `AdminAction` mô tả thay đổi nghiệp vụ, không chụp metadata audit chưa
+  được persistence stamp. Ghi lịch sử và thay đổi nghiệp vụ trong cùng transaction.
+
 ## Quy tắc code cốt lõi
 
 - Business rule, normalization và chuyển trạng thái thuộc Domain; kiểm tra invariant
@@ -106,6 +147,7 @@ chính xác nguyên nhân; không báo đã pass khi chưa chạy.
 - Thêm/sửa query, mapping hoặc filter: [docs/conventions/queries.md](docs/conventions/queries.md).
 - Thêm/sửa API list: [docs/pagination.md](docs/pagination.md).
 - Thay đổi persistence, schema hoặc concurrency: [docs/persistence.md](docs/persistence.md).
+- Entity base và metadata audit: [docs/auditing.md](docs/auditing.md).
 - Chọn và thực hiện kiểm thử: [docs/testing.md](docs/testing.md).
 
 Với thay đổi danh tính hoặc phân quyền, đọc:

@@ -3,7 +3,7 @@ using MatchingSports.Shared;
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Notification
+public sealed class Notification : AuditableEntity
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
@@ -15,7 +15,6 @@ public sealed class Notification
     public Guid? EntityId { get; set; }
     public string PayloadJson { get; set; } = "{}";
     public DateTimeOffset? ReadAt { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset PurgeAfter { get; private set; }
 
     public User User { get; set; } = null!;

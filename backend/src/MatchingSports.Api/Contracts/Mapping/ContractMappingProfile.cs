@@ -20,6 +20,5 @@ public sealed class ContractMappingProfile : Profile
         CreateMap<GetRolePermissionMatrixRequest, GetRolePermissionMatrixQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());
 
-        CreateMap<GetRolesQuery, GetRolePermissionMatrixQuery>().ReverseMap();
     }
 }

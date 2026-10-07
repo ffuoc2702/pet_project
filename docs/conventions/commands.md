@@ -34,6 +34,9 @@ HTTP request + authenticated user ID
 
 Command user profile chỉ chứa dữ liệu cần cập nhật, không chứa UserId.
 Handler lấy UserId qua ICurrentUser; implementation ở API đọc claims đã xác thực.
+Handler mở scope `IAuditActorContext` cho ID tin cậy trước khi ghi. Request có
+`IPermissionAuthorizedRequest` được audit behavior mở scope sau khi kiểm tra quyền.
+Đọc [audit](../auditing.md) trước khi sửa use case ghi hoặc mapping metadata audit.
 Không lấy danh tính người thực hiện từ request body.
 `GetForUpdateAsync` trả entity tracked; đây không phải lời hứa khóa hàng database.
 Query chỉ đọc nên dùng projection hoặc `AsNoTracking()` trong Infrastructure.

@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Team
+public sealed class Team : AuditableEntity
 {
     public Guid Id { get; set; }
     public Guid SportId { get; set; }
@@ -12,8 +12,6 @@ public sealed class Team
     public string? HomeArea { get; set; }
     public string? AvatarUrl { get; set; }
     public TeamStatus Status { get; set; } = TeamStatus.ACTIVE;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
 
     public Sport Sport { get; set; } = null!;

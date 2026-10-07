@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using MatchingSports.Application.Abstractions;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,8 @@ using NetTopologySuite.Geometries;
 
 namespace MatchingSports.Infrastructure.Persistence;
 
-public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbContext> options)
+public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbContext> options,
+    IAuditActorContext? auditActorContext = null, TimeProvider? timeProvider = null)
     : IdentityDbContext<User, Role, Guid>(options)
 {
     public DbSet<Permission> Permissions => Set<Permission>();
@@ -35,6 +37,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Ignore<AuditableEntity>();
+        builder.Ignore<ConcurrentAuditableEntity>();
         builder.HasPostgresExtension("pgcrypto");
         builder.HasPostgresExtension("postgis");
 
@@ -44,6 +48,14 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         ConfigureListingsAndMatching(builder);
         ConfigureNotificationsAndSafety(builder);
         ConfigureSystemSettings(builder);
+
+        foreach (var entity in builder.Model.GetEntityTypes().Where(entity => typeof(IAuditableEntity).IsAssignableFrom(entity.ClrType)).ToArray())
+        {
+            // Reuse CLR properties without introducing an EF inheritance hierarchy or base table.
+            var configuration = builder.Entity(entity.ClrType).HasBaseType((Type?)null);
+            configuration.Property(nameof(IAuditableEntity.CreatedAt)).HasDefaultValueSql("now()");
+            configuration.Property(nameof(IAuditableEntity.UpdatedAt)).HasDefaultValueSql("now()");
+        }
 
         foreach (var entity in builder.Model.GetEntityTypes())
         {
@@ -481,9 +493,35 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
 
     private void ApplyPersistenceConventions()
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = (timeProvider ?? TimeProvider.System).GetUtcNow();
+        var actorUserId = auditActorContext?.ActorUserId;
+        if (actorUserId == Guid.Empty)
+            throw new InvalidOperationException("ID người thực hiện audit không được là Guid.Empty.");
         foreach (var entry in ChangeTracker.Entries())
         {
+            if (entry.Entity is IAuditableEntity)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property(nameof(IAuditableEntity.CreatedAt)).CurrentValue = now;
+                    entry.Property(nameof(IAuditableEntity.CreatedBy)).CurrentValue = actorUserId;
+                    entry.Property(nameof(IAuditableEntity.UpdatedAt)).CurrentValue = now;
+                    entry.Property(nameof(IAuditableEntity.UpdatedBy)).CurrentValue = actorUserId;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    // Creator metadata is immutable even if a tracked entity is marked fully Modified.
+                    var createdAt = entry.Property(nameof(IAuditableEntity.CreatedAt));
+                    var createdBy = entry.Property(nameof(IAuditableEntity.CreatedBy));
+                    createdAt.CurrentValue = createdAt.OriginalValue;
+                    createdAt.IsModified = false;
+                    createdBy.CurrentValue = createdBy.OriginalValue;
+                    createdBy.IsModified = false;
+                    entry.Property(nameof(IAuditableEntity.UpdatedAt)).CurrentValue = now;
+                    entry.Property(nameof(IAuditableEntity.UpdatedBy)).CurrentValue = actorUserId;
+                }
+                continue;
+            }
             var created = entry.Metadata.FindProperty("CreatedAt");
             var updated = entry.Metadata.FindProperty("UpdatedAt");
 

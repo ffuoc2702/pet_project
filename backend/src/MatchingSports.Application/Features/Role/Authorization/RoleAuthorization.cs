@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Domain.Entities;
@@ -21,7 +22,21 @@ internal static class RoleAuthorization
     public static void RecordChange(IAdminActionRepository repository, Guid actorUserId,
         AdminActionType actionType, string targetType, Guid targetId, object? before, object after) =>
         repository.Add(AdminAction.Create(actorUserId, actionType, targetType, targetId,
-            JsonSerializer.Serialize(before), JsonSerializer.Serialize(after)));
+            SerializeChangeSnapshot(before), SerializeChangeSnapshot(after)));
+
+    private static string SerializeChangeSnapshot(object? value)
+    {
+        var node = JsonSerializer.SerializeToNode(value);
+        if (node is JsonObject details)
+        {
+            // Persistence stamps audit fields on commit; snapshots describe the business change.
+            details.Remove("CreatedAt");
+            details.Remove("UpdatedAt");
+            details.Remove("CreatedBy");
+            details.Remove("UpdatedBy");
+        }
+        return node?.ToJsonString() ?? "null";
+    }
 
     public static T ValidateRoleInput<T>(Func<T> createValidatedValue)
     {

@@ -24,7 +24,8 @@ internal sealed class IdentityService(
     IOtpEmailSender emailSender,
     IOptions<AuthOptions> options,
     TimeProvider timeProvider,
-    IUserRoleRepository userRoleRepository) : IIdentityService
+    IUserRoleRepository userRoleRepository,
+    IAuditActorContext auditActorContext) : IIdentityService
 {
     private readonly AuthOptions _options = options.Value;
 
@@ -35,6 +36,7 @@ internal sealed class IdentityService(
         string? ipAddress,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var canonicalEmail = CanonicalizeEmail(email);
         if (await userManager.FindByEmailAsync(canonicalEmail) is not null)
         {
@@ -76,6 +78,7 @@ internal sealed class IdentityService(
         string otp,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await FindUserByEmailAsync(email);
         if (user.EmailConfirmed)
             return;
@@ -86,6 +89,7 @@ internal sealed class IdentityService(
             OtpPurpose.EMAIL_VERIFICATION,
             cancellationToken);
 
+        using var verifiedActorScope = auditActorContext.BeginScope(user.Id);
         challenge.VerifiedAt = timeProvider.GetUtcNow();
         user.EmailConfirmed = true;
         ThrowIfFailed(await userManager.UpdateAsync(user));
@@ -96,6 +100,7 @@ internal sealed class IdentityService(
         string? ipAddress,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await userManager.FindByEmailAsync(CanonicalizeEmail(email));
         if (user is null || user.EmailConfirmed)
             return;
@@ -114,6 +119,7 @@ internal sealed class IdentityService(
         string? userAgent,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await userManager.FindByEmailAsync(CanonicalizeEmail(email));
         if (user is null)
             throw InvalidCredentials();
@@ -131,6 +137,7 @@ internal sealed class IdentityService(
             throw InvalidCredentials();
         }
 
+        using var verifiedActorScope = auditActorContext.BeginScope(user.Id);
         await userManager.ResetAccessFailedCountAsync(user);
 
         EnsureUserCanSignIn(user);
@@ -150,6 +157,7 @@ internal sealed class IdentityService(
         string? userAgent,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var now = timeProvider.GetUtcNow();
         var refreshTokenHash = HashRefreshToken(refreshToken);
         var session = await db.AuthSessions
@@ -165,12 +173,14 @@ internal sealed class IdentityService(
         if (!session.User.EmailConfirmed)
             throw InvalidRefreshToken();
 
+        using var verifiedActorScope = auditActorContext.BeginScope(session.UserId);
         session.RevokedAt = now;
         return await IssueTokensAsync(session.User, ipAddress, userAgent, cancellationToken);
     }
 
     public async Task LogoutAsync(string refreshToken, CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var refreshTokenHash = HashRefreshToken(refreshToken);
         var session = await db.AuthSessions.SingleOrDefaultAsync(
             item => item.RefreshTokenHash == refreshTokenHash,
@@ -179,6 +189,7 @@ internal sealed class IdentityService(
         if (session is null || session.RevokedAt is not null)
             return;
 
+        using var verifiedActorScope = auditActorContext.BeginScope(session.UserId);
         session.RevokedAt = timeProvider.GetUtcNow();
         await db.SaveChangesAsync(cancellationToken);
     }
@@ -188,6 +199,7 @@ internal sealed class IdentityService(
         string? ipAddress,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await userManager.FindByEmailAsync(CanonicalizeEmail(email));
         if (user is null || !user.EmailConfirmed || user.Status != UserStatus.ACTIVE)
             return;
@@ -205,6 +217,7 @@ internal sealed class IdentityService(
         string newPassword,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await FindUserByEmailAsync(email);
         var challenge = await ValidateOtpAsync(
             user,
@@ -212,6 +225,7 @@ internal sealed class IdentityService(
             OtpPurpose.PASSWORD_RESET,
             cancellationToken);
 
+        using var verifiedActorScope = auditActorContext.BeginScope(user.Id);
         var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
         ThrowIfFailed(await userManager.ResetPasswordAsync(user, resetToken, newPassword));
 
@@ -235,6 +249,7 @@ internal sealed class IdentityService(
         string? userAgent,
         CancellationToken cancellationToken)
     {
+        using var anonymousScope = auditActorContext.BeginScope(null);
         var user = await userManager.FindByLoginAsync(provider, providerKey);
         var canonicalEmail = CanonicalizeEmail(email);
 
@@ -256,16 +271,19 @@ internal sealed class IdentityService(
                     }
                 };
                 await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+                using var createdActorScope = auditActorContext.BeginScope(user.Id);
                 ThrowIfFailed(await userManager.CreateAsync(user));
                 await AssignRegistrationRolesAsync(user, cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
             }
             else if (!user.EmailConfirmed)
             {
+                using var verifiedActorScope = auditActorContext.BeginScope(user.Id);
                 user.EmailConfirmed = true;
                 ThrowIfFailed(await userManager.UpdateAsync(user));
             }
 
+            using var linkedActorScope = auditActorContext.BeginScope(user.Id);
             ThrowIfFailed(await userManager.AddLoginAsync(
                 user,
                 new UserLoginInfo(provider, providerKey, provider)));
@@ -401,6 +419,7 @@ internal sealed class IdentityService(
         string? userAgent,
         CancellationToken cancellationToken)
     {
+        using var verifiedActorScope = auditActorContext.BeginScope(user.Id);
         var jwt = _options.Jwt;
         var now = timeProvider.GetUtcNow();
         var accessTokenExpiresAt = now.AddMinutes(jwt.AccessTokenMinutes);

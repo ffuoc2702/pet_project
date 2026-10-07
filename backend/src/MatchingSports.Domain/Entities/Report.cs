@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Report
+public sealed class Report : AuditableEntity
 {
     public Guid Id { get; set; }
     public Guid ReporterUserId { get; set; }
@@ -14,8 +14,6 @@ public sealed class Report
     public Guid? AssignedAdminId { get; set; }
     public string? Resolution { get; set; }
     public DateTimeOffset? ResolvedAt { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
 
     public User ReporterUser { get; set; } = null!;
     public User? AssignedAdmin { get; set; }

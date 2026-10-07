@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Listing : IHasConcurrencyToken
+public sealed class Listing : ConcurrentAuditableEntity
 {
     public Guid Id { get; set; }
     public Guid OwnerUserId { get; set; }
@@ -23,11 +23,8 @@ public sealed class Listing : IHasConcurrencyToken
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
     public ListingStatus Status { get; set; } = ListingStatus.OPEN;
-    public Guid ConcurrencyToken { get; private set; }
     public DateTimeOffset? CancelledAt { get; set; }
     public string? CancelReason { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
 
     public User OwnerUser { get; set; } = null!;

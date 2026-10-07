@@ -1,7 +1,7 @@
 ﻿namespace MatchingSports.Domain.Entities;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711", Justification = "Business permission entity; unrelated to legacy Code Access Security.")]
-public sealed class Permission
+public sealed class Permission : AuditableEntity
 {
     private readonly List<RolePermission> _rolePermissions = [];
 
@@ -10,8 +10,6 @@ public sealed class Permission
     public Guid Id { get; private set; }
     public string Code { get; private set; } = null!;
     public string Name { get; private set; } = null!;
-    public DateTimeOffset CreatedAt { get; private set; }
-    public DateTimeOffset UpdatedAt { get; private set; }
     public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.AsReadOnly();
 
     public void UpdateDisplayName(string name)

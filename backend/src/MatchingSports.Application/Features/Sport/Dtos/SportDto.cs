@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed class SportFormatDto : BaseDto
+public sealed record SportFormatDto : BaseDto
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
@@ -11,7 +11,7 @@ public sealed class SportFormatDto : BaseDto
     public short SideSize { get; set; }
 }
 
-public sealed class SportDto
+public sealed record SportDto : BaseDto
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;

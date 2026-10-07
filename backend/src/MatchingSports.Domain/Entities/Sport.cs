@@ -2,14 +2,12 @@
 
 namespace MatchingSports.Domain.Entities;
 
-public sealed class Sport
+public sealed class Sport : AuditableEntity
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
     public string Name { get; set; } = null!;
     public bool IsActive { get; set; } = true;
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
 
     public static Sport Create(string code, string name, IReadOnlyCollection<SportFormatDetails> formats)
     {

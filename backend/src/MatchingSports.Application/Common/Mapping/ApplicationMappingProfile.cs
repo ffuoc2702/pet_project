@@ -19,6 +19,7 @@ public sealed class ApplicationMappingProfile : Profile
         CreateMap<UserSportProfile, UserSportProfileDto>()
             .ForMember(dto => dto.PreferredFormats, options => options.MapFrom(profile => profile.PreferredFormats.OrderBy(format => format.Code)));
         CreateMap<Permission, PermissionDto>();
+        CreateMap<GetRolesQuery, GetRolePermissionMatrixQuery>().ReverseMap();
         CreateMap<Role, RoleDto>()
             .ForCtorParam(nameof(RoleDto.Permissions), options => options.MapFrom(role =>
                 role.Permissions.OrderBy(item => item.Permission.Code).Select(item => item.Permission)));

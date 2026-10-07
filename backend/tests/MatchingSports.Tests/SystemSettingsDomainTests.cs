@@ -108,8 +108,11 @@ public sealed class SystemSettingsDomainTests
     {
         var settings = SystemSettings.CreateDefaults();
         var createdAt = new DateTimeOffset(2026, 10, 7, 12, 30, 0, TimeSpan.Zero);
-        var notification = new Notification { CreatedAt = createdAt };
-        var message = new OutboxMessage { CreatedAt = createdAt };
+        var notification = new Notification();
+        var message = new OutboxMessage();
+        // Rehydrate creation metadata as persistence does; public setters are intentionally unavailable.
+        typeof(AuditableEntity).GetProperty(nameof(AuditableEntity.CreatedAt))!.SetValue(notification, createdAt);
+        typeof(AuditableEntity).GetProperty(nameof(AuditableEntity.CreatedAt))!.SetValue(message, createdAt);
         notification.InitializeRetention(settings);
         message.InitializeRetention(settings);
         Assert.Equal(createdAt.AddDays(90), notification.PurgeAfter);

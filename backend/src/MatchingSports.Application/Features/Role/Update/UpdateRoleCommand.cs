@@ -31,6 +31,6 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roles, IAdminAction
         var result = mapper.Map<RoleDto>(role);
         RoleAuthorization.RecordChange(audit, request.ActorUserId, AdminActionType.UPDATE_ROLE, EntityTypes.Role, role.Id, before, result);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return result;
+        return mapper.Map<RoleDto>(role);
     }
 }
