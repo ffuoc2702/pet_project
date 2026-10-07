@@ -1,6 +1,7 @@
 ﻿using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Domain.Entities;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Shared;
 using MediatR;
 
@@ -15,7 +16,7 @@ public sealed record ReplaceUserRolesCommand(Guid ActorUserId, Guid UserId, IRea
 public sealed class ReplaceUserRolesCommandHandler(
     IUserRoleRepository repository,
     IRoleRepository roleRepository,
-    IAuthorizationAuditRepository audit,
+    IAdminActionRepository audit,
     IUnitOfWork unitOfWork) : IRequestHandler<ReplaceUserRolesCommand, UserRoleDto>
 {
     public async Task<UserRoleDto> Handle(ReplaceUserRolesCommand request, CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ public sealed class ReplaceUserRolesCommandHandler(
         var before = assignment.RoleIds.ToArray();
         assignment.ReplaceRoles(roles);
         await repository.ReplaceUserRolesAsync(assignment, cancellationToken);
-        RoleAuthorization.RecordChange(audit, request.ActorUserId, PermissionCodes.AssignUserRole,
+        RoleAuthorization.RecordChange(audit, request.ActorUserId, AdminActionType.ASSIGN_USER_ROLES, EntityTypes.User,
             assignment.UserId, before, assignment.RoleIds);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

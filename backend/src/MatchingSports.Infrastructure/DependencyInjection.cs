@@ -158,7 +158,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
-        services.AddScoped<IAuthorizationAuditRepository, AuthorizationAuditRepository>();
+        services.AddScoped<IAdminActionRepository, AdminActionRepository>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PersistenceExceptionBehavior<,>));
 
         return services;

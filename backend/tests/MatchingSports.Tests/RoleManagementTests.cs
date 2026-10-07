@@ -8,6 +8,7 @@ using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Permission;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Domain.Entities;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -74,9 +75,12 @@ public sealed class RoleManagementTests
         Assert.Equal(1, repository.SaveCount);
         Assert.Single(repository.Roles);
         var audit = Assert.Single(repository.AuditEntries);
-        Assert.Equal(PermissionCodes.CreateRoles, audit.Action);
-        Assert.Equal(repository.Actor.UserId, audit.ActorUserId);
+        Assert.Equal(AdminActionType.CREATE_ROLE, audit.ActionType);
+        Assert.Equal("ROLE", audit.TargetType);
         Assert.Equal(result.Id, audit.TargetId);
+        Assert.Equal("null", audit.BeforeJson);
+        Assert.Contains("MODERATOR", audit.AfterJson, StringComparison.Ordinal);
+        Assert.Equal(repository.Actor.UserId, audit.AdminUserId);
     }
 
     [Fact]
@@ -314,18 +318,18 @@ public sealed class RoleManagementTests
         services.AddSingleton<IRoleRepository>(repository);
         services.AddSingleton<IPermissionRepository>(repository);
         services.AddSingleton<IUserRoleRepository>(repository);
-        services.AddSingleton<IAuthorizationAuditRepository>(repository);
+        services.AddSingleton<IAdminActionRepository>(repository);
         services.AddSingleton<IUnitOfWork>(repository);
         return services.BuildServiceProvider();
     }
 
     private sealed class StubRepository(params string[] actorPermissions)
-        : IRoleRepository, IUserRoleRepository, IPermissionRepository, IAuthorizationAuditRepository, IUnitOfWork
+        : IRoleRepository, IUserRoleRepository, IPermissionRepository, IAdminActionRepository, IUnitOfWork
     {
         public UserRoleAssignment Actor { get; } = new(Guid.NewGuid(), ["ACCESS_MANAGER"], actorPermissions);
         public List<Role> Roles { get; } = [];
         public List<Permission> Permissions { get; } = [];
-        public List<AuthorizationAuditEntry> AuditEntries { get; } = [];
+        public List<AdminAction> AuditEntries { get; } = [];
         public int SaveCount { get; private set; }
         public int ListCount { get; private set; }
         public CancellationToken LastListCancellationToken { get; private set; }
@@ -356,7 +360,7 @@ public sealed class RoleManagementTests
         public Task<IReadOnlyCollection<Permission>> GetPermissionsAsync(CancellationToken cancellationToken) => Task.FromResult<IReadOnlyCollection<Permission>>(Permissions);
         public Task<IReadOnlyCollection<Permission>> GetByCodesAsync(IReadOnlyCollection<string> codes, CancellationToken cancellationToken) => Task.FromResult<IReadOnlyCollection<Permission>>(Permissions.Where(permission => codes.Contains(permission.Code)).ToArray());
         public void Add(Role role) => Roles.Add(role);
-        public void Add(AuthorizationAuditEntry entry) => AuditEntries.Add(entry);
+        public void Add(AdminAction entry) => AuditEntries.Add(entry);
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             SaveCount++;

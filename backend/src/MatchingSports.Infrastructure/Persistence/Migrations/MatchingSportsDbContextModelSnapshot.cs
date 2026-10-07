@@ -44,6 +44,20 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("admin_user_id");
 
+                    b.Property<string>("AfterJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("after_json")
+                        .HasDefaultValueSql("'{}'::jsonb");
+
+                    b.Property<string>("BeforeJson")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("before_json")
+                        .HasDefaultValueSql("'{}'::jsonb");
+
                     b.Property<Guid?>("CorrelationId")
                         .HasColumnType("uuid")
                         .HasColumnName("correlation_id");
@@ -62,7 +76,6 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasDefaultValueSql("'{}'::jsonb");
 
                     b.Property<string>("Reason")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("reason");
 
@@ -78,7 +91,7 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminUserId");
+                    b.HasIndex("AdminUserId", "CreatedAt");
 
                     b.HasIndex("TargetType", "TargetId", "CreatedAt")
                         .IsDescending(false, false, true)
@@ -156,50 +169,6 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasFilter("revoked_at IS NULL");
 
                     b.ToTable("auth_sessions", (string)null);
-                });
-
-            modelBuilder.Entity("MatchingSports.Domain.Entities.AuthorizationAuditEntry", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("action");
-
-                    b.Property<Guid>("ActorUserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("actor_user_id");
-
-                    b.Property<string>("AfterJson")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("after_json");
-
-                    b.Property<string>("BeforeJson")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("before_json");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid>("TargetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("target_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActorUserId", "CreatedAt");
-
-                    b.HasIndex("TargetId", "CreatedAt");
-
-                    b.ToTable("authorization_audit_entries", (string)null);
                 });
 
             modelBuilder.Entity("MatchingSports.Domain.Entities.Listing", b =>

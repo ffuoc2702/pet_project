@@ -136,7 +136,7 @@ public sealed class RoleAuthorizationDatabaseTests
             var secondRole = await secondDb.Roles.Include(role => role.Permissions).ThenInclude(link => link.Permission).SingleAsync(role => role.Id == customRole.Id);
             var stamp = firstRole.ConcurrencyStamp!;
             Assert.Equal(stamp, secondRole.ConcurrencyStamp);
-            var auditCount = await firstDb.Set<AuthorizationAuditEntry>().CountAsync();
+            var auditCount = await firstDb.Set<AdminAction>().CountAsync();
             customRole = await first.ServiceProvider.GetRequiredService<IMediator>().Send(new UpdateRolePermissionsCommand(actorId,
                 customRole.Id, [PermissionCodes.ReadSports], stamp));
             var error = await Assert.ThrowsAsync<ConflictException>(() => second.ServiceProvider.GetRequiredService<IMediator>()
@@ -144,7 +144,7 @@ public sealed class RoleAuthorizationDatabaseTests
             Assert.Equal(ErrorCodes.ConcurrencyConflict, error.Code);
             await using var check = provider.CreateAsyncScope();
             var checkDb = check.ServiceProvider.GetRequiredService<MatchingSportsDbContext>();
-            Assert.Equal(auditCount + 1, await checkDb.Set<AuthorizationAuditEntry>().CountAsync());
+            Assert.Equal(auditCount + 1, await checkDb.Set<AdminAction>().CountAsync());
             var role = await checkDb.Roles.Include(item => item.Permissions).ThenInclude(link => link.Permission).SingleAsync(item => item.Id == customRole.Id);
             Assert.Equal(PermissionCodes.ReadSports, Assert.Single(role.Permissions).Permission.Code);
         }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Domain.ValueObjects;
 using MatchingSports.Shared;
 using MediatR;
@@ -13,7 +14,7 @@ public sealed record UpdateRoleCommand(Guid ActorUserId, Guid RoleId, string Nam
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.UpdateRoles];
 }
 
-public sealed class UpdateRoleCommandHandler(IRoleRepository roles, IAuthorizationAuditRepository audit, IUnitOfWork unitOfWork, IMapper mapper)
+public sealed class UpdateRoleCommandHandler(IRoleRepository roles, IAdminActionRepository audit, IUnitOfWork unitOfWork, IMapper mapper)
     : IRequestHandler<UpdateRoleCommand, RoleDto>
 {
     public async Task<RoleDto> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
@@ -28,7 +29,7 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roles, IAuthorizati
         var before = mapper.Map<RoleDto>(role);
         role.UpdateDetails(details);
         var result = mapper.Map<RoleDto>(role);
-        RoleAuthorization.RecordChange(audit, request.ActorUserId, PermissionCodes.UpdateRoles, role.Id, before, result);
+        RoleAuthorization.RecordChange(audit, request.ActorUserId, AdminActionType.UPDATE_ROLE, EntityTypes.Role, role.Id, before, result);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return result;
     }

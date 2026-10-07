@@ -3,6 +3,7 @@ using MatchingSports.Application.Abstractions;
 using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Domain.Entities;
+using MatchingSports.Domain.Enums;
 using MatchingSports.Infrastructure.Persistence.Seed;
 using MatchingSports.Shared;
 using MediatR;
@@ -83,6 +84,12 @@ public sealed class PermissionAuthorizationTests
             new UpdateRolePermissionsCommand(actor.UserId, role.Id, [permission.Code], role.ConcurrencyStamp!), CancellationToken.None);
 
         Assert.Equal(permission.Code, Assert.Single(result.Permissions).Code);
+        var audit = Assert.Single(repository.AuditEntries);
+        Assert.Equal(AdminActionType.UPDATE_ROLE_PERMISSIONS, audit.ActionType);
+        Assert.Equal(actor.UserId, audit.AdminUserId);
+        Assert.Equal("ROLE", audit.TargetType);
+        Assert.Equal(role.Id, audit.TargetId);
+        Assert.Contains(permission.Code, audit.AfterJson, StringComparison.Ordinal);
         Assert.Equal(1, repository.SaveCount);
     }
 
@@ -142,15 +149,16 @@ public sealed class PermissionAuthorizationTests
         services.AddSingleton<IRoleRepository>(repository);
         services.AddSingleton<IPermissionRepository>(repository);
         services.AddSingleton<IUserRoleRepository>(repository);
-        services.AddSingleton<IAuthorizationAuditRepository>(repository);
+        services.AddSingleton<IAdminActionRepository>(repository);
         services.AddSingleton<IUnitOfWork>(repository);
         return services.BuildServiceProvider();
     }
 
     private sealed class StubRepository(UserRoleAssignment actor, Role role, params Permission[] permissions)
-        : IRoleRepository, IPermissionRepository, IUserRoleRepository, IAuthorizationAuditRepository, IUnitOfWork
+        : IRoleRepository, IPermissionRepository, IUserRoleRepository, IAdminActionRepository, IUnitOfWork
     {
-        public void Add(AuthorizationAuditEntry entry) { }
+        public List<AdminAction> AuditEntries { get; } = [];
+        public void Add(AdminAction entry) => AuditEntries.Add(entry);
         public Role Role { get; } = role;
         public int SaveCount { get; private set; }
 
