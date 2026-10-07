@@ -677,6 +677,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnName("payload_json")
                         .HasDefaultValueSql("'{}'::jsonb");
 
+                    b.Property<DateTimeOffset>("PurgeAfter")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("purge_after");
+
                     b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("read_at");
@@ -698,6 +702,9 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PurgeAfter")
+                        .HasDatabaseName("ix_notifications_purge_after");
 
                     b.HasIndex("UserId", "CreatedAt")
                         .IsDescending(false, true)
@@ -814,6 +821,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("event_type");
 
+                    b.Property<DateTimeOffset?>("FailedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("failed_at");
+
                     b.Property<string>("LastError")
                         .HasColumnType("text")
                         .HasColumnName("last_error");
@@ -837,6 +848,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("processed_at");
 
+                    b.Property<DateTimeOffset>("PurgeAfter")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("purge_after");
+
                     b.Property<int>("RetryCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -845,9 +860,13 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PurgeAfter")
+                        .HasDatabaseName("ix_outbox_purge_after")
+                        .HasFilter("processed_at IS NOT NULL");
+
                     b.HasIndex("AvailableAt", "OccurredAt")
                         .HasDatabaseName("ix_outbox_pending")
-                        .HasFilter("processed_at IS NULL");
+                        .HasFilter("processed_at IS NULL AND failed_at IS NULL");
 
                     b.ToTable("outbox_messages", null, t =>
                         {
@@ -1196,6 +1215,85 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.ToTable("sport_formats", null, t =>
                         {
                             t.HasCheckConstraint("ck_sport_formats_side_size", "side_size > 0");
+                        });
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.SystemSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("concurrency_token")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("MaxCaptainTeamsPerUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_captain_teams_per_user");
+
+                    b.Property<int>("MaxDeputiesPerTeam")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_deputies_per_team");
+
+                    b.Property<int>("MaxMemberTeamsPerUser")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_member_teams_per_user");
+
+                    b.Property<int>("MaxMembersPerTeam")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_members_per_team");
+
+                    b.Property<int>("MaxPendingTeamRequests")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_pending_team_requests");
+
+                    b.Property<int>("NotificationRetentionDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("notification_retention_days");
+
+                    b.Property<int>("OutboxMaxRetryCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("outbox_max_retry_count");
+
+                    b.Property<int>("OutboxRetryInitialDelaySeconds")
+                        .HasColumnType("integer")
+                        .HasColumnName("outbox_retry_initial_delay_seconds");
+
+                    b.Property<int>("OutboxRetryMaxDelaySeconds")
+                        .HasColumnType("integer")
+                        .HasColumnName("outbox_retry_max_delay_seconds");
+
+                    b.Property<int>("ProcessedOutboxRetentionDays")
+                        .HasColumnType("integer")
+                        .HasColumnName("processed_outbox_retention_days");
+
+                    b.Property<int>("TeamInvitationLifetimeHours")
+                        .HasColumnType("integer")
+                        .HasColumnName("team_invitation_lifetime_hours");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("system_settings", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_system_settings_limits", "outbox_max_retry_count BETWEEN 0 AND 100 AND max_captain_teams_per_user BETWEEN 0 AND 10000 AND max_member_teams_per_user BETWEEN 0 AND 10000 AND max_members_per_team BETWEEN 1 AND 10000 AND max_deputies_per_team >= 0 AND max_deputies_per_team < max_members_per_team AND team_invitation_lifetime_hours BETWEEN 1 AND 8760 AND max_pending_team_requests BETWEEN 0 AND 10000 AND outbox_retry_initial_delay_seconds BETWEEN 1 AND 604800 AND outbox_retry_max_delay_seconds BETWEEN outbox_retry_initial_delay_seconds AND 604800 AND processed_outbox_retention_days BETWEEN 1 AND 36500 AND notification_retention_days BETWEEN 1 AND 36500");
+
+                            t.HasCheckConstraint("ck_system_settings_singleton", "id = '00000000-0000-0000-0002-000000000001'::uuid");
                         });
                 });
 

@@ -30,6 +30,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<AdminAction> AdminActions => Set<AdminAction>();
+    public DbSet<SystemSettings> SystemSettings => Set<SystemSettings>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -42,6 +43,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         ConfigureTeams(builder);
         ConfigureListingsAndMatching(builder);
         ConfigureNotificationsAndSafety(builder);
+        ConfigureSystemSettings(builder);
 
         foreach (var entity in builder.Model.GetEntityTypes())
         {
@@ -54,14 +56,60 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
+        var settings = NeedsRetentionInitialization() ? GetPendingSettingsUpdate() ??
+            SystemSettings.AsNoTracking().Single(settings => settings.Id == Domain.Entities.SystemSettings.SingletonId) : null;
         ApplyPersistenceConventions();
+        InitializeRetention(settings);
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
-    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
+        var settings = NeedsRetentionInitialization() ? GetPendingSettingsUpdate() ??
+            await SystemSettings.AsNoTracking().SingleAsync(settings => settings.Id == Domain.Entities.SystemSettings.SingletonId, cancellationToken) : null;
         ApplyPersistenceConventions();
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        InitializeRetention(settings);
+        return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private bool NeedsRetentionInitialization() =>
+        ChangeTracker.Entries<Notification>().Any(entry => entry.State == EntityState.Added) ||
+        ChangeTracker.Entries<OutboxMessage>().Any(entry => entry.State == EntityState.Added);
+
+    private SystemSettings? GetPendingSettingsUpdate() =>
+        ChangeTracker.Entries<SystemSettings>().FirstOrDefault(entry => entry.State is EntityState.Added or EntityState.Modified)?.Entity;
+
+    private void InitializeRetention(SystemSettings? settings)
+    {
+        if (settings is null)
+            return;
+        // CreatedAt has been finalized by persistence conventions before calculating retention.
+        foreach (var entry in ChangeTracker.Entries<Notification>().Where(entry => entry.State == EntityState.Added))
+            entry.Entity.InitializeRetention(settings);
+        foreach (var entry in ChangeTracker.Entries<OutboxMessage>().Where(entry => entry.State == EntityState.Added))
+            entry.Entity.InitializeRetention(settings);
+    }
+
+    private static void ConfigureSystemSettings(ModelBuilder modelBuilder)
+    {
+        var settings = modelBuilder.Entity<SystemSettings>();
+        settings.ToTable("system_settings", table =>
+        {
+            table.HasCheckConstraint("ck_system_settings_singleton", "id = '00000000-0000-0000-0002-000000000001'::uuid");
+            table.HasCheckConstraint("ck_system_settings_limits",
+                "outbox_max_retry_count BETWEEN 0 AND 100 AND max_captain_teams_per_user BETWEEN 0 AND 10000 " +
+                "AND max_member_teams_per_user BETWEEN 0 AND 10000 AND max_members_per_team BETWEEN 1 AND 10000 " +
+                "AND max_deputies_per_team >= 0 AND max_deputies_per_team < max_members_per_team " +
+                "AND team_invitation_lifetime_hours BETWEEN 1 AND 8760 AND max_pending_team_requests BETWEEN 0 AND 10000 " +
+                "AND outbox_retry_initial_delay_seconds BETWEEN 1 AND 604800 " +
+                "AND outbox_retry_max_delay_seconds BETWEEN outbox_retry_initial_delay_seconds AND 604800 " +
+                "AND processed_outbox_retention_days BETWEEN 1 AND 36500 AND notification_retention_days BETWEEN 1 AND 36500");
+        });
+        settings.HasKey(x => x.Id);
+        settings.Property(x => x.Id).ValueGeneratedNever();
+        settings.Property(x => x.ConcurrencyToken).HasDefaultValueSql("gen_random_uuid()").IsConcurrencyToken();
+        settings.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
+        settings.Property(x => x.UpdatedAt).HasDefaultValueSql("now()");
     }
 
     private static void ConfigureCatalog(ModelBuilder modelBuilder)
@@ -381,6 +429,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         notifications.Property(x => x.EntityType).HasMaxLength(40);
         notifications.Property(x => x.PayloadJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
         notifications.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
+        notifications.HasIndex(x => x.PurgeAfter).HasDatabaseName("ix_notifications_purge_after");
         notifications.HasOne(x => x.User).WithMany(x => x.Notifications).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
         notifications.HasIndex(x => new { x.UserId, x.CreatedAt }).IsDescending(false, true)
             .HasFilter("read_at IS NULL").HasDatabaseName("ix_notifications_unread");
@@ -397,7 +446,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         outbox.Property(x => x.AvailableAt).HasDefaultValueSql("now()");
         outbox.Property(x => x.RetryCount).HasDefaultValue(0);
         outbox.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
-        outbox.HasIndex(x => new { x.AvailableAt, x.OccurredAt }).HasFilter("processed_at IS NULL").HasDatabaseName("ix_outbox_pending");
+        outbox.HasIndex(x => new { x.AvailableAt, x.OccurredAt }).HasFilter("processed_at IS NULL AND failed_at IS NULL").HasDatabaseName("ix_outbox_pending");
+        outbox.HasIndex(x => x.PurgeAfter).HasFilter("processed_at IS NOT NULL").HasDatabaseName("ix_outbox_purge_after");
 
         var reports = modelBuilder.Entity<Report>();
         reports.ToTable("reports", t => t.HasCheckConstraint("ck_reports_target", "target_type IN ('USER','LISTING','MATCH')"));

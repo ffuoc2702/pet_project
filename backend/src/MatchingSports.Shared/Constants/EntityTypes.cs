@@ -5,6 +5,7 @@
 /// </summary>
 public static class EntityTypes
 {
+    public const string SystemSettings = "SYSTEM_SETTINGS";
     public const string User = "USER";
     public const string Role = "ROLE";
     public const string Team = "TEAM";
