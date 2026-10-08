@@ -26,3 +26,25 @@ Dùng `PaginationTests` làm tham chiếu và đọc [phân trang](pagination.md
 
 Các lệnh restore/build/test/format và quy tắc package/lock file nằm trong
 [AGENTS.md](../AGENTS.md#lệnh-kiểm-tra).
+
+## PostgreSQL integration tests
+
+Sau khi restore, chạy từ backend/:
+
+```powershell
+.\scripts\Test.ps1
+```
+
+Script mặc định dùng container đang chạy `matchingsports-postgres-dev`, lấy
+thông tin đăng nhập và cổng đã publish qua Docker, rồi đặt
+`MATCHINGSPORTS_RBAC_TEST_CONNECTION` chỉ trong quá trình chạy test. Không ghi
+mật khẩu vào repo hoặc in chuỗi kết nối. Dùng `-DatabaseContainer <tên>` để
+chọn container khác, hoặc `-NoBuild` khi đã build Release.
+
+Nếu dùng PostgreSQL ngoài Docker, đặt biến môi trường trên trước khi chạy
+script. Database trong chuỗi kết nối phải bắt đầu bằng
+`matchingsports_rbac_test_`; không cần tạo database đó trước. Tài khoản cần
+quyền tạo/xóa database và cài extension PostGIS. Mỗi integration test tạo
+database với tên ngẫu nhiên riêng và dọn trong finally; không chạy migration
+hoặc seed vào database ứng dụng. Chạy `dotnet test` trực tiếp mà không có
+biến môi trường vẫn bỏ qua các integration test PostgreSQL.

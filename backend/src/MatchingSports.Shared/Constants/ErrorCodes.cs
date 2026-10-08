@@ -2,6 +2,10 @@
 
 public static class ErrorCodes
 {
+    public const string InvalidTeamOperation = "INVALID_TEAM_OPERATION";
+    public const string TeamNotFound = "TEAM_NOT_FOUND";
+    public const string TeamInvitationNotFound = "TEAM_INVITATION_NOT_FOUND";
+    public const string TeamJoinRequestNotFound = "TEAM_JOIN_REQUEST_NOT_FOUND";
     public const string InvalidNotificationConfig = "INVALID_NOTIFICATION_CONFIG";
     public const string NotificationConfigNotFound = "NOTIFICATION_CONFIG_NOT_FOUND";
     public const string NotificationNotFound = "NOTIFICATION_NOT_FOUND";

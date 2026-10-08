@@ -2,6 +2,13 @@
 
 public static class PermissionCodes
 {
+    public const string ManageTeamDeputies = "teams.deputies.manage";
+    public const string TransferTeamCaptain = "teams.captain.transfer";
+    public const string DeleteTeams = "teams.delete";
+    public const string RespondTeamInvitations = "teams.invitations.respond";
+    public const string CreateTeamJoinRequests = "teams.join_requests.create";
+    public const string WithdrawTeamJoinRequests = "teams.join_requests.withdraw";
+    public const string LeaveTeams = "teams.leave";
     public const string CreateNotificationConfigs = "notification_configs.create";
     public const string ReadNotificationConfigs = "notification_configs.read";
     public const string ListNotificationConfigs = "notification_configs.list";

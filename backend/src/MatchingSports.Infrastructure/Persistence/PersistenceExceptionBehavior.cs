@@ -1,8 +1,8 @@
 ﻿using MatchingSports.Application.Common;
+using MatchingSports.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using MatchingSports.Shared;
 
 namespace MatchingSports.Infrastructure.Persistence;
 
@@ -41,6 +41,10 @@ internal sealed class PersistenceExceptionBehavior<TRequest, TResponse>
                 ErrorCodes.ReferenceConflict,
                 "Tài nguyên đang tham chiếu dữ liệu không tồn tại hoặc không thể thay đổi.");
         }
+        catch (Exception exception) when (IsTransactionConflict(exception))
+        {
+            throw new ConflictException(ErrorCodes.ConcurrencyConflict, "Có thao tác đồng thời. Vui lòng tải lại và thử lại.");
+        }
         catch (NpgsqlException)
         {
             throw new ServiceUnavailableException(
@@ -53,5 +57,17 @@ internal sealed class PersistenceExceptionBehavior<TRequest, TResponse>
                 ErrorCodes.DependencyTimeout,
                 "Một dịch vụ phụ thuộc phản hồi quá chậm. Vui lòng thử lại sau.");
         }
+    }
+
+    private static bool IsTransactionConflict(Exception exception)
+    {
+        // Npgsql's execution strategy can wrap a serialization failure in InvalidOperationException.
+        for (Exception? current = exception; current is not null; current = current.InnerException)
+        {
+            if (current is PostgresException postgres
+                && postgres.SqlState is PostgresErrorCodes.SerializationFailure or PostgresErrorCodes.DeadlockDetected)
+                return true;
+        }
+        return false;
     }
 }

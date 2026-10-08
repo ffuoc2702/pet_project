@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using MatchingSports.Application.Features.Notification;
 using MatchingSports.Application.Features.Permission;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
+using MatchingSports.Application.Features.Team;
 using MatchingSports.Application.Features.UserProfile;
-using MatchingSports.Application.Features.Notification;
 
 namespace MatchingSports.Api.Contracts;
 
@@ -11,6 +12,13 @@ public sealed class ContractMappingProfile : Profile
 {
     public ContractMappingProfile()
     {
+        CreateMap<GetTeamsRequest, GetTeamsQuery>().ForMember(x => x.ActorUserId, options => options.Ignore());
+        CreateMap<GetTeamMembersRequest, GetTeamMembersQuery>()
+            .ForMember(x => x.ActorUserId, options => options.Ignore()).ForMember(x => x.TeamId, options => options.Ignore());
+        CreateMap<GetTeamInvitationsRequest, GetTeamInvitationsQuery>()
+            .ForMember(x => x.ActorUserId, options => options.Ignore()).ForMember(x => x.TeamId, options => options.Ignore());
+        CreateMap<GetTeamJoinRequestsRequest, GetTeamJoinRequestsQuery>()
+            .ForMember(x => x.ActorUserId, options => options.Ignore()).ForMember(x => x.TeamId, options => options.Ignore());
         CreateMap<SportFormatRequest, SportFormatInput>();
         CreateMap<NotificationConfigRequest, NotificationInput>()
             .ForCtorParam("Metadata", options => options.MapFrom(x => x.Metadata.GetRawText()));

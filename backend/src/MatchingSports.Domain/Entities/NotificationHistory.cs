@@ -1,4 +1,5 @@
 ﻿using MatchingSports.Domain.Enums;
+using MatchingSports.Domain.ValueObjects;
 using MatchingSports.Shared;
 
 namespace MatchingSports.Domain.Entities;
@@ -63,6 +64,30 @@ public sealed class NotificationHistory : AuditableEntity
             EmailStatus = config.EmailEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED,
             PushStatus = config.PushEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED,
             SmsStatus = config.SmsEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED
+        };
+    }
+    
+    public static NotificationHistory CreateTeamEvent(Guid userId, Guid teamId, NotificationType type,
+        string title, string text, string metadata, DateTimeOffset now, bool emailEnabled)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(text);
+        if (userId == Guid.Empty || teamId == Guid.Empty) throw new ArgumentException("Người nhận hoặc đội không hợp lệ.");
+        return new NotificationHistory
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            TeamId = teamId,
+            Type = type,
+            Title = title,
+            Body = System.Net.WebUtility.HtmlEncode(text),
+            BodyText = text,
+            PayloadJson = NotificationMetadata.NormalizeAndValidate(metadata),
+            EntityType = EntityTypes.Team,
+            EntityId = teamId,
+            ScheduledAt = now,
+            Critical = NotificationCritical.INFO,
+            EmailStatus = emailEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED
         };
     }
 

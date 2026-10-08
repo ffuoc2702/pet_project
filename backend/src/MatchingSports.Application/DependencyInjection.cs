@@ -14,6 +14,7 @@ public static class DependencyInjection
         params Assembly[] additionalMappingAssemblies)
     {
         services.TryAddScoped<IAuditActorContext, AuditActorContext>();
+        services.AddScoped<Features.Team.TeamCommandServices>();
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
@@ -21,6 +22,7 @@ public static class DependencyInjection
             configuration.AddOpenBehavior(typeof(AuditActorBehavior<,>));
             configuration.AddOpenBehavior(typeof(PaginationValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(DateRangeValidationBehavior<,>));
+            configuration.AddOpenBehavior(typeof(Features.Team.TeamRuleBehavior<,>));
         });
 
         var mappingAssemblies = new[] { typeof(ApplicationMappingProfile).Assembly }

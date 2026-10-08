@@ -14,7 +14,7 @@ public sealed record UpdateUserSportProfileCommand(Guid ActorUserId, Guid Profil
 
 public sealed class UpdateUserSportProfileCommandHandler(
                         IUserSportProfileRepository profilesRepository,
-                        IUnitOfWork unitOfWork, 
+                        IUnitOfWork unitOfWork,
                         IMapper mapper) : IRequestHandler<UpdateUserSportProfileCommand, UserSportProfileDto>
 {
     public async Task<UserSportProfileDto> Handle(UpdateUserSportProfileCommand request, CancellationToken cancellationToken)

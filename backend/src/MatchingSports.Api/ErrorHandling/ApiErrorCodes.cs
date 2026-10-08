@@ -1,4 +1,4 @@
-using MatchingSports.Shared;
+﻿using MatchingSports.Shared;
 
 namespace MatchingSports.Api.ErrorHandling;
 

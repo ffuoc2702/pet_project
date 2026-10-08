@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using MatchingSports.Application.Features.Notification;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
 using MatchingSports.Application.Features.SystemSettings;
 using MatchingSports.Application.Features.UserProfile;
 using MatchingSports.Application.Features.UserSportProfile;
-using MatchingSports.Application.Features.Notification;
+using MatchingSports.Application.Features.Team;
 using MatchingSports.Domain.Entities;
 
 namespace MatchingSports.Application.Common;
@@ -13,6 +14,10 @@ public sealed class ApplicationMappingProfile : Profile
 {
     public ApplicationMappingProfile()
     {
+        CreateMap<Team, TeamDto>();
+        CreateMap<TeamMember, TeamMemberDto>();
+        CreateMap<TeamInvitation, TeamInvitationDto>();
+        CreateMap<TeamJoinRequest, TeamJoinRequestDto>();
         CreateMap<SportFormat, SportFormatDto>();
         CreateMap<Sport, SportDto>();
         CreateMap<UserProfile, UserProfileDto>();

@@ -24,6 +24,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<AuthSession> AuthSessions => Set<AuthSession>();
     public DbSet<Team> Teams => Set<Team>();
     public DbSet<TeamMember> TeamMembers => Set<TeamMember>();
+    public DbSet<TeamInvitation> TeamInvitations => Set<TeamInvitation>();
+    public DbSet<TeamJoinRequest> TeamJoinRequests => Set<TeamJoinRequest>();
     public DbSet<Listing> Listings => Set<Listing>();
     public DbSet<ListingRequest> ListingRequests => Set<ListingRequest>();
     public DbSet<Match> Matches => Set<Match>();
@@ -46,6 +48,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         ConfigureCatalog(builder);
         ConfigureIdentityAndProfiles(builder);
         ConfigureTeams(builder);
+        TeamPersistenceConfiguration.Configure(builder);
         ConfigureListingsAndMatching(builder);
         ConfigureNotificationsAndSafety(builder);
         NotificationPersistenceConfiguration.Configure(builder);

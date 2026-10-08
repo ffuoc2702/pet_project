@@ -1,4 +1,4 @@
-using MatchingSports.Domain.Enums;
+﻿using MatchingSports.Domain.Enums;
 
 namespace MatchingSports.Application.Abstractions;
 

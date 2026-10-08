@@ -90,15 +90,19 @@ public sealed class NotificationJobs(INotificationWorkRepository repository, INo
             await transaction.CommitAsync(cancellationToken);
             return true;
         }
-        var config = await repository.LockConfigAsync(message.AggregateId, cancellationToken);
+        var config = message.AggregateType == EntityTypes.NotificationConfig
+            ? await repository.LockConfigAsync(message.AggregateId, cancellationToken) : null;
         var history = await repository.GetHistoryForDeliveryAsync(historyId, cancellationToken);
-        if (history is not null && history.NotificationConfigId != message.AggregateId)
+        if (history is not null && (history.NotificationConfigId is { } configId
+            ? message.AggregateType != EntityTypes.NotificationConfig || configId != message.AggregateId
+            : message.AggregateType != EntityTypes.Team || history.TeamId != message.AggregateId))
             message.FailPermanently("NOTIFICATION_CONFIG_MISMATCH", clock.GetUtcNow());
         else if (history is null)
             message.MarkProcessed(clock.GetUtcNow());
         else if (history.EmailStatus != NotificationDeliveryStatus.PENDING)
             message.MarkProcessed(clock.GetUtcNow());
-        else if (config is null || config.Status == NotificationConfigStatus.CANCEL || history.ExpiresAt <= clock.GetUtcNow())
+        else if ((history.NotificationConfigId is not null && (config is null || config.Status == NotificationConfigStatus.CANCEL))
+            || history.ExpiresAt <= clock.GetUtcNow())
         {
             history.RecordDelivery(NotificationChannel.EMAIL, NotificationDeliveryStatus.SKIPPED, clock.GetUtcNow(), "CANCELLED_OR_EXPIRED");
             message.MarkProcessed(clock.GetUtcNow());
