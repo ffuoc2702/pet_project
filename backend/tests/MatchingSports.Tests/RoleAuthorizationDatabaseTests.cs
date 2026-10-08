@@ -35,10 +35,24 @@ public sealed class RoleAuthorizationDatabaseTests
     [RbacDatabaseFact]
     public async Task DynamicRolesConcurrencyRegistrationAndRepeatableSeedWorkOnPostgres()
     {
-        var connection = Environment.GetEnvironmentVariable("MATCHINGSPORTS_RBAC_TEST_CONNECTION")!;
-        var databaseName = new NpgsqlConnectionStringBuilder(connection).Database;
-        // Never execute this fixture against a development or production database.
-        Assert.StartsWith("matchingsports_rbac_test_", databaseName, StringComparison.Ordinal);
+        var connection = new NpgsqlConnectionStringBuilder(Environment.GetEnvironmentVariable("MATCHINGSPORTS_RBAC_TEST_CONNECTION")!);
+        Assert.StartsWith("matchingsports_rbac_test_", connection.Database, StringComparison.Ordinal);
+        connection.Database = $"matchingsports_rbac_test_roles_{Guid.NewGuid():N}";
+        try
+        {
+            await VerifyRoleWorkflowAsync(connection.ConnectionString);
+        }
+        finally
+        {
+            var options = new DbContextOptionsBuilder<MatchingSportsDbContext>()
+                .UseNpgsql(connection.ConnectionString, postgres => postgres.UseNetTopologySuite()).Options;
+            await using var db = new MatchingSportsDbContext(options);
+            await db.Database.EnsureDeletedAsync();
+        }
+    }
+
+    private static async Task VerifyRoleWorkflowAsync(string connection)
+    {
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["ConnectionStrings:matchingsports"] = connection,
@@ -189,7 +203,7 @@ public sealed class RoleAuthorizationDatabaseTests
 
     private static async Task VerifySportCrudAsync(IServiceProvider provider, Guid actorId)
     {
-        var code = $"CRUD_{Guid.NewGuid():N}"[..30];
+        var code = $"CRUD_{Guid.NewGuid():N}"[..30].ToUpperInvariant();
         Guid sportId;
         await using (var scope = provider.CreateAsyncScope())
         {
@@ -416,19 +430,19 @@ public sealed class RoleAuthorizationDatabaseTests
         try
         {
             using var client = new HttpClient { BaseAddress = new Uri(app.Urls.Single()) };
-            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/v1/role/matrix")).StatusCode);
+            Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/v1/roles/matrix")).StatusCode);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", memberAccessToken);
-            Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/sport")).StatusCode);
-            Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/v1/role", new { name = "NOT_ALLOWED" })).StatusCode);
+            Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/v1/sports")).StatusCode);
+            Assert.Equal(HttpStatusCode.Forbidden, (await client.PostAsJsonAsync("/api/v1/roles", new { name = "NOT_ALLOWED" })).StatusCode);
 
             await using var scope = app.Services.CreateAsyncScope();
             var tokens = await scope.ServiceProvider.GetRequiredService<IIdentityService>()
                 .LoginAsync("rbac-manager@example.test", "Testing-Password123!", null, null, CancellationToken.None);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-            var create = await client.PostAsJsonAsync("/api/v1/role", new { name = "EVENT_ORGANIZER", isDefaultForRegistration = false });
+            var create = await client.PostAsJsonAsync("/api/v1/roles", new { name = "EVENT_ORGANIZER", isDefaultForRegistration = false });
             Assert.Equal(HttpStatusCode.OK, create.StatusCode);
             var created = (await create.Content.ReadFromJsonAsync<BaseResponse<RoleDto>>())!.Data;
-            var uri = $"/api/v1/role/{created.Id}/permissions";
+            var uri = $"/api/v1/roles/{created.Id}/permissions";
             var missingStamp = await client.PutAsJsonAsync(uri, new { permissionCodes = new[] { PermissionCodes.ReadSports } });
             Assert.Equal(HttpStatusCode.BadRequest, missingStamp.StatusCode);
             var granted = await client.PutAsJsonAsync(uri, new { permissionCodes = new[] { PermissionCodes.ReadSports }, concurrencyStamp = created.ConcurrencyStamp });
@@ -438,7 +452,7 @@ public sealed class RoleAuthorizationDatabaseTests
             Assert.Equal(HttpStatusCode.Conflict, stale.StatusCode);
             using (var problem = JsonDocument.Parse(await stale.Content.ReadAsStringAsync()))
                 Assert.Equal(ErrorCodes.ConcurrencyConflict, problem.RootElement.GetProperty("code").GetString());
-            var rename = await client.PutAsJsonAsync($"/api/v1/role/{created.Id}", new
+            var rename = await client.PutAsJsonAsync($"/api/v1/roles/{created.Id}", new
             {
                 name = "EVENT_COORDINATOR",
                 isActive = true,
@@ -446,13 +460,13 @@ public sealed class RoleAuthorizationDatabaseTests
                 concurrencyStamp = updated.ConcurrencyStamp
             });
             Assert.Equal(HttpStatusCode.OK, rename.StatusCode);
-            var matrixResponse = await client.GetAsync("/api/v1/role/matrix");
+            var matrixResponse = await client.GetAsync("/api/v1/roles/matrix");
             Assert.Equal(HttpStatusCode.OK, matrixResponse.StatusCode);
             var matrix = (await matrixResponse.Content.ReadFromJsonAsync<BaseResponse<RolePermissionMatrixDto>>())!.Data;
             Assert.Contains(matrix.Roles.Items, row => row.Name == "EVENT_COORDINATOR");
             Assert.Equal(InitialPermissionCatalog.All.Count, matrix.Permissions.Count);
 
-            var revoke = await client.PutAsJsonAsync($"/api/v1/role/{role.Id}/permissions", new
+            var revoke = await client.PutAsJsonAsync($"/api/v1/roles/{role.Id}/permissions", new
             {
                 permissionCodes = new[] { PermissionCodes.ReadOwnProfile },
                 concurrencyStamp = role.ConcurrencyStamp
@@ -460,15 +474,15 @@ public sealed class RoleAuthorizationDatabaseTests
             Assert.Equal(HttpStatusCode.OK, revoke.StatusCode);
             role = (await revoke.Content.ReadFromJsonAsync<BaseResponse<RoleDto>>())!.Data;
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", memberAccessToken);
-            Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/v1/sport")).StatusCode);
-            var footballPath = "/api/v1/sport/00000000-0000-0000-0000-000000000001";
+            Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync("/api/v1/sports")).StatusCode);
+            var footballPath = "/api/v1/sports/00000000-0000-0000-0000-000000000001";
             Assert.Equal(HttpStatusCode.Forbidden, (await client.GetAsync(footballPath)).StatusCode);
 
             // The same signed token follows current database grants; list and read never imply one another.
             foreach (var code in new[] { PermissionCodes.ReadSports, PermissionCodes.ListSports })
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-                var change = await client.PutAsJsonAsync($"/api/v1/role/{role.Id}/permissions", new
+                var change = await client.PutAsJsonAsync($"/api/v1/roles/{role.Id}/permissions", new
                 {
                     permissionCodes = new[] { PermissionCodes.ReadOwnProfile, code },
                     concurrencyStamp = role.ConcurrencyStamp
@@ -477,7 +491,7 @@ public sealed class RoleAuthorizationDatabaseTests
                 role = (await change.Content.ReadFromJsonAsync<BaseResponse<RoleDto>>())!.Data;
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", memberAccessToken);
                 Assert.Equal(code == PermissionCodes.ListSports ? HttpStatusCode.OK : HttpStatusCode.Forbidden,
-                    (await client.GetAsync("/api/v1/sport")).StatusCode);
+                    (await client.GetAsync("/api/v1/sports")).StatusCode);
                 Assert.Equal(code == PermissionCodes.ReadSports ? HttpStatusCode.OK : HttpStatusCode.Forbidden,
                     (await client.GetAsync(footballPath)).StatusCode);
             }
@@ -485,7 +499,7 @@ public sealed class RoleAuthorizationDatabaseTests
             foreach (var canList in new[] { true, false })
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-                var change = await client.PutAsJsonAsync($"/api/v1/role/{role.Id}/permissions", new
+                var change = await client.PutAsJsonAsync($"/api/v1/roles/{role.Id}/permissions", new
                 {
                     permissionCodes = canList ? new[] { PermissionCodes.ListRoles, PermissionCodes.ListPermissions }
                         : [PermissionCodes.ReadRoles, PermissionCodes.ReadPermissions],
@@ -494,13 +508,13 @@ public sealed class RoleAuthorizationDatabaseTests
                 Assert.Equal(HttpStatusCode.OK, change.StatusCode);
                 role = (await change.Content.ReadFromJsonAsync<BaseResponse<RoleDto>>())!.Data;
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", memberAccessToken);
-                foreach (var path in new[] { "/api/v1/role", "/api/v1/permission", "/api/v1/role/matrix" })
+                foreach (var path in new[] { "/api/v1/roles", "/api/v1/permissions", "/api/v1/roles/matrix" })
                     Assert.Equal(canList ? HttpStatusCode.OK : HttpStatusCode.Forbidden, (await client.GetAsync(path)).StatusCode);
-                foreach (var path in new[] { $"/api/v1/role/{created.Id}", $"/api/v1/permission/{matrix.Permissions.First().Id}" })
+                foreach (var path in new[] { $"/api/v1/roles/{created.Id}", $"/api/v1/permissions/{matrix.Permissions.First().Id}" })
                     Assert.Equal(canList ? HttpStatusCode.Forbidden : HttpStatusCode.OK, (await client.GetAsync(path)).StatusCode);
             }
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
-            var restore = await client.PutAsJsonAsync($"/api/v1/role/{role.Id}/permissions", new
+            var restore = await client.PutAsJsonAsync($"/api/v1/roles/{role.Id}/permissions", new
             {
                 permissionCodes = new[] { PermissionCodes.ReadOwnProfile, PermissionCodes.ListSports, PermissionCodes.ReadSports },
                 concurrencyStamp = role.ConcurrencyStamp

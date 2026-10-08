@@ -1,4 +1,4 @@
-namespace MatchingSports.Infrastructure.Identity;
+﻿namespace MatchingSports.Infrastructure.Identity;
 
 public sealed class AuthOptions
 {

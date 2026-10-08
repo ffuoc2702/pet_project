@@ -173,3 +173,10 @@ Tests: invariant/cron/timezone/misfire/lease, HTML/metadata, actor, snapshot, un
 recipient giữa team, ALL_USERS, transaction, retry/failure/cancel/expiry, cleanup
 bảo vệ pending, đọc đồng thời, migration up/down, HTTP auth/permission/model-binding,
 pagination, metadata JSON object và spoof actor.
+
+## Thông báo nghiệp vụ team
+
+Xem [quản lý đội](teams.md). History độc lập dùng NotificationConfigId=null; outbox email dùng
+AggregateType=TEAM và AggregateId=Team.Id. Dispatcher kiểm tra liên kết TeamId và không yêu cầu
+NotificationConfig cho những history này. Nội dung text được HTML-encode và metadata dùng chung
+validation Domain. Việc xóa đội không hủy email snapshot nghiệp vụ đã commit.

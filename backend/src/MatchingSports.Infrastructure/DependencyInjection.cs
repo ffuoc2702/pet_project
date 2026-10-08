@@ -155,6 +155,10 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IOtpEmailSender, GmailOtpEmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITeamRepository, TeamRepository>();
+        services.AddScoped<Application.Features.Team.TeamNotifications>(provider => new(
+            provider.GetRequiredService<INotificationWorkRepository>(), provider.GetRequiredService<INotificationEmailSender>(),
+            provider.GetRequiredService<TimeProvider>(), configuration.GetValue<bool>("Teams:Notifications:EmailEnabled")));
         services.AddScoped<ISportRepository, SportRepository>();
         services.AddScoped<IUserProfileRepository, UserProfileRepository>();
         services.AddScoped<IUserSportProfileRepository, UserSportProfileRepository>();

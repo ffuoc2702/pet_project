@@ -1,4 +1,4 @@
-using MatchingSports.Application.Common;
+﻿using MatchingSports.Application.Common;
 
 namespace MatchingSports.Tests;
 

@@ -6,14 +6,14 @@ public sealed class SportFormatRequest : IValidatableObject
 {
     public Guid? Id { get; init; }
 
-    [Required]
+    [Required(ErrorMessage = "Thao tác với thể thức là bắt buộc.")]
     [RegularExpression("^(NEW|MODIFY|DELETE)$", ErrorMessage = "Thao tác với thể thức phải là NEW, MODIFY hoặc DELETE.")]
     public string Action { get; init; } = null!;
 
-    [StringLength(32)]
+    [StringLength(32, ErrorMessage = "Mã thể thức không được vượt quá 32 ký tự.")]
     public string? Code { get; init; }
 
-    [StringLength(100)]
+    [StringLength(100, ErrorMessage = "Tên thể thức không được vượt quá 100 ký tự.")]
     public string? DisplayName { get; init; }
 
     public short SideSize { get; init; }

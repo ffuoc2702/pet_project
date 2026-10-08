@@ -13,9 +13,9 @@ không đổi giá trị. Conflict vẫn trả `CONCURRENCY_CONFLICT` qua pipeli
 
 ## Phạm vi áp dụng
 
-- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings, NotificationConfig.
+- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings, NotificationConfig, Team, TeamInvitation, TeamJoinRequest.
 - `AuditableEntity`: Sport, SportFormat, Permission, UserProfile, UserSportProfile,
-  Team, TeamMember, MatchParticipant, Report, NotificationHistory, OtpChallenge, OutboxMessage.
+  TeamMember, MatchParticipant, Report, NotificationHistory, OtpChallenge, OutboxMessage.
 - User/Role: giữ base Identity và concurrency stamp, triển khai `IAuditableEntity`.
 - AdminAction: lịch sử bất biến, giữ actor/timestamp riêng hiện tại.
 - RolePermission, UserSportProfileFormat và bảng liên kết Identity: giữ cấu trúc riêng.
@@ -87,3 +87,6 @@ Không thêm FK cho actor, để metadata lịch sử tồn tại sau khi user b
 Kiểm thử gồm model không tạo bảng base, scope async/nested, creator bất biến,
 API response sau commit, actor khác user mục tiêu, Identity trước/sau xác minh,
 và migration/retention/concurrency trên PostgreSQL dùng database test riêng.
+
+Quản lý đội dùng TeamDto, TeamInvitationDto và TeamJoinRequestDto kế thừa ConcurrentBaseDto;
+TeamMemberDto kế thừa BaseDto. Xem [quản lý đội](teams.md) về transaction, migration và audit.

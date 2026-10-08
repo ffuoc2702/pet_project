@@ -1,4 +1,4 @@
-namespace MatchingSports.Shared;
+﻿namespace MatchingSports.Shared;
 
 public static class StringNormalizer
 {

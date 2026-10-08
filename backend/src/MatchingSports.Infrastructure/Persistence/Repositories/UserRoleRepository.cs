@@ -15,16 +15,16 @@ internal sealed class UserRoleRepository(MatchingSportsDbContext db) : IUserRole
             return null;
 
         var memberships = await (from membership in db.Set<IdentityUserRole<Guid>>()
-                                join role in db.Roles on membership.RoleId equals role.Id
-                                where membership.UserId == userId
-                                orderby role.Name
-                                select new
-                                {
-                                    role.Id,
-                                    role.Name,
-                                    role.IsActive,
-                                    Permissions = role.Permissions.Select(link => link.Permission.Code).ToArray()
-                                }).ToArrayAsync(cancellationToken);
+                                 join role in db.Roles on membership.RoleId equals role.Id
+                                 where membership.UserId == userId
+                                 orderby role.Name
+                                 select new
+                                 {
+                                     role.Id,
+                                     role.Name,
+                                     role.IsActive,
+                                     Permissions = role.Permissions.Select(link => link.Permission.Code).ToArray()
+                                 }).ToArrayAsync(cancellationToken);
         var activeRoles = memberships.Where(role => role.IsActive).ToArray();
         var roles = activeRoles.Select(role => role.Name!).ToArray();
         var permissions = activeRoles.SelectMany(role => role.Permissions).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToArray();

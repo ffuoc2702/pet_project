@@ -12,7 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MatchingSports.Api\MatchingSports.Api.csproj" />
     <ProjectReference Include="..\MatchingSports.Migrator\MatchingSports.Migrator.csproj" />
-    <ProjectReference Include="..\MatchingSports.Shared\MatchingSports.Shared.csproj" />
+    <ProjectReference Include="..\MatchingSports.Shared\MatchingSports.Shared.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
   <ItemGroup>

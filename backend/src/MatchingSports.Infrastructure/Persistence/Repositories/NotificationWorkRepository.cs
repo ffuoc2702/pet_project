@@ -58,7 +58,7 @@ internal sealed class NotificationWorkRepository(MatchingSportsDbContext db) : I
         db.OutboxMessages.FromSqlInterpolated($"""
             SELECT * FROM outbox_messages
             WHERE event_type = {NotificationJobs.EmailEvent} AND processed_at IS NULL AND failed_at IS NULL
-                available_at <= {now} AND (locked_until IS NULL OR locked_until <= {now})
+                AND available_at <= {now} AND (locked_until IS NULL OR locked_until <= {now})
             ORDER BY available_at, id LIMIT 1 FOR UPDATE SKIP LOCKED
             """).FirstOrDefaultAsync(cancellationToken);
 

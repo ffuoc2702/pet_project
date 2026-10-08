@@ -33,9 +33,14 @@ public static class DatabaseInitializer
             new SportSeed(Guid.Parse("00000000-0000-0000-0000-000000000003"), "PICKLEBALL", "Pickleball")
         };
 
-        var existingSports = await db.Sports
-            .IgnoreQueryFilters()
-            .ToDictionaryAsync(sport => sport.Code, StringComparer.OrdinalIgnoreCase, cancellationToken);
+        var seedCodes = sportSeeds.Select(seed => seed.Code).ToArray();
+        var matchingSports = await db.Sports.IgnoreQueryFilters()
+            .Where(sport => seedCodes.Contains(sport.Code))
+            .OrderBy(sport => sport.Id)
+            .ToListAsync(cancellationToken);
+        // Inactive sports may share a reused code; retain the original seed instead of reactivating it.
+        var existingSports = matchingSports.GroupBy(sport => sport.Code, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
         foreach (var seed in sportSeeds)
         {
