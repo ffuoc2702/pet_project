@@ -76,7 +76,14 @@ public static class InitialPermissionCatalog
         new(PermissionCodes.ListAllReports, "Xem danh sách toàn bộ báo cáo", false, PermissionCodes.ReadAllReports),
         new(PermissionCodes.ResolveReports, "Xử lý hoặc bác bỏ báo cáo", false),
         new(PermissionCodes.ReadAuditLogs, "Xem chi tiết thao tác quản trị", false),
-        new(PermissionCodes.ListAuditLogs, "Xem danh sách lịch sử thao tác quản trị", false, PermissionCodes.ReadAuditLogs)
+        new(PermissionCodes.ListAuditLogs, "Xem danh sách lịch sử thao tác quản trị", false, PermissionCodes.ReadAuditLogs),
+        new(PermissionCodes.CreateNotificationConfigs, "Tạo cấu hình thông báo", false),
+        new(PermissionCodes.ReadNotificationConfigs, "Xem cấu hình thông báo", false),
+        new(PermissionCodes.ListNotificationConfigs, "Xem danh sách cấu hình thông báo", false),
+        new(PermissionCodes.UpdateNotificationConfigs, "Sửa cấu hình thông báo", false),
+        new(PermissionCodes.ActivateNotificationConfigs, "Kích hoạt cấu hình thông báo", false),
+        new(PermissionCodes.CancelNotificationConfigs, "Hủy cấu hình thông báo", false),
+        new(PermissionCodes.ListNotificationHistory, "Xem lịch sử phát thông báo", false)
     ]);
 
     public static IEnumerable<string> GetDefaultPermissionCodes(string roleName) =>

@@ -55,7 +55,7 @@ public sealed class User : IdentityUser<Guid>, IAuditableEntity
     public ICollection<ListingRequest> DecidedRequests { get; set; } = [];
     public ICollection<Match> CancelledMatches { get; set; } = [];
     public ICollection<MatchParticipant> MatchParticipations { get; set; } = [];
-    public ICollection<Notification> Notifications { get; set; } = [];
+    public ICollection<NotificationHistory> NotificationHistories { get; set; } = [];
     public ICollection<Report> SubmittedReports { get; set; } = [];
     public ICollection<Report> AssignedReports { get; set; } = [];
     public ICollection<AdminAction> AdminActions { get; set; } = [];

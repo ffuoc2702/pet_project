@@ -2,6 +2,13 @@
 
 public static class PermissionCodes
 {
+    public const string CreateNotificationConfigs = "notification_configs.create";
+    public const string ReadNotificationConfigs = "notification_configs.read";
+    public const string ListNotificationConfigs = "notification_configs.list";
+    public const string UpdateNotificationConfigs = "notification_configs.update";
+    public const string ActivateNotificationConfigs = "notification_configs.activate";
+    public const string CancelNotificationConfigs = "notification_configs.cancel";
+    public const string ListNotificationHistory = "notification_history.list";
     public const string ReadSystemSettings = "system_settings.read";
     public const string UpdateSystemSettings = "system_settings.update";
     public const string ReadRoles = "roles.read";

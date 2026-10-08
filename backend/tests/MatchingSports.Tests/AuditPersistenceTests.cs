@@ -223,7 +223,7 @@ public sealed class AuditPersistenceTests
                 var settingsRoundTrip = JsonSerializer.Deserialize<SystemSettingsDto>(JsonSerializer.Serialize(updated));
                 Assert.Equal(updated, settingsRoundTrip);
 
-                var notification = new Notification { UserId = registeredId, Type = NotificationType.MATCH_REMINDER, Title = "Reminder", Body = "Details" };
+                var notification = new NotificationHistory { UserId = registeredId, Type = NotificationType.MATCH_REMINDER, Title = "Reminder", Body = "Details" };
                 var message = new OutboxMessage { AggregateType = "TEAM", AggregateId = customRoleId, EventType = "Test", PayloadJson = "{}" };
                 db.AddRange(notification, message);
                 await db.SaveChangesAsync();

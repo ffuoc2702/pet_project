@@ -163,6 +163,12 @@ public static class DependencyInjection
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IAdminActionRepository, AdminActionRepository>();
         services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationWorkRepository, NotificationWorkRepository>();
+        services.AddScoped<INotificationContentRenderer, Notifications.NotificationContentRenderer>();
+        services.AddScoped<Domain.Services.INotificationSchedule, Notifications.CronNotificationSchedule>();
+        services.AddScoped<INotificationEmailSender, Notifications.SmtpNotificationEmailSender>();
+        services.AddScoped<Application.Features.Notification.NotificationJobs>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PersistenceExceptionBehavior<,>));
 
         return services;

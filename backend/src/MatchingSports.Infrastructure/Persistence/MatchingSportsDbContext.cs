@@ -28,7 +28,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<ListingRequest> ListingRequests => Set<ListingRequest>();
     public DbSet<Match> Matches => Set<Match>();
     public DbSet<MatchParticipant> MatchParticipants => Set<MatchParticipant>();
-    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<NotificationHistory> NotificationHistories => Set<NotificationHistory>();
+    public DbSet<NotificationConfig> NotificationConfigs => Set<NotificationConfig>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<AdminAction> AdminActions => Set<AdminAction>();
@@ -47,6 +48,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         ConfigureTeams(builder);
         ConfigureListingsAndMatching(builder);
         ConfigureNotificationsAndSafety(builder);
+        NotificationPersistenceConfiguration.Configure(builder);
         ConfigureSystemSettings(builder);
 
         foreach (var entity in builder.Model.GetEntityTypes().Where(entity => typeof(IAuditableEntity).IsAssignableFrom(entity.ClrType)).ToArray())
@@ -85,7 +87,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     }
 
     private bool NeedsRetentionInitialization() =>
-        ChangeTracker.Entries<Notification>().Any(entry => entry.State == EntityState.Added) ||
+        ChangeTracker.Entries<NotificationHistory>().Any(entry => entry.State == EntityState.Added) ||
         ChangeTracker.Entries<OutboxMessage>().Any(entry => entry.State == EntityState.Added);
 
     private SystemSettings? GetPendingSettingsUpdate() =>
@@ -96,7 +98,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         if (settings is null)
             return;
         // CreatedAt has been finalized by persistence conventions before calculating retention.
-        foreach (var entry in ChangeTracker.Entries<Notification>().Where(entry => entry.State == EntityState.Added))
+        foreach (var entry in ChangeTracker.Entries<NotificationHistory>().Where(entry => entry.State == EntityState.Added))
             entry.Entity.InitializeRetention(settings);
         foreach (var entry in ChangeTracker.Entries<OutboxMessage>().Where(entry => entry.State == EntityState.Added))
             entry.Entity.InitializeRetention(settings);
@@ -432,8 +434,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
 
     private static void ConfigureNotificationsAndSafety(ModelBuilder modelBuilder)
     {
-        var notifications = modelBuilder.Entity<Notification>();
-        notifications.ToTable("notifications");
+        var notifications = modelBuilder.Entity<NotificationHistory>();
+        notifications.ToTable("notification_history");
         notifications.HasKey(x => x.Id);
         notifications.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
         notifications.Property(x => x.Type).HasConversion<string>().HasMaxLength(40);
@@ -442,10 +444,9 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         notifications.Property(x => x.PayloadJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
         notifications.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
         notifications.HasIndex(x => x.PurgeAfter).HasDatabaseName("ix_notifications_purge_after");
-        notifications.HasOne(x => x.User).WithMany(x => x.Notifications).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        notifications.HasOne(x => x.User).WithMany(x => x.NotificationHistories).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.SetNull);
         notifications.HasIndex(x => new { x.UserId, x.CreatedAt }).IsDescending(false, true)
             .HasFilter("read_at IS NULL").HasDatabaseName("ix_notifications_unread");
-        notifications.HasQueryFilter(x => x.User.DeletedAt == null);
 
         var outbox = modelBuilder.Entity<OutboxMessage>();
         outbox.ToTable("outbox_messages", t => t.HasCheckConstraint("ck_outbox_retry_count", "retry_count >= 0"));

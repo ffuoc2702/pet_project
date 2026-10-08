@@ -57,4 +57,14 @@ public sealed class OutboxMessage : AuditableEntity
         LockedUntil = null;
         LastError = null;
     }
+
+    public void FailPermanently(string errorCode, DateTimeOffset now)
+    {
+        if (ProcessedAt is not null || FailedAt is not null)
+            throw new InvalidOperationException("Message đã kết thúc xử lý.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(errorCode);
+        FailedAt = now;
+        LastError = errorCode;
+        LockedUntil = null;
+    }
 }

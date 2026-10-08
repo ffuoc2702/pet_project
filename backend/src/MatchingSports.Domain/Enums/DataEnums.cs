@@ -18,6 +18,7 @@ public enum ReportCategory { NO_SHOW, HARASSMENT, SPAM, FRAUD, INACCURATE_INFO, 
 public enum ReportStatus { OPEN, IN_REVIEW, RESOLVED, DISMISSED }
 public enum NotificationType
 {
+    ADMIN_MESSAGE,
     REQUEST_CREATED,
     REQUEST_ACCEPTED,
     REQUEST_REJECTED,
@@ -28,6 +29,10 @@ public enum NotificationType
 }
 public enum AdminActionType
 {
+    CREATE_NOTIFICATION_CONFIG,
+    UPDATE_NOTIFICATION_CONFIG,
+    ACTIVATE_NOTIFICATION_CONFIG,
+    CANCEL_NOTIFICATION_CONFIG,
     WARN_USER,
     SUSPEND_USER,
     REACTIVATE_USER,
