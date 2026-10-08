@@ -13,9 +13,9 @@ không đổi giá trị. Conflict vẫn trả `CONCURRENCY_CONFLICT` qua pipeli
 
 ## Phạm vi áp dụng
 
-- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings.
+- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings, NotificationConfig.
 - `AuditableEntity`: Sport, SportFormat, Permission, UserProfile, UserSportProfile,
-  Team, TeamMember, MatchParticipant, Report, Notification, OtpChallenge, OutboxMessage.
+  Team, TeamMember, MatchParticipant, Report, NotificationHistory, OtpChallenge, OutboxMessage.
 - User/Role: giữ base Identity và concurrency stamp, triển khai `IAuditableEntity`.
 - AdminAction: lịch sử bất biến, giữ actor/timestamp riêng hiện tại.
 - RolePermission, UserSportProfileFormat và bảng liên kết Identity: giữ cấu trúc riêng.
@@ -69,8 +69,10 @@ AdminAction tiếp tục ghi lịch sử trong cùng transaction. Snapshot role 
 giá trị nghiệp vụ, bỏ metadata audit cấp trên chưa được stamp trước commit;
 actor và thời điểm thao tác đã có trên bản ghi AdminAction.
 
-Notification/outbox tính PurgeAfter sau khi CreatedAt được stamp. Khi cập nhật,
+NotificationHistory/outbox tính PurgeAfter sau khi CreatedAt được stamp. Khi cập nhật,
 CreatedAt và deadline retention không bị tính lại.
+Config/history DTO kế thừa base audit/concurrency tương ứng; luồng phát thông báo,
+mobile metadata và worker được mô tả trong [notifications](notifications.md).
 
 ## Migration
 

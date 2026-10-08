@@ -2,6 +2,10 @@
 
 public static class ErrorCodes
 {
+    public const string InvalidNotificationConfig = "INVALID_NOTIFICATION_CONFIG";
+    public const string NotificationConfigNotFound = "NOTIFICATION_CONFIG_NOT_FOUND";
+    public const string NotificationNotFound = "NOTIFICATION_NOT_FOUND";
+    public const string NotificationChannelUnavailable = "NOTIFICATION_CHANNEL_UNAVAILABLE";
     public const string InvalidSystemSettings = "INVALID_SYSTEM_SETTINGS";
     public const string SystemSettingsNotFound = "SYSTEM_SETTINGS_NOT_FOUND";
     public const string ValidationFailed = "VALIDATION_FAILED";

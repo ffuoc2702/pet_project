@@ -50,7 +50,7 @@ public sealed class SystemSettingsPersistenceTests
                 """);
             await migrator.MigrateAsync();
             var migratedMessage = await db.OutboxMessages.SingleAsync();
-            var migratedNotification = await db.Notifications.SingleAsync();
+            var migratedNotification = await db.NotificationHistories.SingleAsync();
             Assert.Equal(oldCreatedAt.AddDays(30), migratedMessage.PurgeAfter);
             Assert.Equal(oldCreatedAt.AddDays(90), migratedNotification.PurgeAfter);
             Assert.Equal(oldCreatedAt, migratedMessage.CreatedAt);
@@ -87,7 +87,7 @@ public sealed class SystemSettingsPersistenceTests
                 version = updated.ConcurrencyToken;
                 var context = scope.ServiceProvider.GetRequiredService<MatchingSportsDbContext>();
                 Assert.Equal(version, (await context.SystemSettings.AsNoTracking().SingleAsync()).ConcurrencyToken);
-                var notification = new Notification
+                var notification = new NotificationHistory
                 {
                     UserId = actor.Id,
                     Type = NotificationType.MATCH_REMINDER,
@@ -102,7 +102,7 @@ public sealed class SystemSettingsPersistenceTests
                 Assert.Equal(notification.CreatedAt.AddDays(14), notification.PurgeAfter);
                 Assert.Equal(message.CreatedAt.AddDays(7), message.PurgeAfter);
                 Assert.NotEqual(oldCreatedAt, notification.CreatedAt);
-                Assert.Equal(oldCreatedAt.AddDays(90), (await context.Notifications.SingleAsync(item => item.Id == oldNotificationId)).PurgeAfter);
+                Assert.Equal(oldCreatedAt.AddDays(90), (await context.NotificationHistories.SingleAsync(item => item.Id == oldNotificationId)).PurgeAfter);
                 message.MarkProcessed(message.CreatedAt.AddDays(1));
                 await context.SaveChangesAsync();
                 Assert.Equal(message.CreatedAt.AddDays(7), message.PurgeAfter);
@@ -134,7 +134,7 @@ public sealed class SystemSettingsPersistenceTests
             db.ChangeTracker.Clear();
             Assert.Equal(14, (await db.SystemSettings.SingleAsync()).NotificationRetentionDays);
             Assert.Equal(2, await db.AdminActions.CountAsync());
-            Assert.Equal(oldCreatedAt.AddDays(90), (await db.Notifications.SingleAsync(item => item.Id == oldNotificationId)).PurgeAfter);
+            Assert.Equal(oldCreatedAt.AddDays(90), (await db.NotificationHistories.SingleAsync(item => item.Id == oldNotificationId)).PurgeAfter);
             await migrator.MigrateAsync(previousMigration);
             await migrator.MigrateAsync();
             db.ChangeTracker.Clear();
@@ -160,8 +160,8 @@ public sealed class SystemSettingsPersistenceTests
         var pendingIndex = Assert.Single(outbox.GetIndexes(), index => index.GetDatabaseName() == "ix_outbox_pending");
         Assert.Equal("processed_at IS NULL AND failed_at IS NULL", pendingIndex.GetFilter());
         Assert.False(outbox.FindProperty(nameof(OutboxMessage.PurgeAfter))!.IsNullable);
-        var notification = db.Model.FindEntityType(typeof(Notification))!;
-        Assert.False(notification.FindProperty(nameof(Notification.PurgeAfter))!.IsNullable);
+        var notification = db.Model.FindEntityType(typeof(NotificationHistory))!;
+        Assert.False(notification.FindProperty(nameof(NotificationHistory.PurgeAfter))!.IsNullable);
         Assert.Contains(notification.GetIndexes(), index => index.GetDatabaseName() == "ix_notifications_purge_after");
     }
 

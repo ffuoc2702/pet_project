@@ -1,10 +1,11 @@
 ﻿namespace MatchingSports.Shared;
 
 /// <summary>
-/// Shared entity identifiers for AdminAction.TargetType and Notification.EntityType.
+/// Shared entity identifiers for AdminAction.TargetType and NotificationHistory.EntityType.
 /// </summary>
 public static class EntityTypes
 {
+    public const string NotificationConfig = "NOTIFICATION_CONFIG";
     public const string SystemSettings = "SYSTEM_SETTINGS";
     public const string User = "USER";
     public const string Role = "ROLE";

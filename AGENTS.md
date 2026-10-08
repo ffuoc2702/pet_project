@@ -93,6 +93,28 @@ phân biệt actor với người dùng mục tiêu. Identity không thay thế 
   Snapshot `AdminAction` mô tả thay đổi nghiệp vụ, không chụp metadata audit chưa
   được persistence stamp. Ghi lịch sử và thay đổi nghiệp vụ trong cùng transaction.
 
+## Tính năng thông báo
+
+- Đọc [docs/notifications.md](docs/notifications.md) trước khi sửa notification,
+  lịch, kênh gửi, outbox delivery hoặc cleanup. `NotificationHistory` thay thế
+  `Notification`; một history là một user × một lượt, nội dung là snapshot.
+- `NotificationConfig` dùng concurrency base; DTO dùng base tương ứng. User/team
+  mục tiêu nằm trong junction, không phải actor. API hộp thông báo chỉ đọc history
+  của chính mình; không nhận `AdminView` hoặc actor từ HTTP.
+- Domain giữ invariant và chuyển trạng thái; Application `NotificationJobs` điều
+  phối. Infrastructure giữ cron, HTML sanitizer, SMTP, lock và transaction.
+- Claim bằng lease/token và khóa hàng; history/outbox/counter/lịch commit cùng
+  transaction. Retry outbox không tăng `SendCount` hoặc `SendNumber`.
+- Metadata HTTP là JSON object với `SchemaVersion`; HTML phải được làm sạch,
+  `BodyText` và điều hướng dùng chung web/mobile. `ReadAt` độc lập delivery status.
+  Khóa metadata chuẩn nhận camelCase/PascalCase, chuẩn hóa thành PascalCase;
+  từ chối khóa trùng nghĩa để tránh diễn giải khác nhau giữa các client.
+- Phase hiện tại hỗ trợ in-app/email. Push/SMS không được kích hoạt trước khi có
+  adapter; thiết bị/token thuộc phase mobile sau. Không ghi nhận gửi thành công giả.
+- `ExpiredAfter` dừng gửi; `PurgeAfter` quản lý retention. Cleanup không xóa history
+  còn delivery pending. Worker đăng ký ở API, không ở migrator; không log nội dung,
+  địa chỉ nhận, token hoặc lỗi thô từ provider.
+
 ## Quy tắc code cốt lõi
 
 - Business rule, normalization và chuyển trạng thái thuộc Domain; kiểm tra invariant
@@ -148,6 +170,7 @@ chính xác nguyên nhân; không báo đã pass khi chưa chạy.
 - Thêm/sửa API list: [docs/pagination.md](docs/pagination.md).
 - Thay đổi persistence, schema hoặc concurrency: [docs/persistence.md](docs/persistence.md).
 - Entity base và metadata audit: [docs/auditing.md](docs/auditing.md).
+- Notification, scheduling, delivery và mobile contract: [docs/notifications.md](docs/notifications.md).
 - Chọn và thực hiện kiểm thử: [docs/testing.md](docs/testing.md).
 
 Với thay đổi danh tính hoặc phân quyền, đọc:
@@ -155,3 +178,7 @@ Với thay đổi danh tính hoặc phân quyền, đọc:
 - [docs/authorization.md](docs/authorization.md)
 - [PermissionAuthorizationBehavior](backend/src/MatchingSports.Application/Common/Authorization/PermissionAuthorizationBehavior.cs)
 - [IPermissionAuthorizedRequest](backend/src/MatchingSports.Application/Common/Authorization/IPermissionAuthorizedRequest.cs)
+
+## Các kĩ năng
+
+Đọc [SKILL.md](./SKILL.md)

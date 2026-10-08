@@ -682,7 +682,214 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("MatchingSports.Domain.Entities.Notification", b =>
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AbortReason")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("abort_reason");
+
+                    b.Property<string>("AudienceType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("audience_type");
+
+                    b.Property<DateTimeOffset>("AvailableAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("available_at");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)")
+                        .HasColumnName("body");
+
+                    b.Property<string>("BodyText")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("body_text");
+
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("concurrency_token")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Critical")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("critical");
+
+                    b.Property<string>("CronString")
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("cron_string");
+
+                    b.Property<bool>("EmailEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("email_enabled");
+
+                    b.Property<DateTimeOffset?>("ExpiredAfter")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expired_after");
+
+                    b.Property<bool>("InAppEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("in_app_enabled");
+
+                    b.Property<bool>("IsSendNow")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_send_now");
+
+                    b.Property<DateTimeOffset?>("LastRunAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_run_at");
+
+                    b.Property<Guid?>("LeaseToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lease_token");
+
+                    b.Property<DateTimeOffset?>("LockedUntil")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("locked_until");
+
+                    b.Property<int?>("MaxSendTimes")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_send_times");
+
+                    b.Property<string>("Metadata")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("metadata");
+
+                    b.Property<DateTimeOffset?>("NextRunAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("next_run_at");
+
+                    b.Property<bool>("PushEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("push_enabled");
+
+                    b.Property<string>("ScheduleType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("schedule_type");
+
+                    b.Property<string>("SchedulingStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("scheduling_status");
+
+                    b.Property<int>("SendCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("send_count");
+
+                    b.Property<bool>("SmsEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("sms_enabled");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<string>("TimeZoneId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("time_zone_id");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("character varying(160)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NextRunAt", "Id")
+                        .HasDatabaseName("ix_notification_configs_due")
+                        .HasFilter("status = 'ACTIVE' AND scheduling_status IN ('PENDING', 'SCHEDULING')");
+
+                    b.ToTable("notification_configs", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_notification_configs_channels", "in_app_enabled OR email_enabled OR push_enabled OR sms_enabled");
+
+                            t.HasCheckConstraint("ck_notification_configs_counts", "send_count >= 0 AND (max_send_times IS NULL OR max_send_times > 0)");
+
+                            t.HasCheckConstraint("ck_notification_configs_lease", "(locked_until IS NULL) = (lease_token IS NULL)");
+
+                            t.HasCheckConstraint("ck_notification_configs_schedule", "(schedule_type = 'ONCE' AND cron_string IS NULL AND max_send_times = 1) OR (schedule_type = 'SCHEDULED' AND cron_string IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_notification_configs_window", "expired_after IS NULL OR expired_after > available_at");
+                        });
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfigTeam", b =>
+                {
+                    b.Property<Guid>("NotificationConfigId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_config_id");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("team_id");
+
+                    b.HasKey("NotificationConfigId", "TeamId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("notification_config_teams", (string)null);
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfigUser", b =>
+                {
+                    b.Property<Guid>("NotificationConfigId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_config_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("NotificationConfigId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("notification_config_users", (string)null);
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationHistory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -695,6 +902,13 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("body");
 
+                    b.Property<string>("BodyText")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("")
+                        .HasColumnName("body_text");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -705,6 +919,31 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("created_by");
 
+                    b.Property<string>("Critical")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasDefaultValue("INFO")
+                        .HasColumnName("critical");
+
+                    b.Property<string>("EmailErrorCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email_error_code");
+
+                    b.Property<DateTimeOffset?>("EmailSentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("email_sent_at");
+
+                    b.Property<string>("EmailStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("DISABLED")
+                        .HasColumnName("email_status");
+
                     b.Property<Guid?>("EntityId")
                         .HasColumnType("uuid")
                         .HasColumnName("entity_id");
@@ -713,6 +952,20 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)")
                         .HasColumnName("entity_type");
+
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<bool>("InAppEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("in_app_enabled");
+
+                    b.Property<Guid?>("NotificationConfigId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_config_id");
 
                     b.Property<string>("PayloadJson")
                         .IsRequired()
@@ -725,9 +978,55 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("purge_after");
 
+                    b.Property<string>("PushErrorCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("push_error_code");
+
+                    b.Property<DateTimeOffset?>("PushSentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("push_sent_at");
+
+                    b.Property<string>("PushStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("DISABLED")
+                        .HasColumnName("push_status");
+
                     b.Property<DateTimeOffset?>("ReadAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("read_at");
+
+                    b.Property<DateTimeOffset>("ScheduledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("scheduled_at");
+
+                    b.Property<int>("SendNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("send_number");
+
+                    b.Property<string>("SmsErrorCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("sms_error_code");
+
+                    b.Property<DateTimeOffset?>("SmsSentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sms_sent_at");
+
+                    b.Property<string>("SmsStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("DISABLED")
+                        .HasColumnName("sms_status");
+
+                    b.Property<Guid?>("TeamId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("team_id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -751,7 +1050,7 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("updated_by");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
@@ -760,12 +1059,22 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.HasIndex("PurgeAfter")
                         .HasDatabaseName("ix_notifications_purge_after");
 
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("NotificationConfigId", "CreatedAt")
+                        .HasDatabaseName("ix_notification_history_config");
+
                     b.HasIndex("UserId", "CreatedAt")
                         .IsDescending(false, true)
                         .HasDatabaseName("ix_notifications_unread")
                         .HasFilter("read_at IS NULL");
 
-                    b.ToTable("notifications", (string)null);
+                    b.HasIndex("NotificationConfigId", "SendNumber", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("uq_notification_history_recipient")
+                        .HasFilter("notification_config_id IS NOT NULL AND user_id IS NOT NULL");
+
+                    b.ToTable("notification_history", (string)null);
                 });
 
             modelBuilder.Entity("MatchingSports.Domain.Entities.OtpChallenge", b =>
@@ -2093,13 +2402,52 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MatchingSports.Domain.Entities.Notification", b =>
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfigTeam", b =>
                 {
-                    b.HasOne("MatchingSports.Domain.Entities.User", "User")
-                        .WithMany("Notifications")
+                    b.HasOne("MatchingSports.Domain.Entities.NotificationConfig", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("NotificationConfigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfigUser", b =>
+                {
+                    b.HasOne("MatchingSports.Domain.Entities.NotificationConfig", null)
+                        .WithMany("Users")
+                        .HasForeignKey("NotificationConfigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationHistory", b =>
+                {
+                    b.HasOne("MatchingSports.Domain.Entities.NotificationConfig", null)
+                        .WithMany()
+                        .HasForeignKey("NotificationConfigId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MatchingSports.Domain.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("MatchingSports.Domain.Entities.User", "User")
+                        .WithMany("NotificationHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
                 });
@@ -2305,6 +2653,13 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.Navigation("Participants");
                 });
 
+            modelBuilder.Entity("MatchingSports.Domain.Entities.NotificationConfig", b =>
+                {
+                    b.Navigation("Teams");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("MatchingSports.Domain.Entities.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
@@ -2360,7 +2715,7 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
 
                     b.Navigation("MatchParticipations");
 
-                    b.Navigation("Notifications");
+                    b.Navigation("NotificationHistories");
 
                     b.Navigation("OwnedListings");
 
