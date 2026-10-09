@@ -1,0 +1,2140 @@
+{
+  "AUTH-01": {
+    "type": "auth",
+    "intro": "Chào mừng bạn trở lại",
+    "note": "Đăng nhập để tìm bạn chơi, kết nối đội và quản lý trận đấu.",
+    "fields": [
+      [
+        "Email",
+        "ban@example.com"
+      ],
+      [
+        "Mật khẩu",
+        "••••••••••"
+      ]
+    ],
+    "actions": [
+      [
+        "Đăng nhập",
+        "LISTING-01"
+      ],
+      [
+        "Tiếp tục với Google",
+        "AUTH-06"
+      ],
+      [
+        "Quên mật khẩu?",
+        "AUTH-04"
+      ],
+      [
+        "Tạo tài khoản",
+        "AUTH-02"
+      ]
+    ]
+  },
+  "AUTH-02": {
+    "type": "auth",
+    "intro": "Bắt đầu hành trình thể thao",
+    "fields": [
+      [
+        "Tên hiển thị",
+        "Nguyễn Minh Anh"
+      ],
+      [
+        "Email",
+        "ban@example.com"
+      ],
+      [
+        "Mật khẩu",
+        "••••••••••"
+      ]
+    ],
+    "note": "Sau đăng ký, bạn cần xác minh email bằng mã OTP.",
+    "actions": [
+      [
+        "Đăng ký",
+        "AUTH-03"
+      ],
+      [
+        "Đã có tài khoản? Đăng nhập",
+        "AUTH-01"
+      ]
+    ]
+  },
+  "AUTH-03": {
+    "type": "auth",
+    "intro": "Kiểm tra hộp thư của bạn",
+    "note": "Nhập mã xác minh được gửi đến email đăng ký.",
+    "fields": [
+      [
+        "Email",
+        "ban@example.com"
+      ],
+      [
+        "Mã OTP",
+        "1   2   3   4   5   6"
+      ]
+    ],
+    "actions": [
+      [
+        "Xác minh email",
+        "AUTH-01"
+      ],
+      [
+        "Gửi lại mã OTP",
+        "AUTH-03"
+      ]
+    ]
+  },
+  "AUTH-04": {
+    "type": "auth",
+    "intro": "Khôi phục tài khoản",
+    "note": "Nhập email đăng ký để nhận mã đặt lại mật khẩu.",
+    "fields": [
+      [
+        "Email",
+        "ban@example.com"
+      ]
+    ],
+    "actions": [
+      [
+        "Gửi mã khôi phục",
+        "AUTH-05"
+      ],
+      [
+        "Quay lại đăng nhập",
+        "AUTH-01"
+      ]
+    ]
+  },
+  "AUTH-05": {
+    "type": "auth",
+    "intro": "Tạo mật khẩu mới",
+    "fields": [
+      [
+        "Email",
+        "ban@example.com"
+      ],
+      [
+        "Mã OTP",
+        "Nhập mã khôi phục"
+      ],
+      [
+        "Mật khẩu mới",
+        "••••••••••"
+      ]
+    ],
+    "actions": [
+      [
+        "Đặt lại mật khẩu",
+        "AUTH-01"
+      ]
+    ]
+  },
+  "AUTH-06": {
+    "type": "result",
+    "symbol": "✓",
+    "note": "Đăng nhập Google thành công. Bạn đã sẵn sàng tìm kèo.",
+    "extra": "Nếu đăng nhập thất bại, thử lại hoặc dùng email và mật khẩu.",
+    "actions": [
+      [
+        "Khám phá kèo",
+        "LISTING-01"
+      ],
+      [
+        "Đăng nhập lại",
+        "AUTH-01"
+      ]
+    ]
+  },
+  "AUTH-07": {
+    "type": "result",
+    "symbol": "!",
+    "note": "Phiên của bạn đã hết hạn. Đăng nhập để tiếp tục thao tác.",
+    "actions": [
+      [
+        "Đăng nhập lại",
+        "AUTH-01"
+      ]
+    ]
+  },
+  "AUTH-08": {
+    "note": "Bạn muốn đăng xuất khỏi MatchingSports?",
+    "extra": "Bạn cần đăng nhập lại để xem kèo, đội và thông báo.",
+    "actions": [
+      [
+        "Đăng xuất",
+        "AUTH-01"
+      ],
+      [
+        "Ở lại",
+        "PROFILE-01"
+      ]
+    ]
+  },
+  "PROFILE-01": {
+    "type": "profile",
+    "hero": "Nguyễn Minh Anh",
+    "note": "Quận 11, TP. Hồ Chí Minh",
+    "private": true,
+    "actions": [
+      [
+        "Sửa hồ sơ",
+        "PROFILE-02"
+      ],
+      [
+        "Thêm môn chơi",
+        "PROFILE-03"
+      ]
+    ]
+  },
+  "PROFILE-02": {
+    "type": "form",
+    "fields": [
+      [
+        "Tên hiển thị",
+        "Nguyễn Minh Anh"
+      ],
+      [
+        "URL ảnh đại diện",
+        "https://…"
+      ],
+      [
+        "Khu vực mặc định",
+        "Quận 11, TP. Hồ Chí Minh"
+      ],
+      [
+        "Ghi chú liên hệ",
+        "Liên hệ trước khi bắt đầu trận"
+      ]
+    ],
+    "note": "Ghi chú liên hệ chỉ dành cho luồng được phép xem liên hệ.",
+    "actions": [
+      [
+        "Lưu hồ sơ",
+        "PROFILE-01"
+      ]
+    ]
+  },
+  "PROFILE-03": {
+    "fields": [
+      [
+        "Môn thể thao",
+        "Cầu lông"
+      ],
+      [
+        "Trình độ",
+        "Trung bình"
+      ],
+      [
+        "Thể thức yêu thích",
+        "Đánh đôi"
+      ],
+      [
+        "Giới thiệu môn chơi",
+        "Chơi cuối tuần, ưu tiên giao lưu"
+      ]
+    ],
+    "actions": [
+      [
+        "Lưu hồ sơ môn",
+        "PROFILE-01"
+      ]
+    ]
+  },
+  "PROFILE-04": {
+    "note": "Xoá hồ sơ môn cầu lông khỏi hồ sơ của bạn?",
+    "extra": "Thông tin môn chơi này sẽ không còn hiển thị.",
+    "danger": true,
+    "actions": [
+      [
+        "Xoá hồ sơ môn",
+        "PROFILE-01"
+      ]
+    ]
+  },
+  "PROFILE-05": {
+    "type": "profile",
+    "hero": "Trần Hoàng Nam",
+    "note": "Quận 10, TP. Hồ Chí Minh",
+    "extra": "Hồ sơ công khai · Chỉ xem khi đã đăng nhập",
+    "actions": [
+      [
+        "Quay lại danh sách",
+        "TEAM-01"
+      ]
+    ]
+  },
+  "TEAM-01": {
+    "type": "cards",
+    "tabs": [
+      "Tìm đội",
+      "Đội của tôi"
+    ],
+    "filters": [
+      [
+        "Tên đội",
+        "Tìm đội theo tên"
+      ],
+      [
+        "Môn thể thao",
+        "Cầu lông"
+      ]
+    ],
+    "cards": [
+      [
+        "Phú Thọ Badminton",
+        "Quận 11 · Cầu lông",
+        "Giao lưu tối thứ 3, 5",
+        "Xem hồ sơ"
+      ],
+      [
+        "Saigon Smash",
+        "Quận 10 · Cầu lông",
+        "Ưu tiên đánh đôi",
+        "Xem hồ sơ"
+      ],
+      [
+        "Weekend United",
+        "Bình Thạnh · Bóng đá",
+        "Giao lưu cuối tuần",
+        "Xem hồ sơ"
+      ]
+    ],
+    "actions": [
+      [
+        "Tạo đội",
+        "TEAM-05"
+      ]
+    ],
+    "cardTarget": "TEAM-02"
+  },
+  "TEAM-02": {
+    "type": "team",
+    "hero": "Phú Thọ Badminton",
+    "note": "Đội cầu lông tại Quận 11 · TP. Hồ Chí Minh",
+    "extra": "Giao lưu thân thiện, chơi đều vào tối thứ 3 và thứ 5.",
+    "actions": [
+      [
+        "Yêu cầu vào đội",
+        "TEAM-12"
+      ]
+    ]
+  },
+  "TEAM-03": {
+    "type": "team",
+    "hero": "Phú Thọ Badminton",
+    "private": true,
+    "note": "Bạn là đội trưởng",
+    "actions": [
+      [
+        "Sửa thông tin",
+        "TEAM-06"
+      ],
+      [
+        "Thành viên",
+        "TEAM-04"
+      ],
+      [
+        "Mời thành viên",
+        "TEAM-07"
+      ],
+      [
+        "Yêu cầu vào đội",
+        "TEAM-09"
+      ]
+    ]
+  },
+  "TEAM-04": {
+    "type": "table",
+    "note": "Đội trưởng quản lý đội phó, chuyển quyền và xoá đội. Đội phó xử lý lời mời, yêu cầu và thành viên thường.",
+    "columns": [
+      "Thành viên",
+      "Vai trò",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Minh Anh",
+        "Đội trưởng",
+        "Đang hoạt động",
+        "Hồ sơ"
+      ],
+      [
+        "Hoàng Nam",
+        "Đội phó",
+        "Đang hoạt động",
+        "Thu hồi đội phó"
+      ],
+      [
+        "Thu Hà",
+        "Thành viên",
+        "Đang hoạt động",
+        "Bổ nhiệm"
+      ]
+    ],
+    "actions": [
+      [
+        "Mời thành viên",
+        "TEAM-07"
+      ],
+      [
+        "Bổ nhiệm đội phó",
+        "TEAM-14"
+      ],
+      [
+        "Chuyển đội trưởng",
+        "TEAM-15"
+      ],
+      [
+        "Loại thành viên",
+        "TEAM-16"
+      ]
+    ]
+  },
+  "TEAM-05": {
+    "type": "form",
+    "fields": [
+      [
+        "Tên đội",
+        "Phú Thọ Badminton"
+      ],
+      [
+        "Môn thể thao",
+        "Cầu lông"
+      ],
+      [
+        "Khu vực",
+        "Quận 11, TP. Hồ Chí Minh"
+      ],
+      [
+        "URL ảnh đại diện",
+        "https://…"
+      ],
+      [
+        "Giới thiệu",
+        "Giao lưu cầu lông tối thứ 3, 5"
+      ]
+    ],
+    "actions": [
+      [
+        "Tạo đội",
+        "TEAM-03"
+      ]
+    ]
+  },
+  "TEAM-06": {
+    "fields": [
+      [
+        "Tên đội",
+        "Phú Thọ Badminton"
+      ],
+      [
+        "Giới thiệu",
+        "Giao lưu cầu lông tối thứ 3, 5"
+      ],
+      [
+        "Khu vực",
+        "Quận 11"
+      ],
+      [
+        "URL ảnh đại diện",
+        "https://…"
+      ]
+    ],
+    "actions": [
+      [
+        "Lưu thay đổi",
+        "TEAM-03"
+      ]
+    ]
+  },
+  "TEAM-07": {
+    "fields": [
+      [
+        "UserId người được mời",
+        "Nhập UserId đã biết"
+      ]
+    ],
+    "preview": "Trần Hoàng Nam · Quận 10 · Cầu lông / Trung bình",
+    "note": "Kiểm tra hồ sơ trước khi gửi lời mời.",
+    "actions": [
+      [
+        "Xem trước hồ sơ",
+        "PROFILE-05"
+      ],
+      [
+        "Gửi lời mời",
+        "TEAM-08"
+      ]
+    ]
+  },
+  "TEAM-08": {
+    "type": "table",
+    "tabs": [
+      "Đang chờ",
+      "Đã phản hồi"
+    ],
+    "columns": [
+      "Người được mời",
+      "Ngày mời",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Hoàng Nam",
+        "10/10/2026",
+        "Đang chờ",
+        "Huỷ lời mời"
+      ],
+      [
+        "Thu Hà",
+        "09/10/2026",
+        "Đã chấp nhận",
+        "Xem hồ sơ"
+      ]
+    ],
+    "actions": [
+      [
+        "Mời thành viên",
+        "TEAM-07"
+      ]
+    ]
+  },
+  "TEAM-09": {
+    "type": "table",
+    "columns": [
+      "Người yêu cầu",
+      "Lời nhắn",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Hoàng Nam",
+        "Muốn giao lưu tối thứ 5",
+        "Đang chờ",
+        "Xem hồ sơ"
+      ],
+      [
+        "Thu Hà",
+        "Chơi cầu lông 2 năm",
+        "Đang chờ",
+        "Xem hồ sơ"
+      ]
+    ],
+    "actions": [
+      [
+        "Xử lý yêu cầu",
+        "TEAM-13"
+      ]
+    ]
+  },
+  "TEAM-10": {
+    "type": "table",
+    "tabs": [
+      "Đang chờ",
+      "Lịch sử"
+    ],
+    "columns": [
+      "Đội",
+      "Môn chơi",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Phú Thọ Badminton",
+        "Cầu lông",
+        "Đang chờ",
+        "Chấp nhận / Từ chối"
+      ],
+      [
+        "Saigon Smash",
+        "Cầu lông",
+        "Hết hạn",
+        "Xem đội"
+      ]
+    ],
+    "actions": [
+      [
+        "Chấp nhận lời mời",
+        "TEAM-03"
+      ],
+      [
+        "Từ chối lời mời",
+        "TEAM-10"
+      ]
+    ]
+  },
+  "TEAM-11": {
+    "type": "table",
+    "columns": [
+      "Đội",
+      "Ngày gửi",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Phú Thọ Badminton",
+        "10/10/2026",
+        "Đang chờ",
+        "Rút yêu cầu"
+      ],
+      [
+        "Weekend United",
+        "08/10/2026",
+        "Đã từ chối",
+        "Xem đội"
+      ]
+    ],
+    "actions": [
+      [
+        "Tìm thêm đội",
+        "TEAM-01"
+      ]
+    ]
+  },
+  "TEAM-12": {
+    "fields": [
+      [
+        "Lời nhắn đến đội",
+        "Mình muốn tham gia giao lưu tối thứ 5."
+      ]
+    ],
+    "note": "Gửi yêu cầu tham gia Phú Thọ Badminton.",
+    "actions": [
+      [
+        "Gửi yêu cầu",
+        "TEAM-11"
+      ]
+    ]
+  },
+  "TEAM-13": {
+    "preview": "Trần Hoàng Nam · Cầu lông · Trung bình",
+    "note": "Yêu cầu tham gia Phú Thọ Badminton",
+    "actions": [
+      [
+        "Duyệt vào đội",
+        "TEAM-04"
+      ],
+      [
+        "Từ chối yêu cầu",
+        "TEAM-09"
+      ]
+    ]
+  },
+  "TEAM-14": {
+    "fields": [
+      [
+        "Thành viên",
+        "Trần Hoàng Nam"
+      ],
+      [
+        "Thay đổi vai trò",
+        "Bổ nhiệm đội phó / Thu hồi đội phó"
+      ]
+    ],
+    "note": "Chỉ đội trưởng được thay đổi vai trò đội phó.",
+    "actions": [
+      [
+        "Xác nhận vai trò",
+        "TEAM-04"
+      ]
+    ]
+  },
+  "TEAM-15": {
+    "fields": [
+      [
+        "Đội trưởng mới",
+        "Trần Hoàng Nam"
+      ]
+    ],
+    "note": "Bạn sẽ chuyển quyền đội trưởng cho thành viên đã chọn.",
+    "extra": "Chỉ đội trưởng hiện tại được thực hiện. Hãy kiểm tra người nhận quyền.",
+    "danger": true,
+    "actions": [
+      [
+        "Chuyển đội trưởng",
+        "TEAM-03"
+      ]
+    ]
+  },
+  "TEAM-16": {
+    "preview": "Thu Hà · Thành viên",
+    "note": "Loại thành viên này khỏi đội?",
+    "extra": "Đội phó chỉ có thể quản lý thành viên thường.",
+    "danger": true,
+    "actions": [
+      [
+        "Loại thành viên",
+        "TEAM-04"
+      ]
+    ]
+  },
+  "TEAM-17": {
+    "note": "Bạn muốn rời Phú Thọ Badminton?",
+    "extra": "Nếu là đội trưởng, hãy chuyển quyền trước khi rời đội.",
+    "danger": true,
+    "actions": [
+      [
+        "Rời đội",
+        "TEAM-01"
+      ]
+    ]
+  },
+  "TEAM-18": {
+    "note": "Đội chỉ còn đội trưởng và không có kèo hoặc trận chưa hoàn tất.",
+    "extra": "Xoá Phú Thọ Badminton? Thao tác không thể hoàn tác.",
+    "danger": true,
+    "actions": [
+      [
+        "Xoá đội",
+        "TEAM-01"
+      ]
+    ]
+  },
+  "TEAM-19": {
+    "type": "result",
+    "symbol": "!",
+    "note": "Chưa thể xoá đội",
+    "extra": "Đội còn thành viên hoặc có kèo / trận chưa hoàn tất. Chỉ đội trưởng được xoá khi đủ điều kiện.",
+    "actions": [
+      [
+        "Quản lý thành viên",
+        "TEAM-04"
+      ],
+      [
+        "Xem trận của đội",
+        "MATCH-01"
+      ]
+    ]
+  },
+  "LISTING-01": {
+    "type": "cards",
+    "tabs": [
+      "Tuyển người",
+      "Tìm đối thủ"
+    ],
+    "filters": [
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Trình độ",
+        "Trung bình"
+      ],
+      [
+        "Bán kính",
+        "5 km"
+      ],
+      [
+        "Thời gian",
+        "10/10 · 18:00 – 22:00"
+      ]
+    ],
+    "note": "Quanh Quận 11 · Dùng vị trí hiện tại hoặc nhập tọa độ",
+    "cards": [
+      [
+        "Cầu lông tối thứ 7",
+        "Sân Phú Thọ · Cách 1,2 km",
+        "18:00 · 10/10 · 90 phút",
+        "Còn 2 chỗ"
+      ],
+      [
+        "Giao lưu đánh đôi",
+        "Sân Kỳ Hoà · Cách 2,4 km",
+        "19:00 · 10/10 · 120 phút",
+        "Còn 1 chỗ"
+      ],
+      [
+        "Tìm bạn chơi cuối tuần",
+        "Sân Tân Bình · Cách 4,1 km",
+        "08:00 · 11/10 · 90 phút",
+        "Còn 3 chỗ"
+      ]
+    ],
+    "cardTarget": "LISTING-03",
+    "actions": [
+      [
+        "Tìm kèo",
+        "LISTING-01"
+      ],
+      [
+        "Tạo kèo",
+        "LISTING-09"
+      ],
+      [
+        "Không có kết quả",
+        "LISTING-02"
+      ]
+    ]
+  },
+  "LISTING-02": {
+    "type": "result",
+    "symbol": "⌕",
+    "note": "Chưa có kèo phù hợp",
+    "extra": "Thử mở rộng bán kính hoặc tạo theo dõi để nhận thông báo khi có kèo tuyển người phù hợp.",
+    "actions": [
+      [
+        "Tạo theo dõi",
+        "WATCH-02"
+      ],
+      [
+        "Điều chỉnh bộ lọc",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "LISTING-03": {
+    "type": "detail",
+    "hero": "Cầu lông tối thứ 7",
+    "status": "Đang mở · Còn 2 chỗ",
+    "detail": [
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Trình độ",
+        "Trung bình"
+      ],
+      [
+        "Thời gian",
+        "18:00 – 19:30 · 10/10/2026"
+      ],
+      [
+        "Địa điểm",
+        "Sân Phú Thọ, Quận 11"
+      ],
+      [
+        "Chủ kèo",
+        "Nguyễn Minh Anh"
+      ],
+      [
+        "Hạn đăng ký",
+        "16:00 · 10/10/2026"
+      ]
+    ],
+    "note": "Giao lưu thân thiện. Vui lòng đến trước giờ chơi 10 phút.",
+    "actions": [
+      [
+        "Đăng ký tham gia",
+        "LISTING-05"
+      ]
+    ]
+  },
+  "LISTING-04": {
+    "type": "detail",
+    "hero": "Giao lưu bóng đá 7 người",
+    "status": "Đang tìm đội đối thủ",
+    "detail": [
+      [
+        "Đội tổ chức",
+        "Weekend United"
+      ],
+      [
+        "Môn / Thể thức",
+        "Bóng đá · 7 người"
+      ],
+      [
+        "Thời gian",
+        "19:00 – 20:30 · 11/10/2026"
+      ],
+      [
+        "Địa điểm",
+        "Sân Bình Thạnh"
+      ],
+      [
+        "Trình độ",
+        "Giao lưu"
+      ],
+      [
+        "Hạn đăng ký",
+        "17:00 · 11/10/2026"
+      ]
+    ],
+    "actions": [
+      [
+        "Đăng ký đại diện đội",
+        "LISTING-05"
+      ]
+    ]
+  },
+  "LISTING-05": {
+    "fields": [
+      [
+        "Tham gia với tư cách",
+        "Cá nhân / Phú Thọ Badminton"
+      ],
+      [
+        "Lời nhắn",
+        "Mình có thể đến đúng giờ."
+      ]
+    ],
+    "note": "Cá nhân tham gia kèo tuyển người; đại diện đội tham gia kèo tìm đối thủ.",
+    "actions": [
+      [
+        "Gửi yêu cầu",
+        "LISTING-06"
+      ]
+    ]
+  },
+  "LISTING-06": {
+    "type": "table",
+    "tabs": [
+      "Đang chờ",
+      "Đã duyệt",
+      "Lịch sử"
+    ],
+    "columns": [
+      "Kèo",
+      "Thời gian",
+      "Trạng thái",
+      "Thao tác"
+    ],
+    "rows": [
+      [
+        "Cầu lông tối thứ 7",
+        "10/10 · 18:00",
+        "Đang chờ",
+        "Rút yêu cầu"
+      ],
+      [
+        "Giao lưu đánh đôi",
+        "11/10 · 08:00",
+        "Đã duyệt",
+        "Xem trận"
+      ]
+    ],
+    "actions": [
+      [
+        "Rút yêu cầu",
+        "LISTING-07"
+      ],
+      [
+        "Xem trận",
+        "MATCH-02"
+      ]
+    ]
+  },
+  "LISTING-07": {
+    "note": "Rút yêu cầu tham gia Cầu lông tối thứ 7?",
+    "extra": "Yêu cầu đang chờ sẽ được rút khỏi danh sách của chủ kèo.",
+    "danger": true,
+    "actions": [
+      [
+        "Rút yêu cầu",
+        "LISTING-06"
+      ]
+    ]
+  },
+  "LISTING-08": {
+    "type": "cards",
+    "tabs": [
+      "Cá nhân",
+      "Đội của tôi"
+    ],
+    "cards": [
+      [
+        "Cầu lông tối thứ 7",
+        "Sân Phú Thọ",
+        "10/10 · 18:00",
+        "Đang mở · 2 yêu cầu"
+      ],
+      [
+        "Giao lưu bóng đá",
+        "Sân Bình Thạnh",
+        "11/10 · 19:00",
+        "Đang tìm đối thủ"
+      ]
+    ],
+    "cardTarget": "LISTING-11",
+    "actions": [
+      [
+        "Tạo kèo",
+        "LISTING-09"
+      ],
+      [
+        "Quản lý yêu cầu",
+        "LISTING-11"
+      ],
+      [
+        "Sửa kèo",
+        "LISTING-10"
+      ]
+    ]
+  },
+  "LISTING-09": {
+    "type": "form",
+    "fields": [
+      [
+        "Mục đích",
+        "Tuyển người / Tìm đối thủ"
+      ],
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Chủ kèo",
+        "Cá nhân / Đội của tôi"
+      ],
+      [
+        "Tiêu đề",
+        "Cầu lông tối thứ 7"
+      ],
+      [
+        "Trình độ từ – đến",
+        "Cơ bản – Trung bình"
+      ],
+      [
+        "Số chỗ tuyển",
+        "2"
+      ],
+      [
+        "Bắt đầu",
+        "10/10/2026 · 18:00"
+      ],
+      [
+        "Thời lượng (phút)",
+        "90"
+      ],
+      [
+        "Hạn đăng ký",
+        "10/10/2026 · 16:00"
+      ],
+      [
+        "Địa chỉ",
+        "Sân Phú Thọ, Quận 11"
+      ],
+      [
+        "Vĩ độ / Kinh độ",
+        "10.7690 / 106.6570"
+      ],
+      [
+        "Ghi chú",
+        "Đến sớm 10 phút để khởi động"
+      ]
+    ],
+    "actions": [
+      [
+        "Đăng kèo",
+        "LISTING-08"
+      ]
+    ]
+  },
+  "LISTING-10": {
+    "type": "form",
+    "note": "Chỉ sửa khi chưa có người được duyệt. Sau khi dữ liệu thay đổi, hãy tải lại trước khi gửi.",
+    "fields": [
+      [
+        "Mục đích / Chủ kèo",
+        "Tuyển người · Cá nhân"
+      ],
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Tiêu đề",
+        "Cầu lông tối thứ 7"
+      ],
+      [
+        "Trình độ từ – đến",
+        "Cơ bản – Trung bình"
+      ],
+      [
+        "Số chỗ tuyển",
+        "2"
+      ],
+      [
+        "Bắt đầu / Thời lượng",
+        "10/10/2026 · 18:00 / 90 phút"
+      ],
+      [
+        "Hạn đăng ký",
+        "10/10/2026 · 16:00"
+      ],
+      [
+        "Địa chỉ",
+        "Sân Phú Thọ"
+      ],
+      [
+        "Vĩ độ / Kinh độ",
+        "10.7690 / 106.6570"
+      ],
+      [
+        "Ghi chú",
+        "Đến sớm 10 phút"
+      ]
+    ],
+    "actions": [
+      [
+        "Lưu kèo",
+        "LISTING-08"
+      ]
+    ]
+  },
+  "LISTING-11": {
+    "type": "table",
+    "note": "Cầu lông tối thứ 7 · Còn 1 chỗ",
+    "columns": [
+      "Ứng viên",
+      "Trình độ",
+      "Lời nhắn",
+      "Trạng thái"
+    ],
+    "rows": [
+      [
+        "Hoàng Nam",
+        "Trung bình",
+        "Đến đúng giờ",
+        "Đang chờ"
+      ],
+      [
+        "Thu Hà",
+        "Trung bình",
+        "Chơi đánh đôi",
+        "Đang chờ"
+      ]
+    ],
+    "preview": "Hoàng Nam · Quận 10 · Cầu lông / Trung bình",
+    "actions": [
+      [
+        "Xem hồ sơ ứng viên",
+        "PROFILE-05"
+      ],
+      [
+        "Duyệt / Từ chối",
+        "LISTING-12"
+      ]
+    ]
+  },
+  "LISTING-12": {
+    "preview": "Trần Hoàng Nam · Trung bình",
+    "note": "Đây là chỗ cuối cùng của kèo.",
+    "extra": "Duyệt sẽ lấp đầy chỗ. Nếu từ chối, nhập lý do để người đăng ký biết.",
+    "fields": [
+      [
+        "Lý do từ chối",
+        "Nhập nếu chọn từ chối"
+      ]
+    ],
+    "actions": [
+      [
+        "Duyệt chỗ cuối",
+        "MATCH-02"
+      ],
+      [
+        "Từ chối",
+        "LISTING-11"
+      ]
+    ]
+  },
+  "LISTING-13": {
+    "fields": [
+      [
+        "Lý do huỷ",
+        "Sân tạm ngừng hoạt động"
+      ]
+    ],
+    "note": "Kèo chưa có trận. Bạn muốn huỷ kèo này?",
+    "danger": true,
+    "actions": [
+      [
+        "Huỷ kèo",
+        "LISTING-08"
+      ]
+    ]
+  },
+  "LISTING-14": {
+    "type": "result",
+    "symbol": "!",
+    "note": "Kèo đã hết hạn hoặc đóng",
+    "extra": "Kèo không nhận thêm yêu cầu tham gia. Tìm một kèo khác phù hợp với bạn.",
+    "actions": [
+      [
+        "Tìm kèo khác",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "WATCH-01": {
+    "type": "cards",
+    "cards": [
+      [
+        "Cầu lông quanh Quận 11",
+        "Đánh đôi · Bán kính 5 km",
+        "10–12/10 · 18:00 – 22:00",
+        "Đang hoạt động"
+      ],
+      [
+        "Cầu lông cuối tuần",
+        "Đánh đôi · Bán kính 3 km",
+        "17–18/10 · 08:00 – 11:00",
+        "Tạm dừng"
+      ]
+    ],
+    "cardTarget": "WATCH-03",
+    "note": "Theo dõi kèo tuyển người cho chính bạn.",
+    "actions": [
+      [
+        "Tạo theo dõi",
+        "WATCH-02"
+      ]
+    ]
+  },
+  "WATCH-02": {
+    "fields": [
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Vĩ độ / Kinh độ",
+        "10.7690 / 106.6570"
+      ],
+      [
+        "Bán kính",
+        "5 km"
+      ],
+      [
+        "Từ thời điểm",
+        "10/10/2026 · 18:00"
+      ],
+      [
+        "Đến thời điểm",
+        "12/10/2026 · 22:00"
+      ],
+      [
+        "Nhận email",
+        "Bật"
+      ]
+    ],
+    "note": "Theo dõi cá nhân cho kèo tuyển người. Nhận thông báo trong ứng dụng và email.",
+    "actions": [
+      [
+        "Lưu theo dõi",
+        "WATCH-03"
+      ]
+    ]
+  },
+  "WATCH-03": {
+    "type": "detail",
+    "hero": "Cầu lông quanh Quận 11",
+    "status": "Đang hoạt động",
+    "detail": [
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Bán kính",
+        "5 km"
+      ],
+      [
+        "Vị trí",
+        "10.7690 / 106.6570"
+      ],
+      [
+        "Khoảng thời gian",
+        "10–12/10/2026"
+      ],
+      [
+        "Kênh nhận",
+        "Trong ứng dụng và email"
+      ]
+    ],
+    "actions": [
+      [
+        "Sửa theo dõi",
+        "WATCH-02"
+      ],
+      [
+        "Đổi trạng thái",
+        "WATCH-04"
+      ],
+      [
+        "Xem thông báo",
+        "INBOX-01"
+      ]
+    ]
+  },
+  "WATCH-04": {
+    "note": "Chọn trạng thái cho theo dõi này.",
+    "extra": "Tạm dừng sẽ ngừng nhận thông báo mới. Bạn có thể kích hoạt lại.",
+    "actions": [
+      [
+        "Tạm dừng",
+        "WATCH-03"
+      ],
+      [
+        "Kích hoạt lại",
+        "WATCH-03"
+      ],
+      [
+        "Huỷ theo dõi",
+        "WATCH-01"
+      ]
+    ]
+  },
+  "MATCH-01": {
+    "type": "cards",
+    "tabs": [
+      "Trận cá nhân",
+      "Trận của đội"
+    ],
+    "filters": [
+      [
+        "Trạng thái",
+        "Tất cả"
+      ],
+      [
+        "Thời gian",
+        "Tháng 10/2026"
+      ]
+    ],
+    "cards": [
+      [
+        "Cầu lông tối thứ 7",
+        "Sân Phú Thọ",
+        "10/10 · 18:00 – 19:30",
+        "Chờ xác nhận"
+      ],
+      [
+        "Giao lưu đánh đôi",
+        "Sân Kỳ Hoà",
+        "11/10 · 08:00 – 10:00",
+        "Đã xác nhận"
+      ]
+    ],
+    "cardTarget": "MATCH-02",
+    "actions": [
+      [
+        "Xem trận xác nhận",
+        "MATCH-03"
+      ]
+    ]
+  },
+  "MATCH-02": {
+    "type": "detail",
+    "hero": "Cầu lông tối thứ 7",
+    "status": "Chờ xác nhận · Đã đủ chỗ",
+    "detail": [
+      [
+        "Môn / Thể thức",
+        "Cầu lông · Đánh đôi"
+      ],
+      [
+        "Thời gian",
+        "10/10 · 18:00 – 19:30"
+      ],
+      [
+        "Địa điểm",
+        "Sân Phú Thọ"
+      ],
+      [
+        "Người tham gia",
+        "Minh Anh · Hoàng Nam · Thu Hà · Bảo"
+      ],
+      [
+        "Chủ kèo",
+        "Nguyễn Minh Anh"
+      ]
+    ],
+    "note": "Thông tin liên hệ sẽ mở sau khi trận được xác nhận.",
+    "actions": [
+      [
+        "Xác nhận trận",
+        "MATCH-04"
+      ],
+      [
+        "Huỷ trận",
+        "MATCH-05"
+      ]
+    ]
+  },
+  "MATCH-03": {
+    "type": "detail",
+    "hero": "Cầu lông tối thứ 7",
+    "status": "Đã xác nhận",
+    "detail": [
+      [
+        "Thời gian",
+        "10/10 · 18:00 – 19:30"
+      ],
+      [
+        "Địa điểm",
+        "Sân Phú Thọ, Quận 11"
+      ],
+      [
+        "Người tham gia",
+        "Minh Anh · Hoàng Nam · Thu Hà · Bảo"
+      ],
+      [
+        "Liên hệ chủ kèo",
+        "Gặp ở cổng sân trước 17:50"
+      ]
+    ],
+    "note": "Chỉ người tham gia đang hoạt động được xem liên hệ của trận đã xác nhận.",
+    "actions": [
+      [
+        "Hoàn tất trận",
+        "MATCH-06"
+      ],
+      [
+        "Huỷ trận",
+        "MATCH-05"
+      ]
+    ]
+  },
+  "MATCH-04": {
+    "note": "Trận đã đủ chỗ. Xác nhận lịch thi đấu?",
+    "extra": "Sau xác nhận, người tham gia đang hoạt động có thể xem thông tin liên hệ.",
+    "actions": [
+      [
+        "Xác nhận trận",
+        "MATCH-03"
+      ]
+    ]
+  },
+  "MATCH-05": {
+    "fields": [
+      [
+        "Lý do huỷ trận",
+        "Sân không thể tiếp nhận trận"
+      ]
+    ],
+    "note": "Người tham gia sẽ được thông báo khi trận bị huỷ.",
+    "danger": true,
+    "actions": [
+      [
+        "Huỷ trận",
+        "MATCH-07"
+      ]
+    ]
+  },
+  "MATCH-06": {
+    "note": "Trận đã qua giờ kết thúc.",
+    "extra": "Xác nhận hoàn tất trận Cầu lông tối thứ 7?",
+    "actions": [
+      [
+        "Hoàn tất trận",
+        "MATCH-07"
+      ]
+    ]
+  },
+  "MATCH-07": {
+    "type": "result",
+    "symbol": "✓",
+    "note": "Trận đã hoàn tất",
+    "extra": "Lịch sử trận được giữ lại. Trận đã huỷ sẽ hiển thị trạng thái và lý do huỷ.",
+    "actions": [
+      [
+        "Xem danh sách trận",
+        "MATCH-01"
+      ]
+    ]
+  },
+  "INBOX-01": {
+    "type": "inbox",
+    "tabs": [
+      "Tất cả",
+      "Chưa đọc · 3"
+    ],
+    "note": "Bạn có 3 thông báo chưa đọc",
+    "cards": [
+      [
+        "Có kèo cầu lông phù hợp",
+        "Cầu lông tối thứ 7 · Sân Phú Thọ",
+        "5 phút trước",
+        "Chưa đọc"
+      ],
+      [
+        "Trận sắp bắt đầu",
+        "Cầu lông tối thứ 7 · 18:00",
+        "30 phút trước",
+        "Chưa đọc"
+      ],
+      [
+        "Lời mời tham gia đội",
+        "Phú Thọ Badminton mời bạn",
+        "1 giờ trước",
+        "Đã đọc"
+      ]
+    ],
+    "cardTarget": "INBOX-02",
+    "actions": [
+      [
+        "Xem thông báo",
+        "INBOX-02"
+      ]
+    ]
+  },
+  "INBOX-02": {
+    "note": "Có kèo cầu lông phù hợp",
+    "detail": [
+      [
+        "Kèo",
+        "Cầu lông tối thứ 7"
+      ],
+      [
+        "Thời gian",
+        "18:00 · 10/10/2026"
+      ],
+      [
+        "Địa điểm",
+        "Sân Phú Thọ"
+      ],
+      [
+        "Nhận lúc",
+        "10/10/2026 · 12:05"
+      ],
+      [
+        "Trạng thái đọc",
+        "Đã đọc"
+      ]
+    ],
+    "extra": "Trạng thái đọc độc lập với việc gửi email.",
+    "actions": [
+      [
+        "Mở kèo",
+        "LISTING-03"
+      ]
+    ]
+  },
+  "INBOX-03": {
+    "type": "result",
+    "symbol": "✓",
+    "note": "Kèo mới phù hợp với theo dõi của bạn",
+    "extra": "Cầu lông tối thứ 7 · 18:00 · Sân Phú Thọ. Thông báo nhắc trận hiển thị thời gian và địa điểm trước giờ chơi.",
+    "actions": [
+      [
+        "Xem kèo",
+        "LISTING-03"
+      ],
+      [
+        "Xem trận",
+        "MATCH-03"
+      ]
+    ]
+  },
+  "INBOX-04": {
+    "type": "result",
+    "symbol": "!",
+    "note": "Nội dung được liên kết không còn tồn tại",
+    "extra": "Bạn vẫn có thể đọc nội dung thông báo đã nhận. Kèo hoặc trận được liên kết đã không còn khả dụng.",
+    "actions": [
+      [
+        "Về hộp thông báo",
+        "INBOX-01"
+      ]
+    ]
+  },
+  "ADMIN-01": {
+    "type": "table",
+    "columns": [
+      "Mã",
+      "Môn thể thao",
+      "Thể thức",
+      "Trạng thái"
+    ],
+    "rows": [
+      [
+        "BADMINTON",
+        "Cầu lông",
+        "Đơn, Đôi",
+        "Hoạt động"
+      ],
+      [
+        "FOOTBALL",
+        "Bóng đá",
+        "5, 7, 11 người",
+        "Hoạt động"
+      ]
+    ],
+    "actions": [
+      [
+        "Tạo môn thể thao",
+        "ADMIN-02"
+      ],
+      [
+        "Sửa môn",
+        "ADMIN-02"
+      ],
+      [
+        "Ngừng hoạt động",
+        "ADMIN-03"
+      ]
+    ]
+  },
+  "ADMIN-02": {
+    "type": "form",
+    "fields": [
+      [
+        "Mã môn",
+        "BADMINTON"
+      ],
+      [
+        "Tên môn",
+        "Cầu lông"
+      ],
+      [
+        "Thể thức 1 — Mã / Tên",
+        "SINGLES / Đánh đơn"
+      ],
+      [
+        "Thể thức 2 — Mã / Tên",
+        "DOUBLES / Đánh đôi"
+      ]
+    ],
+    "actions": [
+      [
+        "Lưu môn và thể thức",
+        "ADMIN-01"
+      ]
+    ]
+  },
+  "ADMIN-03": {
+    "note": "Ngừng hoạt động môn hoặc thể thức đã chọn?",
+    "extra": "Môn hoặc thể thức sẽ không được chọn cho hoạt động mới.",
+    "danger": true,
+    "actions": [
+      [
+        "Ngừng hoạt động",
+        "ADMIN-01"
+      ]
+    ]
+  },
+  "ADMIN-04": {
+    "type": "table",
+    "columns": [
+      "Vai trò",
+      "Mô tả",
+      "Mặc định đăng ký",
+      "Trạng thái"
+    ],
+    "rows": [
+      [
+        "Player",
+        "Người chơi",
+        "Có",
+        "Hoạt động"
+      ],
+      [
+        "Admin",
+        "Quản trị hệ thống",
+        "Không",
+        "Hoạt động"
+      ]
+    ],
+    "actions": [
+      [
+        "Tạo vai trò",
+        "ADMIN-05"
+      ],
+      [
+        "Sửa vai trò",
+        "ADMIN-05"
+      ],
+      [
+        "Ma trận quyền",
+        "ADMIN-06"
+      ]
+    ]
+  },
+  "ADMIN-05": {
+    "fields": [
+      [
+        "Tên vai trò",
+        "Player"
+      ],
+      [
+        "Mô tả",
+        "Người chơi MatchingSports"
+      ],
+      [
+        "Trạng thái",
+        "Hoạt động"
+      ],
+      [
+        "Mặc định khi đăng ký",
+        "Có"
+      ]
+    ],
+    "actions": [
+      [
+        "Lưu vai trò",
+        "ADMIN-04"
+      ]
+    ]
+  },
+  "ADMIN-06": {
+    "type": "table",
+    "columns": [
+      "Permission",
+      "Player",
+      "Admin",
+      "Mô tả"
+    ],
+    "rows": [
+      [
+        "listings.list",
+        "✓",
+        "✓",
+        "Xem kèo"
+      ],
+      [
+        "listings.create",
+        "✓",
+        "✓",
+        "Tạo kèo"
+      ],
+      [
+        "roles.update",
+        "—",
+        "✓",
+        "Sửa vai trò"
+      ],
+      [
+        "matches.cancel_any",
+        "—",
+        "✓",
+        "Huỷ trận bất kỳ"
+      ]
+    ],
+    "note": "Thay đổi quyền của vai trò đã chọn và lưu rõ ràng.",
+    "actions": [
+      [
+        "Lưu quyền vai trò",
+        "ADMIN-06"
+      ]
+    ]
+  },
+  "ADMIN-07": {
+    "type": "table",
+    "columns": [
+      "Mã permission",
+      "Nhóm",
+      "Mô tả"
+    ],
+    "rows": [
+      [
+        "profile.read",
+        "Hồ sơ",
+        "Đọc hồ sơ"
+      ],
+      [
+        "requests.accept",
+        "Kèo",
+        "Duyệt yêu cầu"
+      ],
+      [
+        "roles.update",
+        "Quản trị",
+        "Sửa vai trò"
+      ]
+    ],
+    "note": "Danh mục permission và ý nghĩa theo use case."
+  },
+  "ADMIN-08": {
+    "type": "form",
+    "fields": [
+      [
+        "UserId",
+        "Nhập UserId đã biết"
+      ],
+      [
+        "Vai trò",
+        "Player"
+      ]
+    ],
+    "preview": "Người dùng đã tìm thấy · Vai trò hiện tại: Player",
+    "note": "Tra cứu bằng UserId trước khi thay đổi vai trò.",
+    "actions": [
+      [
+        "Tra cứu UserId",
+        "ADMIN-08"
+      ],
+      [
+        "Lưu vai trò người dùng",
+        "ADMIN-08"
+      ]
+    ]
+  },
+  "ADMIN-09": {
+    "type": "table",
+    "columns": [
+      "Tiêu đề",
+      "Kênh gửi",
+      "Lịch",
+      "Trạng thái"
+    ],
+    "rows": [
+      [
+        "Nhắc lịch giao lưu",
+        "In-app, Email",
+        "Một lần",
+        "Đang chờ"
+      ],
+      [
+        "Thông báo sân mới",
+        "In-app",
+        "Định kỳ",
+        "Hoạt động"
+      ]
+    ],
+    "actions": [
+      [
+        "Soạn thông báo",
+        "ADMIN-10"
+      ],
+      [
+        "Xem cấu hình",
+        "ADMIN-12"
+      ]
+    ]
+  },
+  "ADMIN-10": {
+    "type": "form",
+    "fields": [
+      [
+        "Tiêu đề",
+        "Lịch giao lưu cuối tuần"
+      ],
+      [
+        "Nội dung",
+        "Mời bạn tham gia giao lưu cầu lông."
+      ],
+      [
+        "Mức độ quan trọng",
+        "Thông thường"
+      ],
+      [
+        "Đối tượng",
+        "Tất cả / Người dùng / Đội"
+      ],
+      [
+        "UserId / TeamId mục tiêu",
+        "Nhập ID theo đối tượng đã chọn"
+      ],
+      [
+        "Kênh gửi",
+        "Trong ứng dụng ✓ · Email ✓"
+      ],
+      [
+        "Gửi ngay / Loại lịch",
+        "Theo lịch · Một lần"
+      ],
+      [
+        "Cron (nếu định kỳ)",
+        "0 18 * * 6"
+      ],
+      [
+        "Múi giờ",
+        "Asia/Ho_Chi_Minh"
+      ],
+      [
+        "Thời điểm bắt đầu",
+        "10/10/2026 · 18:00"
+      ],
+      [
+        "Hết hạn gửi",
+        "11/10/2026 · 18:00"
+      ],
+      [
+        "Số lượt tối đa",
+        "1"
+      ],
+      [
+        "Thông tin điều hướng",
+        "Đích đến và ID tài nguyên"
+      ]
+    ],
+    "note": "Push và SMS chưa khả dụng. Nội dung HTML được làm sạch trước khi gửi.",
+    "actions": [
+      [
+        "Xem trước",
+        "ADMIN-11"
+      ],
+      [
+        "Lưu cấu hình",
+        "ADMIN-12"
+      ]
+    ]
+  },
+  "ADMIN-11": {
+    "type": "table",
+    "columns": [
+      "Người nhận",
+      "Kênh",
+      "Lượt gửi kế tiếp"
+    ],
+    "rows": [
+      [
+        "Minh Anh",
+        "In-app, Email",
+        "10/10/2026 · 18:00"
+      ],
+      [
+        "Hoàng Nam",
+        "In-app, Email",
+        "10/10/2026 · 18:00"
+      ]
+    ],
+    "note": "Xem trước người nhận và mốc lịch · Asia/Ho_Chi_Minh",
+    "preview": "Lịch giao lưu cuối tuần — Mời bạn tham gia giao lưu cầu lông.",
+    "actions": [
+      [
+        "Quay lại soạn",
+        "ADMIN-10"
+      ],
+      [
+        "Lưu cấu hình",
+        "ADMIN-12"
+      ]
+    ]
+  },
+  "ADMIN-12": {
+    "type": "table",
+    "columns": [
+      "Lượt",
+      "Người nhận",
+      "Đọc",
+      "Delivery"
+    ],
+    "rows": [
+      [
+        "1",
+        "Minh Anh",
+        "Chưa đọc",
+        "Email đang chờ"
+      ],
+      [
+        "1",
+        "Hoàng Nam",
+        "Đã đọc",
+        "Email đã gửi"
+      ]
+    ],
+    "note": "Lịch giao lưu cuối tuần · In-app và Email · Số lượt đã gửi: 1",
+    "extra": "Trạng thái đọc và delivery được hiển thị riêng.",
+    "actions": [
+      [
+        "Sửa cấu hình",
+        "ADMIN-10"
+      ],
+      [
+        "Quản lý lịch gửi",
+        "ADMIN-13"
+      ]
+    ]
+  },
+  "ADMIN-13": {
+    "note": "Kích hoạt hoặc huỷ lịch gửi thông báo.",
+    "extra": "Lịch giao lưu cuối tuần · Mốc kế tiếp 10/10/2026, 18:00",
+    "actions": [
+      [
+        "Kích hoạt lịch",
+        "ADMIN-12"
+      ],
+      [
+        "Huỷ lịch gửi",
+        "ADMIN-12"
+      ]
+    ]
+  },
+  "ADMIN-14": {
+    "type": "form",
+    "fields": [
+      [
+        "Giới hạn đội trưởng / Thành viên",
+        "Số đội tối đa mỗi người"
+      ],
+      [
+        "Đội phó / Thành viên mỗi đội",
+        "Giới hạn theo hệ thống"
+      ],
+      [
+        "Hạn lời mời (giờ)",
+        "Thời gian lời mời còn hiệu lực"
+      ],
+      [
+        "Yêu cầu vào đội đang chờ",
+        "Giới hạn tối đa"
+      ],
+      [
+        "Theo dõi hoạt động mỗi người",
+        "Giới hạn tối đa"
+      ],
+      [
+        "Bán kính tìm kiếm (m)",
+        "Giới hạn tối đa"
+      ],
+      [
+        "Khoảng theo dõi (ngày)",
+        "Giới hạn tối đa"
+      ],
+      [
+        "Nhắc trận trước (phút)",
+        "Áp dụng toàn hệ thống"
+      ],
+      [
+        "Outbox retry tối đa",
+        "Số lần thử lại"
+      ],
+      [
+        "Delay đầu / Delay tối đa (giây)",
+        "Khoảng chờ retry"
+      ],
+      [
+        "Retention outbox (ngày)",
+        "Giữ delivery đã xử lý"
+      ],
+      [
+        "Retention thông báo (ngày)",
+        "Thời gian giữ lịch sử"
+      ]
+    ],
+    "note": "Thời gian nhắc trận là thiết lập chung của hệ thống.",
+    "actions": [
+      [
+        "Lưu cấu hình hệ thống",
+        "ADMIN-14"
+      ]
+    ]
+  },
+  "ADMIN-15": {
+    "fields": [
+      [
+        "Lý do huỷ",
+        "Nhập lý do quản trị bắt buộc"
+      ]
+    ],
+    "note": "Huỷ trận bằng quyền quản trị.",
+    "extra": "Thao tác yêu cầu quyền huỷ trận bất kỳ và được ghi lịch sử.",
+    "danger": true,
+    "actions": [
+      [
+        "Huỷ trận",
+        "MATCH-07"
+      ]
+    ]
+  },
+  "COMMON-01": {
+    "type": "loading",
+    "note": "Đang tải danh sách kèo…"
+  },
+  "COMMON-02": {
+    "type": "result",
+    "symbol": "○",
+    "note": "Danh sách chưa có nội dung",
+    "extra": "Khi có dữ liệu, nội dung sẽ xuất hiện tại đây.",
+    "actions": [
+      [
+        "Tìm kèo",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "COMMON-03": {
+    "type": "form",
+    "fields": [
+      [
+        "Tiêu đề *",
+        ""
+      ],
+      [
+        "Bắt đầu *",
+        "09/10/2026 · 18:00"
+      ],
+      [
+        "Vĩ độ / Kinh độ *",
+        "10.7690 / —"
+      ]
+    ],
+    "validation": true,
+    "note": "Kiểm tra những trường được đánh dấu.",
+    "actions": [
+      [
+        "Kiểm tra và gửi lại",
+        "LISTING-09"
+      ]
+    ]
+  },
+  "COMMON-04": {
+    "type": "result",
+    "symbol": "403",
+    "note": "Bạn không có quyền truy cập",
+    "extra": "Liên hệ người quản lý quyền hoặc trở về màn bạn được phép sử dụng.",
+    "actions": [
+      [
+        "Về tìm kèo",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "COMMON-05": {
+    "type": "result",
+    "symbol": "404",
+    "note": "Không tìm thấy nội dung",
+    "extra": "Nội dung đã bị xoá hoặc đường dẫn không còn hợp lệ.",
+    "actions": [
+      [
+        "Về tìm kèo",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "COMMON-06": {
+    "note": "Dữ liệu đã được cập nhật bởi một thao tác khác.",
+    "extra": "Tải lại phiên bản mới, kiểm tra nội dung rồi chủ động gửi lại thay đổi.",
+    "actions": [
+      [
+        "Tải lại dữ liệu",
+        "LISTING-10"
+      ]
+    ]
+  },
+  "COMMON-07": {
+    "type": "result",
+    "symbol": "!",
+    "note": "Chưa thể kết nối đến dịch vụ",
+    "extra": "Kiểm tra kết nối mạng rồi thử lại. Dữ liệu chưa gửi có thể cần được kiểm tra trước khi tiếp tục.",
+    "actions": [
+      [
+        "Thử lại",
+        "LISTING-01"
+      ]
+    ]
+  },
+  "COMMON-08": {
+    "type": "form",
+    "note": "Bạn chưa cho phép truy cập vị trí. Nhập tọa độ và bán kính để tìm kèo.",
+    "fields": [
+      [
+        "Vĩ độ",
+        "10.7690"
+      ],
+      [
+        "Kinh độ",
+        "106.6570"
+      ],
+      [
+        "Bán kính (km)",
+        "5"
+      ]
+    ],
+    "actions": [
+      [
+        "Tìm với tọa độ này",
+        "LISTING-01"
+      ]
+    ]
+  }
+}

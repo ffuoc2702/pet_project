@@ -1,0 +1,2624 @@
+{
+  "project": "MatchingSports",
+  "status": "Partially created in Figma: 13 of 84 screens (26 desktop/mobile frames); stopped by Figma MCP Starter tool call limit. Native continuation plugin prepared in docs/design/figma; not yet run.",
+  "frontend": {
+    "framework": "React",
+    "layout": "Bootstrap responsive grid",
+    "components": "Ant Design",
+    "fontSource": "frontend/src/index.css: system-ui, Avenir, Helvetica, Arial, sans-serif"
+  },
+  "viewportTargets": {
+    "desktop": 1440,
+    "mobile": 390
+  },
+  "modules": [
+    {
+      "key": "AUTH",
+      "title": "Danh tính"
+    },
+    {
+      "key": "PROFILE",
+      "title": "Hồ sơ"
+    },
+    {
+      "key": "TEAM",
+      "title": "Đội"
+    },
+    {
+      "key": "LISTING",
+      "title": "Tìm và quản lý kèo"
+    },
+    {
+      "key": "WATCH",
+      "title": "Theo dõi kèo"
+    },
+    {
+      "key": "MATCH",
+      "title": "Trận đấu"
+    },
+    {
+      "key": "INBOX",
+      "title": "Thông báo"
+    },
+    {
+      "key": "ADMIN",
+      "title": "Quản trị"
+    },
+    {
+      "key": "COMMON",
+      "title": "Trạng thái dùng chung"
+    }
+  ],
+  "screens": [
+    {
+      "id": "AUTH-01",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Đăng nhập",
+      "kind": "page",
+      "figmaNodeId": "5:11",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "5:11",
+        "mobile": "5:49"
+      }
+    },
+    {
+      "id": "AUTH-02",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Đăng ký",
+      "kind": "page",
+      "figmaNodeId": "5:79",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "5:79",
+        "mobile": "5:117"
+      }
+    },
+    {
+      "id": "AUTH-03",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Xác minh email và gửi lại OTP",
+      "kind": "page",
+      "figmaNodeId": "9:52",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:52",
+        "mobile": "9:86"
+      }
+    },
+    {
+      "id": "AUTH-04",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Quên mật khẩu",
+      "kind": "page",
+      "figmaNodeId": "9:112",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:112",
+        "mobile": "9:142"
+      }
+    },
+    {
+      "id": "AUTH-05",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Đặt lại mật khẩu",
+      "kind": "page",
+      "figmaNodeId": "9:164",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:164",
+        "mobile": "9:197"
+      }
+    },
+    {
+      "id": "AUTH-06",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Kết quả đăng nhập Google",
+      "kind": "state",
+      "figmaNodeId": "9:222",
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:222",
+        "mobile": "9:257"
+      }
+    },
+    {
+      "id": "AUTH-07",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Phiên đăng nhập hết hạn",
+      "kind": "state",
+      "figmaNodeId": "9:287",
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:287",
+        "mobile": "9:319"
+      }
+    },
+    {
+      "id": "AUTH-08",
+      "module": "Danh tính",
+      "actor": "Mọi người",
+      "title": "Xác nhận đăng xuất",
+      "kind": "modal",
+      "figmaNodeId": "9:346",
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "9:346",
+        "mobile": "9:402"
+      }
+    },
+    {
+      "id": "PROFILE-01",
+      "module": "Hồ sơ",
+      "actor": "Người chơi",
+      "title": "Hồ sơ của tôi",
+      "kind": "page",
+      "figmaNodeId": "10:184",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "10:184",
+        "mobile": "10:233"
+      }
+    },
+    {
+      "id": "PROFILE-02",
+      "module": "Hồ sơ",
+      "actor": "Người chơi",
+      "title": "Sửa hồ sơ của tôi",
+      "kind": "page",
+      "figmaNodeId": "10:277",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "10:277",
+        "mobile": "10:323"
+      }
+    },
+    {
+      "id": "PROFILE-03",
+      "module": "Hồ sơ",
+      "actor": "Người chơi",
+      "title": "Thêm hoặc sửa hồ sơ môn chơi",
+      "kind": "drawer",
+      "figmaNodeId": "10:364",
+      "components": [
+        "Drawer",
+        "Form",
+        "Select",
+        "Input",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "10:364",
+        "mobile": "10:429"
+      }
+    },
+    {
+      "id": "PROFILE-04",
+      "module": "Hồ sơ",
+      "actor": "Người chơi",
+      "title": "Xác nhận xoá hồ sơ môn chơi",
+      "kind": "modal",
+      "figmaNodeId": "10:484",
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "10:484",
+        "mobile": "10:538"
+      }
+    },
+    {
+      "id": "PROFILE-05",
+      "module": "Hồ sơ",
+      "actor": "Người chơi",
+      "title": "Hồ sơ công khai của người chơi khác",
+      "kind": "page",
+      "figmaNodeId": "10:582",
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ],
+      "figmaNodes": {
+        "desktop": "10:582",
+        "mobile": "10:625"
+      }
+    },
+    {
+      "id": "TEAM-01",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Tìm đội và đội của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-02",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Hồ sơ công khai của đội",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-03",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Chi tiết đội của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-04",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Thành viên và quyền quản lý theo vai trò",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-05",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Tạo đội",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-06",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Sửa thông tin đội",
+      "kind": "drawer",
+      "figmaNodeId": null,
+      "components": [
+        "Drawer",
+        "Form",
+        "Select",
+        "Input",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-07",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Mời thành viên bằng UserId và xem trước hồ sơ",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-08",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Lời mời đến đội của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-09",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Yêu cầu vào đội cần xử lý",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-10",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Lời mời tôi nhận được",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-11",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Yêu cầu vào đội của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-12",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Gửi yêu cầu vào đội",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-13",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Duyệt hoặc từ chối yêu cầu vào đội",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-14",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Bổ nhiệm hoặc thu hồi đội phó",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-15",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Chuyển đội trưởng",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-16",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Loại thành viên",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-17",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Rời đội",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-18",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Xoá đội đủ điều kiện",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "TEAM-19",
+      "module": "Đội",
+      "actor": "Người chơi / thành viên / đội phó / đội trưởng",
+      "title": "Xoá đội bị chặn do còn thành viên hoặc trận",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-01",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Tìm kèo theo môn, bán kính và thời gian",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-02",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Không có kèo và tạo theo dõi",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-03",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Chi tiết kèo tuyển người vãng lai",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-04",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Chi tiết kèo tìm đội đối thủ",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-05",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Đăng ký tham gia cá nhân hoặc đại diện đội",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-06",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Yêu cầu tham gia của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-07",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Rút yêu cầu tham gia",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-08",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Kèo do tôi hoặc đội của tôi tổ chức",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-09",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Tạo kèo tuyển người hoặc tìm đối thủ",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-10",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Sửa kèo chưa có người được duyệt",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-11",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Danh sách yêu cầu và chi tiết ứng viên",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-12",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Duyệt chỗ cuối hoặc từ chối ứng viên",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-13",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Huỷ kèo chưa có trận",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "LISTING-14",
+      "module": "Tìm và quản lý kèo",
+      "actor": "Người chơi / quản lý đội",
+      "title": "Kèo hết hạn hoặc đã đóng",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "WATCH-01",
+      "module": "Theo dõi kèo",
+      "actor": "Người chơi",
+      "title": "Danh sách theo dõi của tôi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "WATCH-02",
+      "module": "Theo dõi kèo",
+      "actor": "Người chơi",
+      "title": "Tạo hoặc sửa theo dõi",
+      "kind": "drawer",
+      "figmaNodeId": null,
+      "components": [
+        "Drawer",
+        "Form",
+        "Select",
+        "Input",
+        "Button"
+      ]
+    },
+    {
+      "id": "WATCH-03",
+      "module": "Theo dõi kèo",
+      "actor": "Người chơi",
+      "title": "Chi tiết theo dõi với trạng thái",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "WATCH-04",
+      "module": "Theo dõi kèo",
+      "actor": "Người chơi",
+      "title": "Tạm dừng, kích hoạt lại hoặc huỷ theo dõi",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-01",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Danh sách trận cá nhân và trận của đội",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-02",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Chi tiết trận chưa xác nhận",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-03",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Chi tiết trận xác nhận và thông tin liên hệ",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-04",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Xác nhận trận đủ chỗ",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-05",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Huỷ trận với lý do",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-06",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Hoàn tất trận sau giờ kết thúc",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "MATCH-07",
+      "module": "Trận đấu",
+      "actor": "Người tham gia / chủ kèo / quản lý đội",
+      "title": "Trận đã huỷ hoặc hoàn tất",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "INBOX-01",
+      "module": "Thông báo",
+      "actor": "Người chơi",
+      "title": "Hộp thông báo và số chưa đọc",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "INBOX-02",
+      "module": "Thông báo",
+      "actor": "Người chơi",
+      "title": "Chi tiết thông báo và đánh dấu đã đọc",
+      "kind": "drawer",
+      "figmaNodeId": null,
+      "components": [
+        "Drawer",
+        "Form",
+        "Select",
+        "Input",
+        "Button"
+      ]
+    },
+    {
+      "id": "INBOX-03",
+      "module": "Thông báo",
+      "actor": "Người chơi",
+      "title": "Thông báo kèo phù hợp hoặc nhắc lịch trận",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "INBOX-04",
+      "module": "Thông báo",
+      "actor": "Người chơi",
+      "title": "Tài nguyên không còn tồn tại khi mở thông báo",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-01",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Danh sách môn thể thao",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-02",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Tạo hoặc sửa môn và thể thức chơi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-03",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Ngừng hoạt động môn hoặc thể thức",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-04",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Danh sách vai trò",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-05",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Tạo hoặc sửa vai trò",
+      "kind": "drawer",
+      "figmaNodeId": null,
+      "components": [
+        "Drawer",
+        "Form",
+        "Select",
+        "Input",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-06",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Ma trận vai trò và permission",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-07",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Danh sách và chi tiết permission",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-08",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Tra cứu và thay vai trò người dùng bằng UserId",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-09",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Danh sách cấu hình thông báo",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-10",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Soạn nội dung, đối tượng và lịch gửi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-11",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Xem trước người nhận và các mốc lịch",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-12",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Chi tiết cấu hình và lịch sử gửi",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-13",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Kích hoạt hoặc huỷ lịch gửi",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-14",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Cấu hình hệ thống, giới hạn và thời gian nhắc trận",
+      "kind": "page",
+      "figmaNodeId": null,
+      "components": [
+        "Layout",
+        "Breadcrumb",
+        "Tabs",
+        "Card",
+        "Form",
+        "Table",
+        "Pagination",
+        "Button"
+      ]
+    },
+    {
+      "id": "ADMIN-15",
+      "module": "Quản trị",
+      "actor": "Người có permission quản trị tương ứng",
+      "title": "Huỷ trận bằng quyền quản trị",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-01",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Đang tải và skeleton",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-02",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Danh sách trống",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-03",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Lỗi validation theo field",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-04",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Không có quyền 403",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-05",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Không tìm thấy 404",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-06",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Dữ liệu đã thay đổi 409 và tải lại",
+      "kind": "modal",
+      "figmaNodeId": null,
+      "components": [
+        "Modal",
+        "Form",
+        "Alert",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-07",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Mất kết nối hoặc dịch vụ lỗi",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    },
+    {
+      "id": "COMMON-08",
+      "module": "Trạng thái dùng chung",
+      "actor": "Mọi người",
+      "title": "Vị trí bị từ chối và nhập tọa độ thủ công",
+      "kind": "state",
+      "figmaNodeId": null,
+      "components": [
+        "Result",
+        "Empty",
+        "Alert",
+        "Skeleton",
+        "Button"
+      ]
+    }
+  ],
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/register",
+      "screenId": "AUTH-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email",
+        "password",
+        "displayName"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/verify-email",
+      "screenId": "AUTH-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email",
+        "otp"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/resend-verification",
+      "screenId": "AUTH-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "screenId": "AUTH-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email",
+        "password"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "screenId": "AUTH-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "refreshToken"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "screenId": "AUTH-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "refreshToken"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/forgot-password",
+      "screenId": "AUTH-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/reset-password",
+      "screenId": "AUTH-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "email",
+        "otp",
+        "newPassword"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/google",
+      "screenId": "AUTH-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nGoogle OAuth cần cấu hình provider và cookie callback; bắt đầu luồng đăng nhập từ trình duyệt.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/google/callback",
+      "screenId": "AUTH-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. \nGoogle OAuth cần cấu hình provider và cookie callback; bắt đầu luồng đăng nhập từ trình duyệt.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "screenId": "PROFILE-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: profile.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/auth/me",
+      "screenId": "PROFILE-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: profile.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "displayName",
+        "avatarUrl",
+        "defaultArea",
+        "contactNote"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listing-requests",
+      "screenId": "LISTING-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listings/{listingId}/requests",
+      "screenId": "LISTING-11",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings/{listingId}/requests",
+      "screenId": "LISTING-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "applicantTeamId",
+        "message"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listings/{listingId}/requests/{requestId}",
+      "screenId": "LISTING-11",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings/{listingId}/requests/{requestId}/accept",
+      "screenId": "LISTING-12",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.accept\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings/{listingId}/requests/{requestId}/reject",
+      "screenId": "LISTING-12",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.reject\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "reason"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings/{listingId}/requests/{requestId}/withdraw",
+      "screenId": "LISTING-07",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: requests.withdraw\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listings",
+      "screenId": "LISTING-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listings.list",
+      "bodyFields": [],
+      "queryFields": [
+        "SportId",
+        "FormatId",
+        "Mode",
+        "Level",
+        "StartFrom",
+        "StartTo",
+        "Latitude",
+        "Longitude",
+        "RadiusMeters",
+        "MineOnly",
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings",
+      "screenId": "LISTING-09",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listings.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "sportId",
+        "formatId",
+        "hostTeamId",
+        "mode",
+        "title",
+        "note",
+        "levelMin",
+        "levelMax",
+        "openSlots",
+        "startAt",
+        "durationMinutes",
+        "cutoffAt",
+        "addressText",
+        "latitude",
+        "longitude"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listings/{listingId}",
+      "screenId": "LISTING-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listings.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/listings/{listingId}",
+      "screenId": "LISTING-10",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listings.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "sportId",
+        "formatId",
+        "hostTeamId",
+        "mode",
+        "title",
+        "note",
+        "levelMin",
+        "levelMax",
+        "openSlots",
+        "startAt",
+        "durationMinutes",
+        "cutoffAt",
+        "addressText",
+        "latitude",
+        "longitude"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listings/{listingId}/cancel",
+      "screenId": "LISTING-13",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listings.cancel\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "reason"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listing-watches",
+      "screenId": "WATCH-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.list",
+      "bodyFields": [],
+      "queryFields": [
+        "SportId",
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listing-watches",
+      "screenId": "WATCH-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "sportId",
+        "formatId",
+        "latitude",
+        "longitude",
+        "radiusMeters",
+        "startFrom",
+        "startTo",
+        "emailEnabled"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/listing-watches/{watchId}",
+      "screenId": "WATCH-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/listing-watches/{watchId}",
+      "screenId": "WATCH-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "sportId",
+        "formatId",
+        "latitude",
+        "longitude",
+        "radiusMeters",
+        "startFrom",
+        "startTo",
+        "emailEnabled"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listing-watches/{watchId}/pause",
+      "screenId": "WATCH-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.pause\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listing-watches/{watchId}/activate",
+      "screenId": "WATCH-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.activate\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/listing-watches/{watchId}/cancel",
+      "screenId": "WATCH-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: listing_watches.cancel\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/matches",
+      "screenId": "MATCH-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.list",
+      "bodyFields": [],
+      "queryFields": [
+        "TeamId",
+        "Status",
+        "StartFrom",
+        "StartTo",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/matches/{matchId}",
+      "screenId": "MATCH-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/matches/{matchId}/contact",
+      "screenId": "MATCH-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.contact.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/matches/{matchId}/confirm",
+      "screenId": "MATCH-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.confirm\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/matches/{matchId}/cancel",
+      "screenId": "MATCH-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.cancel\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "reason"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/admin/matches/{matchId}/cancel",
+      "screenId": "ADMIN-15",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.cancel_any\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "reason"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/matches/{matchId}/complete",
+      "screenId": "MATCH-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: matches.complete\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notification-configs",
+      "screenId": "ADMIN-09",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/notification-configs",
+      "screenId": "ADMIN-10",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "isSendNow",
+        "scheduleType",
+        "cronString",
+        "critical",
+        "title",
+        "body",
+        "availableAt",
+        "expiredAfter",
+        "maxSendTimes",
+        "audienceType",
+        "userIds",
+        "teamIds",
+        "inAppEnabled",
+        "emailEnabled",
+        "pushEnabled",
+        "smsEnabled",
+        "metadata",
+        "timeZoneId"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notification-configs/{id}",
+      "screenId": "ADMIN-12",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/notification-configs/{id}",
+      "screenId": "ADMIN-10",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "isSendNow",
+        "scheduleType",
+        "cronString",
+        "critical",
+        "title",
+        "body",
+        "availableAt",
+        "expiredAfter",
+        "maxSendTimes",
+        "audienceType",
+        "userIds",
+        "teamIds",
+        "inAppEnabled",
+        "emailEnabled",
+        "pushEnabled",
+        "smsEnabled",
+        "metadata",
+        "timeZoneId"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/notification-configs/{id}/activate",
+      "screenId": "ADMIN-13",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.activate\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/notification-configs/{id}/cancel",
+      "screenId": "ADMIN-13",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.cancel\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/notification-configs/preview",
+      "screenId": "ADMIN-11",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_configs.read\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "isSendNow",
+        "scheduleType",
+        "cronString",
+        "critical",
+        "title",
+        "body",
+        "availableAt",
+        "expiredAfter",
+        "maxSendTimes",
+        "audienceType",
+        "userIds",
+        "teamIds",
+        "inAppEnabled",
+        "emailEnabled",
+        "pushEnabled",
+        "smsEnabled",
+        "metadata",
+        "timeZoneId"
+      ],
+      "queryFields": [
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notification-configs/{id}/history",
+      "screenId": "ADMIN-12",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notification_history.list",
+      "bodyFields": [],
+      "queryFields": [
+        "NotificationConfigId",
+        "UnreadOnly",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notifications",
+      "screenId": "INBOX-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notifications.list",
+      "bodyFields": [],
+      "queryFields": [
+        "NotificationConfigId",
+        "UnreadOnly",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notifications/unread-count",
+      "screenId": "INBOX-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notifications.list",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/notifications/{id}",
+      "screenId": "INBOX-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notifications.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/notifications/{id}/read",
+      "screenId": "INBOX-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: notifications.mark_read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/permissions",
+      "screenId": "ADMIN-07",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: permissions.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/permissions/{permissionId}",
+      "screenId": "ADMIN-07",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: permissions.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users/{userId}/public-profile",
+      "screenId": "PROFILE-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: profiles.public.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams/{teamId}/public-profile",
+      "screenId": "TEAM-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.public_profile.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/roles",
+      "screenId": "ADMIN-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/roles",
+      "screenId": "ADMIN-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "name",
+        "description",
+        "isDefaultForRegistration"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/roles/{roleId}",
+      "screenId": "ADMIN-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/roles/{roleId}",
+      "screenId": "ADMIN-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "name",
+        "description",
+        "isActive",
+        "isDefaultForRegistration"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/roles/matrix",
+      "screenId": "ADMIN-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.list, permissions.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/roles/users/{userId}",
+      "screenId": "ADMIN-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: users.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/roles/users/{userId}",
+      "screenId": "ADMIN-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.assign\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "roleIds"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/roles/{roleId}/permissions",
+      "screenId": "ADMIN-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: roles.permissions.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "permissionCodes"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/sports",
+      "screenId": "ADMIN-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.list",
+      "bodyFields": [],
+      "queryFields": [
+        "ActiveOnly",
+        "SportCode",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sports",
+      "screenId": "ADMIN-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "code",
+        "name",
+        "formats"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/sports/{sportId}",
+      "screenId": "ADMIN-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/sports/{sportId}",
+      "screenId": "ADMIN-02",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "code",
+        "name",
+        "formats"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/sports/{sportId}",
+      "screenId": "ADMIN-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.deactivate",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1",
+      "screenId": null,
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nKhông yêu cầu JWT. ",
+      "bodyFields": [],
+      "queryFields": [],
+      "reason": "Thông tin dịch vụ, không cần màn nghiệp vụ riêng."
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/system-settings",
+      "screenId": "ADMIN-14",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: system_settings.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/system-settings",
+      "screenId": "ADMIN-14",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: system_settings.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "outboxMaxRetryCount",
+        "maxCaptainTeamsPerUser",
+        "maxMemberTeamsPerUser",
+        "maxDeputiesPerTeam",
+        "maxMembersPerTeam",
+        "teamInvitationLifetimeHours",
+        "maxPendingTeamRequests",
+        "outboxRetryInitialDelaySeconds",
+        "outboxRetryMaxDelaySeconds",
+        "processedOutboxRetentionDays",
+        "notificationRetentionDays",
+        "maxActiveListingWatchesPerUser",
+        "maxListingSearchRadiusMeters",
+        "maxListingWatchWindowDays",
+        "matchReminderLeadMinutes"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams/{teamId}/invitations",
+      "screenId": "TEAM-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/invitations",
+      "screenId": "TEAM-07",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.members.add\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "userId"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/team-invitations",
+      "screenId": "TEAM-10",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/invitations/{invitationId}/cancel",
+      "screenId": "TEAM-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.members.add\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/invitations/{invitationId}/accept",
+      "screenId": "TEAM-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.invitations.respond\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/invitations/{invitationId}/reject",
+      "screenId": "TEAM-08",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.invitations.respond\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams/{teamId}/join-requests",
+      "screenId": "TEAM-09",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/join-requests",
+      "screenId": "TEAM-12",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.join_requests.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "message"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/team-join-requests",
+      "screenId": "TEAM-11",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Status",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/join-requests/{joinRequestId}/withdraw",
+      "screenId": "TEAM-11",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.join_requests.withdraw\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/join-requests/{joinRequestId}/accept",
+      "screenId": "TEAM-13",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.members.add\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/join-requests/{joinRequestId}/reject",
+      "screenId": "TEAM-13",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.members.add\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams",
+      "screenId": "TEAM-01",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "MineOnly",
+        "SportId",
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams",
+      "screenId": "TEAM-05",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.create\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "name",
+        "description",
+        "homeArea",
+        "avatarUrl",
+        "sportId"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams/{teamId}",
+      "screenId": "TEAM-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.read",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/teams/{teamId}",
+      "screenId": "TEAM-06",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "name",
+        "description",
+        "homeArea",
+        "avatarUrl"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/teams/{teamId}",
+      "screenId": "TEAM-18",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.delete\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/teams/{teamId}/members",
+      "screenId": "TEAM-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.list",
+      "bodyFields": [],
+      "queryFields": [
+        "Id",
+        "SearchString",
+        "FromDate",
+        "ToDate",
+        "PageNumber",
+        "PageSize"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/captain/transfer",
+      "screenId": "TEAM-15",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.captain.transfer\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "userId"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/members/{userId}/deputy",
+      "screenId": "TEAM-14",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.deputies.manage\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/teams/{teamId}/members/{userId}/deputy",
+      "screenId": "TEAM-14",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.deputies.manage\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/teams/{teamId}/members/{userId}",
+      "screenId": "TEAM-16",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.members.remove\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/teams/{teamId}/leave",
+      "screenId": "TEAM-17",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: teams.leave",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/user-sport-profiles",
+      "screenId": "PROFILE-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sport_profiles.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "sportId",
+        "level",
+        "preferredFormatIds",
+        "bio"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/user-sport-profiles/{profileId}",
+      "screenId": "PROFILE-03",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sport_profiles.update\nBody mẫu theo HTTP contract. Thay ID bằng dữ liệu thật. Với lệnh ghi có concurrency token, đọc resource trước rồi dùng token mới nhất.",
+      "bodyFields": [
+        "level",
+        "preferredFormatIds",
+        "bio"
+      ],
+      "queryFields": []
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/user-sport-profiles/{profileId}",
+      "screenId": "PROFILE-04",
+      "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sport_profiles.update",
+      "bodyFields": [],
+      "queryFields": []
+    }
+  ],
+  "criticalRules": [
+    "Public profiles require authentication; no email, contact note, internal members or rating.",
+    "Team captain alone transfers captaincy, assigns deputies and deletes team. Deputy manages invitations/requests and ordinary members.",
+    "Deleting team requires only captain active and no unfinished listing/match.",
+    "Contact opens only to active participants in CONFIRMED match.",
+    "Confirmed match reminder lead is global admin system setting; not a personal preference.",
+    "Watch is personal FIND_PLAYERS; radius and time only, no level filter or opponent/team watch.",
+    "409 requires reload and a deliberate new submission; never silently overwrite.",
+    "Admin user-role assignment uses known UserId; no user directory/search endpoint exists.",
+    "Notification ReadAt is independent of email delivery status. In-app/email only.",
+    "Search geolocation fields latitude/longitude/radius must go together; manual coordinates support denied location."
+  ],
+  "figmaFileKey": "Hy26nYnp9g5oj156rML1F7",
+  "figmaUrl": "https://www.figma.com/design/Hy26nYnp9g5oj156rML1F7"
+}

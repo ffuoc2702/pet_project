@@ -1,0 +1,1651 @@
+{
+  "fileKey": "Hy26nYnp9g5oj156rML1F7",
+  "url": "https://www.figma.com/design/Hy26nYnp9g5oj156rML1F7",
+  "scope": "84 screens desktop and mobile, shared components, prototype flows",
+  "font": "Noto Sans: substitute for unavailable system-ui family",
+  "step": "MCP Starter call limit reached; 13 of 84 screen pairs created",
+  "foundation": {
+    "createdNodeIds": [
+      "4:2",
+      "4:3",
+      "4:38",
+      "4:39",
+      "4:40",
+      "4:41",
+      "4:42",
+      "4:43",
+      "4:44",
+      "4:45",
+      "4:46",
+      "4:47",
+      "4:48",
+      "4:49",
+      "4:50",
+      "4:51",
+      "4:52",
+      "4:53",
+      "4:54",
+      "4:55",
+      "4:56",
+      "4:57",
+      "4:58",
+      "4:59",
+      "4:60",
+      "4:61",
+      "4:62",
+      "4:63",
+      "4:64",
+      "4:65",
+      "4:66",
+      "4:67",
+      "4:68",
+      "4:69",
+      "4:70",
+      "4:71",
+      "4:72",
+      "4:73"
+    ],
+    "pages": {
+      "foundations": "0:1",
+      "01 · Player flows": "4:2",
+      "02 · Admin & shared states": "4:3"
+    },
+    "tokens": {
+      "surface": "VariableID:4:5",
+      "canvas": "VariableID:4:6",
+      "text": "VariableID:4:7",
+      "muted": "VariableID:4:8",
+      "primary": "VariableID:4:9",
+      "navy": "VariableID:4:10",
+      "soft": "VariableID:4:11",
+      "success": "VariableID:4:12",
+      "successBg": "VariableID:4:13",
+      "warning": "VariableID:4:14",
+      "warningBg": "VariableID:4:15",
+      "danger": "VariableID:4:16",
+      "dangerBg": "VariableID:4:17",
+      "border": "VariableID:4:18",
+      "disabled": "VariableID:4:19",
+      "s0": "VariableID:4:20",
+      "s1": "VariableID:4:21",
+      "s4": "VariableID:4:22",
+      "s6": "VariableID:4:23",
+      "s8": "VariableID:4:24",
+      "s12": "VariableID:4:25",
+      "s16": "VariableID:4:26",
+      "s24": "VariableID:4:27",
+      "s32": "VariableID:4:28",
+      "s40": "VariableID:4:29",
+      "s48": "VariableID:4:30"
+    },
+    "styles": {
+      "caption": "S:fdbd3b80cc030ef717b187e67bd6473285b3215c,",
+      "body": "S:c3817f39a19735e1ffc21d95195a4f4bde9c458f,",
+      "label": "S:c06675b043535ab1901aae8923ca45d83fd8709f,",
+      "h3": "S:0fbfe502c2578339d6ccc97f3e9e289a6deeb328,",
+      "h2": "S:4e2c5d96235adbb65a405a28e24adaea977588ee,",
+      "h1": "S:2f054d9ae6e6a988c058945398a2afef2b495402,",
+      "display": "S:12b251dbe608751b769699462ace47e62016b0e1,"
+    },
+    "components": {
+      "ButtonPrimary": {
+        "id": "4:38",
+        "props": {
+          "Label": "Label#4:0"
+        }
+      },
+      "ButtonSecondary": {
+        "id": "4:40",
+        "props": {
+          "Label": "Label#4:1"
+        }
+      },
+      "ButtonDanger": {
+        "id": "4:42",
+        "props": {
+          "Label": "Label#4:2"
+        }
+      },
+      "ButtonDisabled": {
+        "id": "4:44",
+        "props": {
+          "Label": "Label#4:3"
+        }
+      },
+      "Field": {
+        "id": "4:47",
+        "props": {
+          "Label": "Label#4:5",
+          "Value": "Value#4:6"
+        }
+      },
+      "Card": {
+        "id": "4:51",
+        "props": {
+          "Title": "Title#4:7",
+          "Subtitle": "Subtitle#4:8",
+          "Meta": "Meta#4:9",
+          "Status": "Status#4:10"
+        }
+      },
+      "Tag": {
+        "id": "4:56",
+        "props": {
+          "Label": "Label#4:11"
+        }
+      },
+      "Alert": {
+        "id": "4:58",
+        "props": {
+          "Title": "Title#4:12",
+          "Body": "Body#4:13"
+        }
+      },
+      "Nav": {
+        "id": "4:61",
+        "props": {
+          "Label": "Label#4:14"
+        }
+      },
+      "Pagination": {
+        "id": "4:63",
+        "props": {}
+      },
+      "Skeleton": {
+        "id": "4:65",
+        "props": {}
+      }
+    },
+    "collectionId": "VariableCollectionId:4:4",
+    "font": "Noto Sans",
+    "componentCount": 11,
+    "variableCount": 26
+  },
+  "sections": {
+    "AUTH": {
+      "id": "5:2",
+      "pageId": "4:2",
+      "y": 8246
+    },
+    "PROFILE": {
+      "id": "5:3",
+      "pageId": "4:2",
+      "y": 5449
+    },
+    "TEAM": {
+      "id": "5:4",
+      "pageId": "4:2",
+      "y": 80
+    },
+    "LISTING": {
+      "id": "5:5",
+      "pageId": "4:2",
+      "y": 80
+    },
+    "WATCH": {
+      "id": "5:6",
+      "pageId": "4:2",
+      "y": 80
+    },
+    "MATCH": {
+      "id": "5:7",
+      "pageId": "4:2",
+      "y": 80
+    },
+    "INBOX": {
+      "id": "5:8",
+      "pageId": "4:2",
+      "y": 80
+    },
+    "ADMIN": {
+      "id": "5:9",
+      "pageId": "4:3",
+      "y": 80
+    },
+    "COMMON": {
+      "id": "5:10",
+      "pageId": "4:3",
+      "y": 80
+    }
+  },
+  "mapping": [
+    {
+      "id": "AUTH-01",
+      "viewport": "desktop",
+      "nodeId": "5:11",
+      "width": 1440,
+      "height": 900,
+      "title": "Đăng nhập",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-01",
+      "viewport": "mobile",
+      "nodeId": "5:49",
+      "width": 390,
+      "height": 844,
+      "title": "Đăng nhập",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-02",
+      "viewport": "desktop",
+      "nodeId": "5:79",
+      "width": 1440,
+      "height": 900,
+      "title": "Đăng ký",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-02",
+      "viewport": "mobile",
+      "nodeId": "5:117",
+      "width": 390,
+      "height": 844,
+      "title": "Đăng ký",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-03",
+      "viewport": "desktop",
+      "nodeId": "9:52",
+      "width": 1440,
+      "height": 900,
+      "title": "Xác minh email và gửi lại OTP",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-03",
+      "viewport": "mobile",
+      "nodeId": "9:86",
+      "width": 390,
+      "height": 844,
+      "title": "Xác minh email và gửi lại OTP",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-04",
+      "viewport": "desktop",
+      "nodeId": "9:112",
+      "width": 1440,
+      "height": 900,
+      "title": "Quên mật khẩu",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-04",
+      "viewport": "mobile",
+      "nodeId": "9:142",
+      "width": 390,
+      "height": 844,
+      "title": "Quên mật khẩu",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-05",
+      "viewport": "desktop",
+      "nodeId": "9:164",
+      "width": 1440,
+      "height": 900,
+      "title": "Đặt lại mật khẩu",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-05",
+      "viewport": "mobile",
+      "nodeId": "9:197",
+      "width": 390,
+      "height": 844,
+      "title": "Đặt lại mật khẩu",
+      "kind": "page"
+    },
+    {
+      "id": "AUTH-06",
+      "viewport": "desktop",
+      "nodeId": "9:222",
+      "width": 1440,
+      "height": 902,
+      "title": "Kết quả đăng nhập Google",
+      "kind": "state"
+    },
+    {
+      "id": "AUTH-06",
+      "viewport": "mobile",
+      "nodeId": "9:257",
+      "width": 390,
+      "height": 844,
+      "title": "Kết quả đăng nhập Google",
+      "kind": "state"
+    },
+    {
+      "id": "AUTH-07",
+      "viewport": "desktop",
+      "nodeId": "9:287",
+      "width": 1440,
+      "height": 902,
+      "title": "Phiên đăng nhập hết hạn",
+      "kind": "state"
+    },
+    {
+      "id": "AUTH-07",
+      "viewport": "mobile",
+      "nodeId": "9:319",
+      "width": 390,
+      "height": 844,
+      "title": "Phiên đăng nhập hết hạn",
+      "kind": "state"
+    },
+    {
+      "id": "AUTH-08",
+      "viewport": "desktop",
+      "nodeId": "9:346",
+      "width": 1440,
+      "height": 902,
+      "title": "Xác nhận đăng xuất",
+      "kind": "modal"
+    },
+    {
+      "id": "AUTH-08",
+      "viewport": "mobile",
+      "nodeId": "9:402",
+      "width": 390,
+      "height": 844,
+      "title": "Xác nhận đăng xuất",
+      "kind": "modal"
+    },
+    {
+      "id": "PROFILE-01",
+      "viewport": "desktop",
+      "nodeId": "10:184",
+      "width": 1440,
+      "height": 902,
+      "title": "Hồ sơ của tôi",
+      "kind": "page"
+    },
+    {
+      "id": "PROFILE-01",
+      "viewport": "mobile",
+      "nodeId": "10:233",
+      "width": 390,
+      "height": 1099,
+      "title": "Hồ sơ của tôi",
+      "kind": "page"
+    },
+    {
+      "id": "PROFILE-02",
+      "viewport": "desktop",
+      "nodeId": "10:277",
+      "width": 1440,
+      "height": 902,
+      "title": "Sửa hồ sơ của tôi",
+      "kind": "page"
+    },
+    {
+      "id": "PROFILE-02",
+      "viewport": "mobile",
+      "nodeId": "10:323",
+      "width": 390,
+      "height": 863,
+      "title": "Sửa hồ sơ của tôi",
+      "kind": "page"
+    },
+    {
+      "id": "PROFILE-03",
+      "viewport": "desktop",
+      "nodeId": "10:364",
+      "width": 1440,
+      "height": 902,
+      "title": "Thêm hoặc sửa hồ sơ môn chơi",
+      "kind": "drawer"
+    },
+    {
+      "id": "PROFILE-03",
+      "viewport": "mobile",
+      "nodeId": "10:429",
+      "width": 390,
+      "height": 844,
+      "title": "Thêm hoặc sửa hồ sơ môn chơi",
+      "kind": "drawer"
+    },
+    {
+      "id": "PROFILE-04",
+      "viewport": "desktop",
+      "nodeId": "10:484",
+      "width": 1440,
+      "height": 902,
+      "title": "Xác nhận xoá hồ sơ môn chơi",
+      "kind": "modal"
+    },
+    {
+      "id": "PROFILE-04",
+      "viewport": "mobile",
+      "nodeId": "10:538",
+      "width": 390,
+      "height": 844,
+      "title": "Xác nhận xoá hồ sơ môn chơi",
+      "kind": "modal"
+    },
+    {
+      "id": "PROFILE-05",
+      "viewport": "desktop",
+      "nodeId": "10:582",
+      "width": 1440,
+      "height": 917,
+      "title": "Hồ sơ công khai của người chơi khác",
+      "kind": "page"
+    },
+    {
+      "id": "PROFILE-05",
+      "viewport": "mobile",
+      "nodeId": "10:625",
+      "width": 390,
+      "height": 964,
+      "title": "Hồ sơ công khai của người chơi khác",
+      "kind": "page"
+    }
+  ],
+  "links": [
+    {
+      "nodeId": "5:40",
+      "source": "AUTH-01",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Đăng nhập"
+    },
+    {
+      "nodeId": "5:42",
+      "source": "AUTH-01",
+      "target": "AUTH-06",
+      "viewport": "desktop",
+      "label": "Tiếp tục với Google"
+    },
+    {
+      "nodeId": "5:44",
+      "source": "AUTH-01",
+      "target": "AUTH-04",
+      "viewport": "desktop",
+      "label": "Quên mật khẩu?"
+    },
+    {
+      "nodeId": "5:46",
+      "source": "AUTH-01",
+      "target": "AUTH-02",
+      "viewport": "desktop",
+      "label": "Tạo tài khoản"
+    },
+    {
+      "nodeId": "5:70",
+      "source": "AUTH-01",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Đăng nhập"
+    },
+    {
+      "nodeId": "5:72",
+      "source": "AUTH-01",
+      "target": "AUTH-06",
+      "viewport": "mobile",
+      "label": "Tiếp tục với Google"
+    },
+    {
+      "nodeId": "5:74",
+      "source": "AUTH-01",
+      "target": "AUTH-04",
+      "viewport": "mobile",
+      "label": "Quên mật khẩu?"
+    },
+    {
+      "nodeId": "5:76",
+      "source": "AUTH-01",
+      "target": "AUTH-02",
+      "viewport": "mobile",
+      "label": "Tạo tài khoản"
+    },
+    {
+      "nodeId": "5:112",
+      "source": "AUTH-02",
+      "target": "AUTH-03",
+      "viewport": "desktop",
+      "label": "Đăng ký"
+    },
+    {
+      "nodeId": "5:114",
+      "source": "AUTH-02",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Đã có tài khoản? Đăng nhập"
+    },
+    {
+      "nodeId": "5:142",
+      "source": "AUTH-02",
+      "target": "AUTH-03",
+      "viewport": "mobile",
+      "label": "Đăng ký"
+    },
+    {
+      "nodeId": "5:144",
+      "source": "AUTH-02",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Đã có tài khoản? Đăng nhập"
+    },
+    {
+      "nodeId": "9:81",
+      "source": "AUTH-03",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Xác minh email"
+    },
+    {
+      "nodeId": "9:83",
+      "source": "AUTH-03",
+      "target": "AUTH-03",
+      "viewport": "desktop",
+      "label": "Gửi lại mã OTP"
+    },
+    {
+      "nodeId": "9:107",
+      "source": "AUTH-03",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Xác minh email"
+    },
+    {
+      "nodeId": "9:109",
+      "source": "AUTH-03",
+      "target": "AUTH-03",
+      "viewport": "mobile",
+      "label": "Gửi lại mã OTP"
+    },
+    {
+      "nodeId": "9:137",
+      "source": "AUTH-04",
+      "target": "AUTH-05",
+      "viewport": "desktop",
+      "label": "Gửi mã khôi phục"
+    },
+    {
+      "nodeId": "9:139",
+      "source": "AUTH-04",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Quay lại đăng nhập"
+    },
+    {
+      "nodeId": "9:159",
+      "source": "AUTH-04",
+      "target": "AUTH-05",
+      "viewport": "mobile",
+      "label": "Gửi mã khôi phục"
+    },
+    {
+      "nodeId": "9:161",
+      "source": "AUTH-04",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Quay lại đăng nhập"
+    },
+    {
+      "nodeId": "9:194",
+      "source": "AUTH-05",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Đặt lại mật khẩu"
+    },
+    {
+      "nodeId": "9:219",
+      "source": "AUTH-05",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Đặt lại mật khẩu"
+    },
+    {
+      "nodeId": "9:229",
+      "source": "AUTH-06",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "9:231",
+      "source": "AUTH-06",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "9:233",
+      "source": "AUTH-06",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "9:235",
+      "source": "AUTH-06",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "9:237",
+      "source": "AUTH-06",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "9:239",
+      "source": "AUTH-06",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "9:252",
+      "source": "AUTH-06",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Khám phá kèo"
+    },
+    {
+      "nodeId": "9:254",
+      "source": "AUTH-06",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Đăng nhập lại"
+    },
+    {
+      "nodeId": "9:273",
+      "source": "AUTH-06",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Khám phá kèo"
+    },
+    {
+      "nodeId": "9:275",
+      "source": "AUTH-06",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Đăng nhập lại"
+    },
+    {
+      "nodeId": "9:278",
+      "source": "AUTH-06",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "9:280",
+      "source": "AUTH-06",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "9:282",
+      "source": "AUTH-06",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "9:284",
+      "source": "AUTH-06",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "9:294",
+      "source": "AUTH-07",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "9:296",
+      "source": "AUTH-07",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "9:298",
+      "source": "AUTH-07",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "9:300",
+      "source": "AUTH-07",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "9:302",
+      "source": "AUTH-07",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "9:304",
+      "source": "AUTH-07",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "9:316",
+      "source": "AUTH-07",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Đăng nhập lại"
+    },
+    {
+      "nodeId": "9:334",
+      "source": "AUTH-07",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Đăng nhập lại"
+    },
+    {
+      "nodeId": "9:337",
+      "source": "AUTH-07",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "9:339",
+      "source": "AUTH-07",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "9:341",
+      "source": "AUTH-07",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "9:343",
+      "source": "AUTH-07",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "9:353",
+      "source": "AUTH-08",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "9:355",
+      "source": "AUTH-08",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "9:357",
+      "source": "AUTH-08",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "9:359",
+      "source": "AUTH-08",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "9:361",
+      "source": "AUTH-08",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "9:363",
+      "source": "AUTH-08",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "9:396",
+      "source": "AUTH-08",
+      "target": "AUTH-01",
+      "viewport": "desktop",
+      "label": "Đăng xuất"
+    },
+    {
+      "nodeId": "9:398",
+      "source": "AUTH-08",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Ở lại"
+    },
+    {
+      "nodeId": "9:400",
+      "source": "AUTH-08",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "9:423",
+      "source": "AUTH-08",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "9:425",
+      "source": "AUTH-08",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "9:427",
+      "source": "AUTH-08",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "9:429",
+      "source": "AUTH-08",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "9:442",
+      "source": "AUTH-08",
+      "target": "AUTH-01",
+      "viewport": "mobile",
+      "label": "Đăng xuất"
+    },
+    {
+      "nodeId": "9:444",
+      "source": "AUTH-08",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Ở lại"
+    },
+    {
+      "nodeId": "9:446",
+      "source": "AUTH-08",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "10:191",
+      "source": "PROFILE-01",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "10:193",
+      "source": "PROFILE-01",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "10:195",
+      "source": "PROFILE-01",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "10:197",
+      "source": "PROFILE-01",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "10:199",
+      "source": "PROFILE-01",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "10:201",
+      "source": "PROFILE-01",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "10:228",
+      "source": "PROFILE-01",
+      "target": "PROFILE-02",
+      "viewport": "desktop",
+      "label": "Sửa hồ sơ"
+    },
+    {
+      "nodeId": "10:230",
+      "source": "PROFILE-01",
+      "target": "PROFILE-03",
+      "viewport": "desktop",
+      "label": "Thêm môn chơi"
+    },
+    {
+      "nodeId": "10:263",
+      "source": "PROFILE-01",
+      "target": "PROFILE-02",
+      "viewport": "mobile",
+      "label": "Sửa hồ sơ"
+    },
+    {
+      "nodeId": "10:265",
+      "source": "PROFILE-01",
+      "target": "PROFILE-03",
+      "viewport": "mobile",
+      "label": "Thêm môn chơi"
+    },
+    {
+      "nodeId": "10:268",
+      "source": "PROFILE-01",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "10:270",
+      "source": "PROFILE-01",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "10:272",
+      "source": "PROFILE-01",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "10:274",
+      "source": "PROFILE-01",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "10:284",
+      "source": "PROFILE-02",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "10:286",
+      "source": "PROFILE-02",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "10:288",
+      "source": "PROFILE-02",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "10:290",
+      "source": "PROFILE-02",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "10:292",
+      "source": "PROFILE-02",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "10:294",
+      "source": "PROFILE-02",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "10:320",
+      "source": "PROFILE-02",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Lưu hồ sơ"
+    },
+    {
+      "nodeId": "10:352",
+      "source": "PROFILE-02",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Lưu hồ sơ"
+    },
+    {
+      "nodeId": "10:355",
+      "source": "PROFILE-02",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "10:357",
+      "source": "PROFILE-02",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "10:359",
+      "source": "PROFILE-02",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "10:361",
+      "source": "PROFILE-02",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "10:371",
+      "source": "PROFILE-03",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "10:373",
+      "source": "PROFILE-03",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "10:375",
+      "source": "PROFILE-03",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "10:377",
+      "source": "PROFILE-03",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "10:379",
+      "source": "PROFILE-03",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "10:381",
+      "source": "PROFILE-03",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "10:425",
+      "source": "PROFILE-03",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Lưu hồ sơ môn"
+    },
+    {
+      "nodeId": "10:427",
+      "source": "PROFILE-03",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "10:450",
+      "source": "PROFILE-03",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "10:452",
+      "source": "PROFILE-03",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "10:454",
+      "source": "PROFILE-03",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "10:456",
+      "source": "PROFILE-03",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "10:480",
+      "source": "PROFILE-03",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Lưu hồ sơ môn"
+    },
+    {
+      "nodeId": "10:482",
+      "source": "PROFILE-03",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "10:491",
+      "source": "PROFILE-04",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "10:493",
+      "source": "PROFILE-04",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "10:495",
+      "source": "PROFILE-04",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "10:497",
+      "source": "PROFILE-04",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "10:499",
+      "source": "PROFILE-04",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "10:501",
+      "source": "PROFILE-04",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "10:534",
+      "source": "PROFILE-04",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Xoá hồ sơ môn"
+    },
+    {
+      "nodeId": "10:536",
+      "source": "PROFILE-04",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "10:559",
+      "source": "PROFILE-04",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "10:561",
+      "source": "PROFILE-04",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "10:563",
+      "source": "PROFILE-04",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "10:565",
+      "source": "PROFILE-04",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    },
+    {
+      "nodeId": "10:578",
+      "source": "PROFILE-04",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Xoá hồ sơ môn"
+    },
+    {
+      "nodeId": "10:580",
+      "source": "PROFILE-04",
+      "target": "PROFILE-01",
+      "viewport": "mobile",
+      "label": "Đóng"
+    },
+    {
+      "nodeId": "10:589",
+      "source": "PROFILE-05",
+      "target": "LISTING-01",
+      "viewport": "desktop",
+      "label": "Tìm kèo"
+    },
+    {
+      "nodeId": "10:591",
+      "source": "PROFILE-05",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Đội của tôi"
+    },
+    {
+      "nodeId": "10:593",
+      "source": "PROFILE-05",
+      "target": "MATCH-01",
+      "viewport": "desktop",
+      "label": "Trận đấu"
+    },
+    {
+      "nodeId": "10:595",
+      "source": "PROFILE-05",
+      "target": "WATCH-01",
+      "viewport": "desktop",
+      "label": "Theo dõi"
+    },
+    {
+      "nodeId": "10:597",
+      "source": "PROFILE-05",
+      "target": "INBOX-01",
+      "viewport": "desktop",
+      "label": "Thông báo · 3"
+    },
+    {
+      "nodeId": "10:599",
+      "source": "PROFILE-05",
+      "target": "PROFILE-01",
+      "viewport": "desktop",
+      "label": "Hồ sơ của tôi"
+    },
+    {
+      "nodeId": "10:622",
+      "source": "PROFILE-05",
+      "target": "TEAM-01",
+      "viewport": "desktop",
+      "label": "Quay lại danh sách"
+    },
+    {
+      "nodeId": "10:651",
+      "source": "PROFILE-05",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Quay lại danh sách"
+    },
+    {
+      "nodeId": "10:654",
+      "source": "PROFILE-05",
+      "target": "LISTING-01",
+      "viewport": "mobile",
+      "label": "Kèo"
+    },
+    {
+      "nodeId": "10:656",
+      "source": "PROFILE-05",
+      "target": "TEAM-01",
+      "viewport": "mobile",
+      "label": "Đội"
+    },
+    {
+      "nodeId": "10:658",
+      "source": "PROFILE-05",
+      "target": "MATCH-01",
+      "viewport": "mobile",
+      "label": "Trận"
+    },
+    {
+      "nodeId": "10:660",
+      "source": "PROFILE-05",
+      "target": "INBOX-01",
+      "viewport": "mobile",
+      "label": "Hộp thư"
+    }
+  ],
+  "stats": [
+    {
+      "id": "AUTH-01",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 10,
+        "TEXT": 20,
+        "INSTANCE": 7
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-01",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 15,
+        "INSTANCE": 7
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-02",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 11,
+        "TEXT": 20,
+        "INSTANCE": 6
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-02",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 15,
+        "INSTANCE": 6
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-03",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 10,
+        "TEXT": 18,
+        "INSTANCE": 5
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-03",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 13,
+        "INSTANCE": 5
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-04",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 9,
+        "TEXT": 16,
+        "INSTANCE": 4
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-04",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 6,
+        "TEXT": 11,
+        "INSTANCE": 4
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-05",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 11,
+        "TEXT": 17,
+        "INSTANCE": 4
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-05",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 12,
+        "INSTANCE": 4
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-06",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 6,
+        "TEXT": 19,
+        "INSTANCE": 9
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-06",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 6,
+        "TEXT": 16,
+        "INSTANCE": 7
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-07",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 6,
+        "TEXT": 17,
+        "INSTANCE": 8
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-07",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 6,
+        "TEXT": 14,
+        "INSTANCE": 6
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-08",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 33,
+        "INSTANCE": 14
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "AUTH-08",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 26,
+        "INSTANCE": 11
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-01",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 30,
+        "INSTANCE": 11
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-01",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 27,
+        "INSTANCE": 9
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-02",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 10,
+        "TEXT": 23,
+        "INSTANCE": 12
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-02",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 10,
+        "TEXT": 20,
+        "INSTANCE": 10
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-03",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 13,
+        "TEXT": 36,
+        "INSTANCE": 15
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-03",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 13,
+        "TEXT": 29,
+        "INSTANCE": 12
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-04",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 32,
+        "INSTANCE": 13
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-04",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 8,
+        "TEXT": 25,
+        "INSTANCE": 10
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-05",
+      "viewport": "desktop",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 25,
+        "INSTANCE": 10
+      },
+      "images": [],
+      "fontMismatch": []
+    },
+    {
+      "id": "PROFILE-05",
+      "viewport": "mobile",
+      "counts": {
+        "FRAME": 7,
+        "TEXT": 22,
+        "INSTANCE": 8
+      },
+      "images": [],
+      "fontMismatch": []
+    }
+  ],
+  "webPlugin": {
+    "id": "5161c1a7-d32b-43f3-b885-f110b8aa82d3",
+    "status": "Scaffold only; authored update failed TypeScript compilation. Not ready to run."
+  }
+}
