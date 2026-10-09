@@ -343,3 +343,9 @@ Xem [matching](../docs/matching.md) về API, quyền, trạng thái, worker, em
 Hồ sơ công khai người chơi/đội: [public-profiles](../docs/public-profiles.md).
 Nhắc lịch trận CONFIRMED dùng MatchReminderLeadMinutes trong [SystemSettings](../docs/system-settings.md)
 và worker [matching](../docs/matching.md).
+
+## Mô phỏng người dùng và tìm kèo
+
+Chạy `.\scripts\Demo.ps1 -RunId cv-demo-01` từ backend để tạo 50 người dùng,
+6 team và 15 kèo. Dùng `-Mode test` để tạo/dọn database cô lập.
+Xem [hướng dẫn simulator](../docs/demo-simulator.md) về cấu hình và checkpoint.

@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\tools\MatchingSports.DemoSimulator\MatchingSports.DemoSimulator.csproj" />
     <ProjectReference Include="..\..\src\MatchingSports.Api\MatchingSports.Api.csproj" />
     <ProjectReference Include="..\..\src\MatchingSports.Application\MatchingSports.Application.csproj" />
     <ProjectReference Include="..\..\src\MatchingSports.Domain\MatchingSports.Domain.csproj" />
