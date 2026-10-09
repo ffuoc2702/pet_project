@@ -128,7 +128,7 @@ public sealed class SystemSettingsTests
         var errors = new List<ValidationResult>();
         var request = new UpdateSystemSettingsRequest();
         Assert.False(Validator.TryValidateObject(request, new ValidationContext(request), errors, true));
-        Assert.Equal(12, errors.Count);
+        Assert.Equal(16, errors.Count);
         var adminPermissions = InitialPermissionCatalog.GetDefaultPermissionCodes(RoleNames.Admin).ToArray();
         var userPermissions = InitialPermissionCatalog.GetDefaultPermissionCodes(RoleNames.User).ToArray();
         Assert.Contains(PermissionCodes.ReadSystemSettings, adminPermissions);
@@ -161,6 +161,10 @@ public sealed class SystemSettingsTests
             OutboxRetryMaxDelaySeconds = 120,
             ProcessedOutboxRetentionDays = 10,
             NotificationRetentionDays = 60,
+            MaxActiveListingWatchesPerUser = 20,
+            MaxListingSearchRadiusMeters = 50000,
+            MaxListingWatchWindowDays = 30,
+            MatchReminderLeadMinutes = 60,
             ConcurrencyToken = readResponse.Data.ConcurrencyToken
         }, CancellationToken.None);
         var writeResponse = Assert.IsType<BaseResponse<SystemSettingsDto>>(Assert.IsType<OkObjectResult>(writeResult.Result).Value);

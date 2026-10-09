@@ -28,4 +28,12 @@ public sealed class UpdateSystemSettingsRequest
     public int? NotificationRetentionDays { get; init; }
     [Required(ErrorMessage = "Trường {0} là bắt buộc.")]
     public Guid? ConcurrencyToken { get; init; }
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), Range(0, 1000, ErrorMessage = "Trường {0} phải từ {1} đến {2}.")]
+    public int? MaxActiveListingWatchesPerUser { get; init; }
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), Range(1, 200000, ErrorMessage = "Trường {0} phải từ {1} đến {2}.")]
+    public int? MaxListingSearchRadiusMeters { get; init; }
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), Range(1, 365, ErrorMessage = "Trường {0} phải từ {1} đến {2}.")]
+    public int? MaxListingWatchWindowDays { get; init; }
+    [Required(ErrorMessage = "Trường {0} là bắt buộc."), Range(1, 10080, ErrorMessage = "Trường {0} phải từ {1} đến {2}.")]
+    public int? MatchReminderLeadMinutes { get; init; }
 }

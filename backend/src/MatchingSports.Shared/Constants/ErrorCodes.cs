@@ -2,6 +2,11 @@
 
 public static class ErrorCodes
 {
+    public const string InvalidMatchingOperation = "INVALID_MATCHING_OPERATION";
+    public const string ListingNotFound = "LISTING_NOT_FOUND";
+    public const string ListingRequestNotFound = "LISTING_REQUEST_NOT_FOUND";
+    public const string MatchNotFound = "MATCH_NOT_FOUND";
+    public const string ListingWatchNotFound = "LISTING_WATCH_NOT_FOUND";
     public const string InvalidTeamOperation = "INVALID_TEAM_OPERATION";
     public const string TeamNotFound = "TEAM_NOT_FOUND";
     public const string TeamInvitationNotFound = "TEAM_INVITATION_NOT_FOUND";

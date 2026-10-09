@@ -93,16 +93,19 @@ public sealed class NotificationJobs(INotificationWorkRepository repository, INo
         var config = message.AggregateType == EntityTypes.NotificationConfig
             ? await repository.LockConfigAsync(message.AggregateId, cancellationToken) : null;
         var history = await repository.GetHistoryForDeliveryAsync(historyId, cancellationToken);
+        var reminderMatch = history?.Type == NotificationType.MATCH_REMINDER && history.EntityId is { } matchId
+            ? await repository.LockReminderMatchAsync(matchId, cancellationToken) : null;
         if (history is not null && (history.NotificationConfigId is { } configId
             ? message.AggregateType != EntityTypes.NotificationConfig || configId != message.AggregateId
-            : message.AggregateType != EntityTypes.Team || history.TeamId != message.AggregateId))
+            : !MatchesStandaloneAggregate(message, history)))
             message.FailPermanently("NOTIFICATION_CONFIG_MISMATCH", clock.GetUtcNow());
         else if (history is null)
             message.MarkProcessed(clock.GetUtcNow());
         else if (history.EmailStatus != NotificationDeliveryStatus.PENDING)
             message.MarkProcessed(clock.GetUtcNow());
         else if ((history.NotificationConfigId is not null && (config is null || config.Status == NotificationConfigStatus.CANCEL))
-            || history.ExpiresAt <= clock.GetUtcNow())
+            || history.ExpiresAt <= clock.GetUtcNow()
+            || (history.Type == NotificationType.MATCH_REMINDER && reminderMatch?.Status != MatchStatus.CONFIRMED))
         {
             history.RecordDelivery(NotificationChannel.EMAIL, NotificationDeliveryStatus.SKIPPED, clock.GetUtcNow(), "CANCELLED_OR_EXPIRED");
             message.MarkProcessed(clock.GetUtcNow());
@@ -139,6 +142,11 @@ public sealed class NotificationJobs(INotificationWorkRepository repository, INo
 
     public Task<int> PurgeExpiredAsync(int batchSize, CancellationToken cancellationToken) =>
         repository.PurgeBatchAsync(clock.GetUtcNow(), batchSize, cancellationToken);
+
+    private static bool MatchesStandaloneAggregate(OutboxMessage message, NotificationHistory history) =>
+        message.AggregateType == EntityTypes.Team ? history.TeamId == message.AggregateId
+            : message.AggregateType is EntityTypes.Listing or EntityTypes.Match
+                && history.EntityType == message.AggregateType && history.EntityId == message.AggregateId;
 
     private bool ValidateClaimedSchedule(NotificationConfig config)
     {

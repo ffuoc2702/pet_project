@@ -8,6 +8,15 @@ public static class InitialPermissionCatalog
 {
     public static IReadOnlyList<InitialPermissionDefinition> All { get; } = Array.AsReadOnly<InitialPermissionDefinition>(
     [
+        new(PermissionCodes.ReadPublicUserProfiles, "Xem hồ sơ công khai người chơi", true),
+        new(PermissionCodes.ReadPublicTeamProfiles, "Xem hồ sơ công khai đội", true),
+        new(PermissionCodes.CreateListingWatches, "Tạo theo dõi kèo phù hợp", true),
+        new(PermissionCodes.ReadListingWatches, "Xem chi tiết theo dõi của mình", true),
+        new(PermissionCodes.ListListingWatches, "Xem danh sách theo dõi của mình", true),
+        new(PermissionCodes.UpdateListingWatches, "Sửa tiêu chí theo dõi của mình", true),
+        new(PermissionCodes.PauseListingWatches, "Tạm dừng theo dõi của mình", true),
+        new(PermissionCodes.ActivateListingWatches, "Kích hoạt theo dõi của mình", true),
+        new(PermissionCodes.CancelListingWatches, "Hủy theo dõi của mình", true),
         new(PermissionCodes.ReadSystemSettings, "Xem cấu hình hệ thống", false),
         new(PermissionCodes.UpdateSystemSettings, "Cập nhật cấu hình hệ thống", false),
         new(PermissionCodes.ReadOwnProfile, "Xem hồ sơ của mình", true),

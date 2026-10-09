@@ -27,6 +27,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<TeamInvitation> TeamInvitations => Set<TeamInvitation>();
     public DbSet<TeamJoinRequest> TeamJoinRequests => Set<TeamJoinRequest>();
     public DbSet<Listing> Listings => Set<Listing>();
+    public DbSet<ListingWatch> ListingWatches => Set<ListingWatch>();
+    public DbSet<ListingWatchDelivery> ListingWatchDeliveries => Set<ListingWatchDelivery>();
     public DbSet<ListingRequest> ListingRequests => Set<ListingRequest>();
     public DbSet<Match> Matches => Set<Match>();
     public DbSet<MatchParticipant> MatchParticipants => Set<MatchParticipant>();
@@ -53,6 +55,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         ConfigureNotificationsAndSafety(builder);
         NotificationPersistenceConfiguration.Configure(builder);
         ConfigureSystemSettings(builder);
+        MatchingPersistenceConfiguration.Configure(builder);
 
         foreach (var entity in builder.Model.GetEntityTypes().Where(entity => typeof(IAuditableEntity).IsAssignableFrom(entity.ClrType)).ToArray())
         {

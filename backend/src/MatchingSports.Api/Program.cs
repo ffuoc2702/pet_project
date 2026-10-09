@@ -31,6 +31,7 @@ builder.Services.AddApplication(
     typeof(ContractMappingProfile).Assembly);
 builder.Services.AddInfrastructure(builder.Configuration);
 MatchingSports.Infrastructure.Notifications.NotificationWorkerRegistration.AddNotificationWorkers(builder.Services, builder.Configuration);
+MatchingSports.Infrastructure.Matching.MatchingWorkerRegistration.AddMatchingWorkers(builder.Services, builder.Configuration);
 builder.Services.AddCurrentUser();
 builder.Services.PostConfigure<MvcOptions>(VietnameseModelBindingMessages.LocalizeImplicitRequiredFields);
 builder.Services.AddControllers(options =>

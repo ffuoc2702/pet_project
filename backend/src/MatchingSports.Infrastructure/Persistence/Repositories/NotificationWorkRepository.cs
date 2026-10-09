@@ -66,6 +66,10 @@ internal sealed class NotificationWorkRepository(MatchingSportsDbContext db) : I
         db.NotificationHistories.FromSqlInterpolated($"SELECT * FROM notification_history WHERE id = {id} FOR UPDATE")
             .SingleOrDefaultAsync(cancellationToken);
 
+    public Task<Match?> LockReminderMatchAsync(Guid matchId, CancellationToken cancellationToken) =>
+        db.Matches.FromSqlInterpolated($"SELECT * FROM matches WHERE id = {matchId} FOR UPDATE")
+            .SingleOrDefaultAsync(cancellationToken);
+
     public Task<SystemSettings> GetSettingsAsync(CancellationToken cancellationToken) => db.SystemSettings.AsNoTracking().SingleAsync(cancellationToken);
 
     public async Task<NotificationRecipient?> GetRecipientAsync(Guid userId, CancellationToken cancellationToken) =>

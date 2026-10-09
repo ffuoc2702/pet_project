@@ -479,6 +479,146 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MatchingSports.Domain.Entities.ListingWatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("EmailEnabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("email_enabled");
+
+                    b.Property<Guid?>("FormatId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("format_id");
+
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("numeric(9,6)")
+                        .HasColumnName("latitude");
+
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("numeric(9,6)")
+                        .HasColumnName("longitude");
+
+                    b.Property<int>("RadiusMeters")
+                        .HasColumnType("integer")
+                        .HasColumnName("radius_meters");
+
+                    b.Property<Guid>("SportId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sport_id");
+
+                    b.Property<DateTimeOffset>("StartFrom")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_from");
+
+                    b.Property<DateTimeOffset>("StartTo")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_to");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormatId", "SportId");
+
+                    b.HasIndex("Status", "StartTo");
+
+                    b.HasIndex("UserId", "Status", "StartTo");
+
+                    b.HasIndex("SportId", "Status", "StartFrom", "StartTo");
+
+                    b.ToTable("listing_watches", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_listing_watches_coordinates", "latitude BETWEEN -90 AND 90 AND longitude BETWEEN -180 AND 180");
+
+                            t.HasCheckConstraint("ck_listing_watches_criteria", "radius_meters BETWEEN 1 AND 200000 AND start_from < start_to");
+                        });
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.ListingWatchDelivery", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<Guid>("NotificationHistoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("notification_history_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.Property<Guid>("WatchId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("watch_id");
+
+                    b.HasKey("UserId", "ListingId");
+
+                    b.HasIndex("ListingId");
+
+                    b.HasIndex("WatchId");
+
+                    b.ToTable("listing_watch_deliveries", (string)null);
+                });
+
             modelBuilder.Entity("MatchingSports.Domain.Entities.Match", b =>
                 {
                     b.Property<Guid>("Id")
@@ -552,6 +692,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(9,6)")
                         .HasColumnName("longitude");
 
+                    b.Property<DateTimeOffset?>("ReminderPublishedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reminder_published_at");
+
                     b.Property<DateTimeOffset>("StartAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("start_at");
@@ -585,6 +729,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.HasIndex("Status", "StartAt")
                         .HasDatabaseName("ix_matches_schedule")
                         .HasFilter("status IN ('PENDING','CONFIRMED')");
+
+                    b.HasIndex(new[] { "Status", "StartAt" }, "ix_matches_due_reminder")
+                        .HasDatabaseName("ix_matches_due_reminder")
+                        .HasFilter("status = 'CONFIRMED' AND reminder_published_at IS NULL");
 
                     b.ToTable("matches", null, t =>
                         {
@@ -1684,6 +1832,18 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("created_by");
 
+                    b.Property<int>("MatchReminderLeadMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(60)
+                        .HasColumnName("match_reminder_lead_minutes");
+
+                    b.Property<int>("MaxActiveListingWatchesPerUser")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(20)
+                        .HasColumnName("max_active_listing_watches_per_user");
+
                     b.Property<int>("MaxCaptainTeamsPerUser")
                         .HasColumnType("integer")
                         .HasColumnName("max_captain_teams_per_user");
@@ -1691,6 +1851,18 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.Property<int>("MaxDeputiesPerTeam")
                         .HasColumnType("integer")
                         .HasColumnName("max_deputies_per_team");
+
+                    b.Property<int>("MaxListingSearchRadiusMeters")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(50000)
+                        .HasColumnName("max_listing_search_radius_meters");
+
+                    b.Property<int>("MaxListingWatchWindowDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(30)
+                        .HasColumnName("max_listing_watch_window_days");
 
                     b.Property<int>("MaxMemberTeamsPerUser")
                         .HasColumnType("integer")
@@ -1743,6 +1915,10 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.ToTable("system_settings", null, t =>
                         {
                             t.HasCheckConstraint("ck_system_settings_limits", "outbox_max_retry_count BETWEEN 0 AND 100 AND max_captain_teams_per_user BETWEEN 0 AND 10000 AND max_member_teams_per_user BETWEEN 0 AND 10000 AND max_members_per_team BETWEEN 1 AND 10000 AND max_deputies_per_team >= 0 AND max_deputies_per_team < max_members_per_team AND team_invitation_lifetime_hours BETWEEN 1 AND 8760 AND max_pending_team_requests BETWEEN 0 AND 10000 AND outbox_retry_initial_delay_seconds BETWEEN 1 AND 604800 AND outbox_retry_max_delay_seconds BETWEEN outbox_retry_initial_delay_seconds AND 604800 AND processed_outbox_retention_days BETWEEN 1 AND 36500 AND notification_retention_days BETWEEN 1 AND 36500");
+
+                            t.HasCheckConstraint("ck_system_settings_listing_watches", "max_active_listing_watches_per_user BETWEEN 0 AND 1000 AND max_listing_search_radius_meters BETWEEN 1 AND 200000 AND max_listing_watch_window_days BETWEEN 1 AND 365");
+
+                            t.HasCheckConstraint("ck_system_settings_match_reminder", "match_reminder_lead_minutes BETWEEN 1 AND 10080");
 
                             t.HasCheckConstraint("ck_system_settings_singleton", "id = '00000000-0000-0000-0002-000000000001'::uuid");
                         });
@@ -2500,6 +2676,54 @@ namespace MatchingSports.Infrastructure.Persistence.Migrations
                     b.Navigation("DecidedByUser");
 
                     b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.ListingWatch", b =>
+                {
+                    b.HasOne("MatchingSports.Domain.Entities.Sport", "Sport")
+                        .WithMany()
+                        .HasForeignKey("SportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.SportFormat", "Format")
+                        .WithMany()
+                        .HasForeignKey("FormatId", "SportId")
+                        .HasPrincipalKey("Id", "SportId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Format");
+
+                    b.Navigation("Sport");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MatchingSports.Domain.Entities.ListingWatchDelivery", b =>
+                {
+                    b.HasOne("MatchingSports.Domain.Entities.Listing", null)
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MatchingSports.Domain.Entities.ListingWatch", null)
+                        .WithMany()
+                        .HasForeignKey("WatchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MatchingSports.Domain.Entities.Match", b =>

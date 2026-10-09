@@ -1,4 +1,4 @@
-# Thông báo quản trị và hộp thông báo web/mobile
+﻿# Thông báo quản trị và hộp thông báo web/mobile
 
 ## Model và invariant
 
@@ -180,3 +180,14 @@ Xem [quản lý đội](teams.md). History độc lập dùng NotificationConfig
 AggregateType=TEAM và AggregateId=Team.Id. Dispatcher kiểm tra liên kết TeamId và không yêu cầu
 NotificationConfig cho những history này. Nội dung text được HTML-encode và metadata dùng chung
 validation Domain. Việc xóa đội không hủy email snapshot nghiệp vụ đã commit.
+
+## Thông báo nghiệp vụ kèo/trận
+
+Xem [tìm kèo/trận](matching.md). History độc lập dùng NotificationConfigId=null;
+email outbox có aggregate LISTING/MATCH và dispatcher kiểm tra EntityType/EntityId
+trên history. Snapshot đã commit tiếp tục được gửi sau khi kèo/trận đóng.
+Watch dedup theo UserId × ListingId, không dùng SendCount của NotificationConfig.
+
+MATCH_REMINDER là history độc lập aggregate MATCH. ExpiresAt = StartAt; dispatcher khoá match
+và chỉ gửi email khi trận còn CONFIRMED và chưa bắt đầu. Snapshot in-app đã commit vẫn giữ
+làm lịch sử khi trận bị huỷ. Dấu chống nhắc trùng nằm trên match, độc lập cleanup history.

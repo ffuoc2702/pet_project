@@ -13,4 +13,8 @@ public sealed record SystemSettingsDto(
     int OutboxRetryInitialDelaySeconds,
     int OutboxRetryMaxDelaySeconds,
     int ProcessedOutboxRetentionDays,
-    int NotificationRetentionDays) : ConcurrentBaseDto;
+    int NotificationRetentionDays,
+    int MaxActiveListingWatchesPerUser = 20,
+    int MaxListingSearchRadiusMeters = 50000,
+    int MaxListingWatchWindowDays = 30,
+    int MatchReminderLeadMinutes = 60) : ConcurrentBaseDto;
