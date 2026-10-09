@@ -1,4 +1,4 @@
-# Entity audit và concurrency
+﻿# Entity audit và concurrency
 
 `AuditableEntity` chứa bốn property `CreatedAt`, `UpdatedAt`, `CreatedBy`,
 `UpdatedBy` với private setter. `ConcurrentAuditableEntity` kế thừa base đó và
@@ -13,9 +13,9 @@ không đổi giá trị. Conflict vẫn trả `CONCURRENCY_CONFLICT` qua pipeli
 
 ## Phạm vi áp dụng
 
-- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings, NotificationConfig, Team, TeamInvitation, TeamJoinRequest.
+- `ConcurrentAuditableEntity`: Listing, ListingRequest, Match, AuthSession, SystemSettings, NotificationConfig, Team, TeamInvitation, TeamJoinRequest, ListingWatch.
 - `AuditableEntity`: Sport, SportFormat, Permission, UserProfile, UserSportProfile,
-  TeamMember, MatchParticipant, Report, NotificationHistory, OtpChallenge, OutboxMessage.
+  TeamMember, MatchParticipant, Report, NotificationHistory, OtpChallenge, OutboxMessage, ListingWatchDelivery.
 - User/Role: giữ base Identity và concurrency stamp, triển khai `IAuditableEntity`.
 - AdminAction: lịch sử bất biến, giữ actor/timestamp riêng hiện tại.
 - RolePermission, UserSportProfileFormat và bảng liên kết Identity: giữ cấu trúc riêng.
@@ -90,3 +90,6 @@ và migration/retention/concurrency trên PostgreSQL dùng database test riêng.
 
 Quản lý đội dùng TeamDto, TeamInvitationDto và TeamJoinRequestDto kế thừa ConcurrentBaseDto;
 TeamMemberDto kế thừa BaseDto. Xem [quản lý đội](teams.md) về transaction, migration và audit.
+
+ListingDto, ListingRequestDto, MatchDto và ListingWatchDto dùng ConcurrentBaseDto;
+MatchParticipantDto dùng BaseDto. Xem [tìm kèo/trận](matching.md).

@@ -66,7 +66,7 @@ public sealed class NotificationHistory : AuditableEntity
             SmsStatus = config.SmsEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED
         };
     }
-    
+
     public static NotificationHistory CreateTeamEvent(Guid userId, Guid teamId, NotificationType type,
         string title, string text, string metadata, DateTimeOffset now, bool emailEnabled)
     {
@@ -86,6 +86,31 @@ public sealed class NotificationHistory : AuditableEntity
             EntityType = EntityTypes.Team,
             EntityId = teamId,
             ScheduledAt = now,
+            Critical = NotificationCritical.INFO,
+            EmailStatus = emailEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED
+        };
+    }
+
+    public static NotificationHistory CreateMatchingEvent(Guid userId, string entityType, Guid entityId,
+        NotificationType type, string title, string text, string metadata, DateTimeOffset now, bool emailEnabled, DateTimeOffset? expiresAt = null)
+    {
+        MatchingRules.Require(type != NotificationType.MATCH_REMINDER || (entityType == EntityTypes.Match && expiresAt > now),
+            "Nhắc lịch phải liên kết trận và có hạn gửi trong tương lai.");
+        MatchingRules.Require(userId != Guid.Empty && entityId != Guid.Empty
+            && entityType is EntityTypes.Listing or EntityTypes.Match, "Liên kết thông báo trận không hợp lệ.");
+        return new NotificationHistory
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Type = type,
+            Title = MatchingRules.Text(title, 160, "Tiêu đề"),
+            Body = System.Net.WebUtility.HtmlEncode(text),
+            BodyText = text,
+            PayloadJson = NotificationMetadata.NormalizeAndValidate(metadata),
+            EntityType = entityType,
+            EntityId = entityId,
+            ScheduledAt = now,
+            ExpiresAt = expiresAt,
             Critical = NotificationCritical.INFO,
             EmailStatus = emailEnabled ? NotificationDeliveryStatus.PENDING : NotificationDeliveryStatus.DISABLED
         };

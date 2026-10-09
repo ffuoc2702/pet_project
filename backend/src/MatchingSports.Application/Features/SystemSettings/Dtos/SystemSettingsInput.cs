@@ -13,10 +13,14 @@ public sealed record SystemSettingsInput(
     int OutboxRetryInitialDelaySeconds,
     int OutboxRetryMaxDelaySeconds,
     int ProcessedOutboxRetentionDays,
-    int NotificationRetentionDays)
+    int NotificationRetentionDays,
+    int MaxActiveListingWatchesPerUser = 20,
+    int MaxListingSearchRadiusMeters = 50000,
+    int MaxListingWatchWindowDays = 30,
+    int MatchReminderLeadMinutes = 60)
 {
     internal SystemSettingsValues ToDomainValues() => new(OutboxMaxRetryCount, MaxCaptainTeamsPerUser,
         MaxMemberTeamsPerUser, MaxDeputiesPerTeam, MaxMembersPerTeam, TeamInvitationLifetimeHours,
         MaxPendingTeamRequests, OutboxRetryInitialDelaySeconds, OutboxRetryMaxDelaySeconds,
-        ProcessedOutboxRetentionDays, NotificationRetentionDays);
+        ProcessedOutboxRetentionDays, NotificationRetentionDays, MaxActiveListingWatchesPerUser, MaxListingSearchRadiusMeters, MaxListingWatchWindowDays, MatchReminderLeadMinutes);
 }

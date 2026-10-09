@@ -44,6 +44,7 @@ public interface INotificationWorkRepository
     void AddOccurrence(NotificationHistory history, OutboxMessage? email);
     Task<OutboxMessage?> LockDueMessageAsync(DateTimeOffset now, CancellationToken cancellationToken);
     Task<NotificationHistory?> GetHistoryForDeliveryAsync(Guid id, CancellationToken cancellationToken);
+    Task<Match?> LockReminderMatchAsync(Guid matchId, CancellationToken cancellationToken);
     Task<SystemSettings> GetSettingsAsync(CancellationToken cancellationToken);
     Task<NotificationRecipient?> GetRecipientAsync(Guid userId, CancellationToken cancellationToken);
     Task<int> PurgeBatchAsync(DateTimeOffset now, int batchSize, CancellationToken cancellationToken);

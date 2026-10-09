@@ -156,11 +156,19 @@ public static class DependencyInjection
         services.AddScoped<IOtpEmailSender, GmailOtpEmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITeamRepository, TeamRepository>();
+        services.AddScoped<MatchingRepository>();
+        services.AddScoped<IMatchingRepository>(provider => provider.GetRequiredService<MatchingRepository>());
+        services.AddScoped<IMatchingWorkRepository>(provider => provider.GetRequiredService<MatchingRepository>());
+        services.AddScoped<Application.Features.Matching.MatchingNotifications>(provider => new(
+            provider.GetRequiredService<IMatchingRepository>(), provider.GetRequiredService<INotificationWorkRepository>(),
+            provider.GetRequiredService<INotificationEmailSender>(), provider.GetRequiredService<TimeProvider>(),
+            configuration.GetValue<bool>("Matching:Notifications:EmailEnabled")));
         services.AddScoped<Application.Features.Team.TeamNotifications>(provider => new(
             provider.GetRequiredService<INotificationWorkRepository>(), provider.GetRequiredService<INotificationEmailSender>(),
             provider.GetRequiredService<TimeProvider>(), configuration.GetValue<bool>("Teams:Notifications:EmailEnabled")));
         services.AddScoped<ISportRepository, SportRepository>();
         services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+        services.AddScoped<IPublicProfileRepository, PublicProfileRepository>();
         services.AddScoped<IUserSportProfileRepository, UserSportProfileRepository>();
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using MatchingSports.Application.Features.Matching;
 using MatchingSports.Application.Features.Notification;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
 using MatchingSports.Application.Features.SystemSettings;
+using MatchingSports.Application.Features.Team;
 using MatchingSports.Application.Features.UserProfile;
 using MatchingSports.Application.Features.UserSportProfile;
-using MatchingSports.Application.Features.Team;
 using MatchingSports.Domain.Entities;
 
 namespace MatchingSports.Application.Common;
@@ -14,6 +15,13 @@ public sealed class ApplicationMappingProfile : Profile
 {
     public ApplicationMappingProfile()
     {
+        CreateMap<Listing, ListingDto>()
+            .ForMember(dto => dto.MatchId, options => options.MapFrom(listing => listing.Match == null ? (Guid?)null : listing.Match.Id))
+            .ForMember(dto => dto.DistanceMeters, options => options.Ignore());
+        CreateMap<ListingRequest, ListingRequestDto>();
+        CreateMap<MatchParticipant, MatchParticipantDto>();
+        CreateMap<Match, MatchDto>();
+        CreateMap<ListingWatch, ListingWatchDto>();
         CreateMap<Team, TeamDto>();
         CreateMap<TeamMember, TeamMemberDto>();
         CreateMap<TeamInvitation, TeamInvitationDto>();

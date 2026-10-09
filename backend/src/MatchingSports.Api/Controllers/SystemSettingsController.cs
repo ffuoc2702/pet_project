@@ -31,7 +31,8 @@ public sealed class SystemSettingsController(IMediator mediator, ICurrentUser cu
             request.MaxMemberTeamsPerUser!.Value, request.MaxDeputiesPerTeam!.Value, request.MaxMembersPerTeam!.Value,
             request.TeamInvitationLifetimeHours!.Value, request.MaxPendingTeamRequests!.Value,
             request.OutboxRetryInitialDelaySeconds!.Value, request.OutboxRetryMaxDelaySeconds!.Value,
-            request.ProcessedOutboxRetentionDays!.Value, request.NotificationRetentionDays!.Value);
+            request.ProcessedOutboxRetentionDays!.Value, request.NotificationRetentionDays!.Value,
+            request.MaxActiveListingWatchesPerUser!.Value, request.MaxListingSearchRadiusMeters!.Value, request.MaxListingWatchWindowDays!.Value, request.MatchReminderLeadMinutes!.Value);
         var result = await mediator.Send(new UpdateSystemSettingsCommand(currentUser.UserId,
             request.ConcurrencyToken!.Value, values), cancellationToken);
         return OkResponse(result);

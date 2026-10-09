@@ -10,7 +10,8 @@ public enum MemberStatus { ACTIVE, LEFT, REMOVED }
 public enum ListingMode { FIND_OPPONENT, FIND_PLAYERS }
 public enum ListingStatus { DRAFT, OPEN, MATCHED, CONFIRMED, COMPLETED, CANCELLED, EXPIRED }
 public enum RequestType { PLAYER, OPPONENT }
-public enum RequestStatus { PENDING, ACCEPTED, REJECTED, WITHDRAWN, EXPIRED }
+public enum RequestStatus { PENDING, ACCEPTED, REJECTED, WITHDRAWN, EXPIRED, CANCELLED }
+public enum ListingWatchStatus { ACTIVE, PAUSED, CANCELLED, EXPIRED }
 public enum MatchStatus { PENDING, CONFIRMED, COMPLETED, CANCELLED }
 public enum ParticipantRole { HOST, OPPONENT, PLAYER }
 public enum ParticipantStatus { CONFIRMED, CANCELLED, NO_SHOW, COMPLETED }
@@ -44,6 +45,12 @@ public enum NotificationType
     TEAM_MEMBER_REMOVED,
     TEAM_CAPTAIN_TRANSFERRED,
     TEAM_DELETED,
+    REQUEST_WITHDRAWN,
+    REQUEST_EXPIRED,
+    LISTING_CANCELLED,
+    MATCH_CONFIRMED,
+    MATCH_COMPLETED,
+    LISTING_WATCH_MATCHED,
 }
 public enum AdminActionType
 {

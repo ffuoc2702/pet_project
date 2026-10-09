@@ -11,7 +11,11 @@ public sealed record SystemSettingsValues(
     int OutboxRetryInitialDelaySeconds,
     int OutboxRetryMaxDelaySeconds,
     int ProcessedOutboxRetentionDays,
-    int NotificationRetentionDays)
+    int NotificationRetentionDays,
+    int MaxActiveListingWatchesPerUser = 20,
+    int MaxListingSearchRadiusMeters = 50000,
+    int MaxListingWatchWindowDays = 30,
+    int MatchReminderLeadMinutes = 60)
 {
     public static SystemSettingsValues Defaults { get; } = new(5, 3, 10, 2, 50, 72, 100, 5, 3600, 30, 90);
 
@@ -28,6 +32,10 @@ public sealed record SystemSettingsValues(
         RequireRange(OutboxRetryMaxDelaySeconds, OutboxRetryInitialDelaySeconds, 604800, nameof(OutboxRetryMaxDelaySeconds));
         RequireRange(ProcessedOutboxRetentionDays, 1, 36500, nameof(ProcessedOutboxRetentionDays));
         RequireRange(NotificationRetentionDays, 1, 36500, nameof(NotificationRetentionDays));
+        RequireRange(MaxActiveListingWatchesPerUser, 0, 1000, nameof(MaxActiveListingWatchesPerUser));
+        RequireRange(MaxListingSearchRadiusMeters, 1, 200000, nameof(MaxListingSearchRadiusMeters));
+        RequireRange(MaxListingWatchWindowDays, 1, 365, nameof(MaxListingWatchWindowDays));
+        RequireRange(MatchReminderLeadMinutes, 1, 10080, nameof(MatchReminderLeadMinutes));
     }
 
     private static void RequireRange(int value, int minimum, int maximum, string name)

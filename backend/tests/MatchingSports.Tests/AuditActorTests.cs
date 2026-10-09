@@ -80,7 +80,7 @@ public sealed class AuditActorTests
         Assert.Null(db.Model.FindEntityType(typeof(AuditableEntity)));
         Assert.Null(db.Model.FindEntityType(typeof(ConcurrentAuditableEntity)));
         var entities = db.Model.GetEntityTypes().Where(entity => typeof(IAuditableEntity).IsAssignableFrom(entity.ClrType)).ToArray();
-        Assert.Equal(22, entities.Length);
+        Assert.Equal(24, entities.Length);
         foreach (var entity in entities)
         {
             Assert.Null(entity.BaseType);
@@ -93,7 +93,7 @@ public sealed class AuditActorTests
             Assert.True(creatorProperty.DeclaringType!.GetProperty(creatorProperty.Name)!.GetSetMethod(true)!.IsPrivate);
         }
         var concurrentEntities = entities.Where(entity => typeof(IHasConcurrencyToken).IsAssignableFrom(entity.ClrType)).ToArray();
-        Assert.Equal(9, concurrentEntities.Length);
+        Assert.Equal(10, concurrentEntities.Length);
         Assert.All(concurrentEntities, entity => Assert.True(entity.FindProperty(nameof(IHasConcurrencyToken.ConcurrencyToken))!.IsConcurrencyToken));
         Assert.False(typeof(IAuditableEntity).IsAssignableFrom(typeof(AdminAction)));
         Assert.False(typeof(IAuditableEntity).IsAssignableFrom(typeof(RolePermission)));

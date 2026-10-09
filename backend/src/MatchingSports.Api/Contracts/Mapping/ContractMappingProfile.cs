@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MatchingSports.Application.Features.Matching;
 using MatchingSports.Application.Features.Notification;
 using MatchingSports.Application.Features.Permission;
 using MatchingSports.Application.Features.Role;
@@ -12,6 +13,15 @@ public sealed class ContractMappingProfile : Profile
 {
     public ContractMappingProfile()
     {
+        CreateMap<CreateListingRequest, ListingInput>();
+        CreateMap<UpdateListingRequest, ListingInput>();
+        CreateMap<ListingWatchRequest, ListingWatchInput>();
+        CreateMap<UpdateListingWatchRequest, ListingWatchInput>();
+        CreateMap<GetListingsRequest, GetListingsQuery>().ForMember(query => query.ActorUserId, options => options.Ignore());
+        CreateMap<GetListingRequestsRequest, GetListingRequestsQuery>().ForMember(query => query.ActorUserId, options => options.Ignore())
+            .ForMember(query => query.ListingId, options => options.Ignore());
+        CreateMap<GetMatchesRequest, GetMatchesQuery>().ForMember(query => query.ActorUserId, options => options.Ignore());
+        CreateMap<GetListingWatchesRequest, GetListingWatchesQuery>().ForMember(query => query.ActorUserId, options => options.Ignore());
         CreateMap<GetTeamsRequest, GetTeamsQuery>().ForMember(x => x.ActorUserId, options => options.Ignore());
         CreateMap<GetTeamMembersRequest, GetTeamMembersQuery>()
             .ForMember(x => x.ActorUserId, options => options.Ignore()).ForMember(x => x.TeamId, options => options.Ignore());

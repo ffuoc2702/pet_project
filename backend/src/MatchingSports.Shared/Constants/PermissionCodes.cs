@@ -2,6 +2,15 @@
 
 public static class PermissionCodes
 {
+    public const string ReadPublicUserProfiles = "profiles.public.read";
+    public const string ReadPublicTeamProfiles = "teams.public_profile.read";
+    public const string CreateListingWatches = "listing_watches.create";
+    public const string ListListingWatches = "listing_watches.list";
+    public const string ReadListingWatches = "listing_watches.read";
+    public const string UpdateListingWatches = "listing_watches.update";
+    public const string PauseListingWatches = "listing_watches.pause";
+    public const string ActivateListingWatches = "listing_watches.activate";
+    public const string CancelListingWatches = "listing_watches.cancel";
     public const string ManageTeamDeputies = "teams.deputies.manage";
     public const string TransferTeamCaptain = "teams.captain.transfer";
     public const string DeleteTeams = "teams.delete";

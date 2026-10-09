@@ -15,6 +15,8 @@ public static class DependencyInjection
     {
         services.TryAddScoped<IAuditActorContext, AuditActorContext>();
         services.AddScoped<Features.Team.TeamCommandServices>();
+        services.AddScoped<Features.Matching.MatchingServices>();
+        services.AddScoped<Features.Matching.MatchingJobs>();
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
@@ -23,6 +25,7 @@ public static class DependencyInjection
             configuration.AddOpenBehavior(typeof(PaginationValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(DateRangeValidationBehavior<,>));
             configuration.AddOpenBehavior(typeof(Features.Team.TeamRuleBehavior<,>));
+            configuration.AddOpenBehavior(typeof(Features.Matching.MatchingRuleBehavior<,>));
         });
 
         var mappingAssemblies = new[] { typeof(ApplicationMappingProfile).Assembly }

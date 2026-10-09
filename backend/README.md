@@ -1,4 +1,4 @@
-# MatchingSports Backend
+﻿# MatchingSports Backend
 
 Backend .NET 10 theo Clean Architecture, dùng ASP.NET Core, MediatR, AutoMapper,
 EF Core, PostgreSQL/PostGIS, Serilog ECS và OpenTelemetry.
@@ -333,3 +333,13 @@ Khi không có biến môi trường, test tích hợp được skip rõ ràng.
 AutoMapper 16 được giữ theo yêu cầu. Development/testing có thể chạy không key,
 nhưng production cần license hợp lệ. Cấu hình bằng `AUTOMAPPER_LICENSE_KEY`,
 `LUCKYPENNY_LICENSE_KEY`, hoặc `AutoMapper__LicenseKey`.
+
+## Tìm kèo và quản lý trận
+
+Module hỗ trợ kèo cá nhân/team, yêu cầu tham gia, duyệt/rút, xác nhận/hủy/hoàn tất,
+tìm theo bán kính/thời gian và theo dõi để nhận thông báo kèo vãng lai phù hợp.
+Xem [matching](../docs/matching.md) về API, quyền, trạng thái, worker, email và migration.
+
+Hồ sơ công khai người chơi/đội: [public-profiles](../docs/public-profiles.md).
+Nhắc lịch trận CONFIRMED dùng MatchReminderLeadMinutes trong [SystemSettings](../docs/system-settings.md)
+và worker [matching](../docs/matching.md).

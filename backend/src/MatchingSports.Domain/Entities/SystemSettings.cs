@@ -20,6 +20,10 @@ public sealed class SystemSettings : ConcurrentAuditableEntity
     public int OutboxRetryMaxDelaySeconds { get; private set; }
     public int ProcessedOutboxRetentionDays { get; private set; }
     public int NotificationRetentionDays { get; private set; }
+    public int MaxActiveListingWatchesPerUser { get; private set; }
+    public int MaxListingSearchRadiusMeters { get; private set; }
+    public int MaxListingWatchWindowDays { get; private set; }
+    public int MatchReminderLeadMinutes { get; private set; }
 
     public static SystemSettings CreateDefaults()
     {
@@ -44,6 +48,10 @@ public sealed class SystemSettings : ConcurrentAuditableEntity
         OutboxRetryMaxDelaySeconds = values.OutboxRetryMaxDelaySeconds;
         ProcessedOutboxRetentionDays = values.ProcessedOutboxRetentionDays;
         NotificationRetentionDays = values.NotificationRetentionDays;
+        MaxActiveListingWatchesPerUser = values.MaxActiveListingWatchesPerUser;
+        MaxListingSearchRadiusMeters = values.MaxListingSearchRadiusMeters;
+        MaxListingWatchWindowDays = values.MaxListingWatchWindowDays;
+        MatchReminderLeadMinutes = values.MatchReminderLeadMinutes;
         // Even an unchanged submission must participate in optimistic concurrency and auditing.
         RenewConcurrencyToken();
     }
@@ -51,7 +59,7 @@ public sealed class SystemSettings : ConcurrentAuditableEntity
     public SystemSettingsValues GetValues() => new(OutboxMaxRetryCount, MaxCaptainTeamsPerUser,
         MaxMemberTeamsPerUser, MaxDeputiesPerTeam, MaxMembersPerTeam, TeamInvitationLifetimeHours,
         MaxPendingTeamRequests, OutboxRetryInitialDelaySeconds, OutboxRetryMaxDelaySeconds,
-        ProcessedOutboxRetentionDays, NotificationRetentionDays);
+        ProcessedOutboxRetentionDays, NotificationRetentionDays, MaxActiveListingWatchesPerUser, MaxListingSearchRadiusMeters, MaxListingWatchWindowDays, MatchReminderLeadMinutes);
 
     public TimeSpan GetOutboxRetryDelay(int retryNumber)
     {
@@ -88,6 +96,9 @@ public sealed class SystemSettings : ConcurrentAuditableEntity
 
     public void EnsureCanCreateTeamRequest(int pendingInvitationAndRequestCount) =>
         RequireAvailableCapacity(pendingInvitationAndRequestCount, MaxPendingTeamRequests, "Đội đã đạt giới hạn lời mời/yêu cầu đang chờ.");
+
+    public void EnsureCanActivateListingWatch(int activeCount) =>
+        RequireAvailableCapacity(activeCount, MaxActiveListingWatchesPerUser, "Đã đạt giới hạn theo dõi đang hoạt động.");
 
     private static void RequireAvailableCapacity(int count, int limit, string message)
     {

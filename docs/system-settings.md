@@ -1,4 +1,4 @@
-# Cấu hình hệ thống
+﻿# Cấu hình hệ thống
 
 Backend cung cấp một bộ cấu hình toàn hệ thống trong bảng `system_settings`.
 Migration seed một lần; khởi động lại hoặc chạy seed quyền không ghi đè giá trị
@@ -12,7 +12,7 @@ quản trị viên đã sửa. Không cache cấu hình trong singleton.
 Hai quyền được cấp mặc định cho role ADMIN, không cấp cho USER. Quyền được kiểm
 tra ở HTTP và MediatR pipeline. Actor lấy qua `ICurrentUser`, không có trong body.
 Success trả `BaseResponse<SystemSettingsDto>`. PUT thay toàn bộ cấu hình; tất cả
-11 giá trị và `concurrencyToken` đều bắt buộc. Lấy token từ GET hoặc PUT gần nhất.
+15 giá trị và `concurrencyToken` đều bắt buộc. Lấy token từ GET hoặc PUT gần nhất.
 Token cũ trả `CONCURRENCY_CONFLICT` (409); dữ liệu sai trả
 `INVALID_SYSTEM_SETTINGS` (400), cấu hình chưa được migration tạo trả
 `SYSTEM_SETTINGS_NOT_FOUND` (404).
@@ -30,12 +30,16 @@ Token cũ trả `CONCURRENCY_CONFLICT` (409); dữ liệu sai trả
   "outboxRetryMaxDelaySeconds": 3600,
   "processedOutboxRetentionDays": 30,
   "notificationRetentionDays": 90,
+  "maxActiveListingWatchesPerUser": 20,
+  "maxListingSearchRadiusMeters": 50000,
+  "maxListingWatchWindowDays": 30,
+  "matchReminderLeadMinutes": 60,
   "concurrencyToken": "<token nhận từ GET>"
 }
 ```
 
 Mỗi PUT hợp lệ lưu một `admin_actions` loại `UPDATE_SYSTEM_SETTINGS`, gồm actor,
-thời điểm và 11 giá trị trước/sau, cùng transaction với cấu hình. Token được đổi
+thời điểm và 15 giá trị trước/sau, cùng transaction với cấu hình. Token được đổi
 khi lưu, kể cả gửi lại các giá trị không đổi. Hai phiên quản trị cùng đọc một
 version không được ghi đè nhau; transaction thua cũng không lưu audit.
 
@@ -54,6 +58,10 @@ version không được ghi đè nhau; transaction thua cũng không lưu audit.
 | `outboxRetryMaxDelaySeconds` | 3600 | Từ khoảng chờ ban đầu đến 604800 giây; giới hạn backoff. |
 | `processedOutboxRetentionDays` | 30 | 1–36500 ngày; tính từ `created_at`, không tính từ `processed_at`. |
 | `notificationRetentionDays` | 90 | 1–36500 ngày; tính từ `created_at`. |
+| `maxActiveListingWatchesPerUser` | 20 | 0–1000; ACTIVE chưa hết hạn của mỗi user. |
+| `maxListingSearchRadiusMeters` | 50000 | 1–200000 mét; giới hạn radius query/watch. |
+| `maxListingWatchWindowDays` | 30 | 1–365 ngày; giới hạn cửa sổ watch từ hiện tại. |
+| `matchReminderLeadMinutes` | 60 | 1–10080 phút; nhắc một lần cho trận CONFIRMED còn chưa bắt đầu. |
 
 Giới hạn bằng 0 cho retry/team/đội phó/yêu cầu đang chờ chặn thao tác mới tương
 ứng. Giảm giới hạn không tự xóa team, loại thành viên hoặc thu hồi vai trò.
@@ -145,3 +153,12 @@ concurrency trên PostgreSQL/PostGIS trong database dùng riêng.
 Đặt `MATCHINGSPORTS_RBAC_TEST_CONNECTION` trỏ đến database test có tên bắt đầu
 `matchingsports_rbac_test_` để bật integration test; fixture cấu hình tạo database
 riêng và xóa sau khi chạy. Không đặt biến này trỏ vào database phát triển.
+
+## Tích hợp tìm kèo
+
+Các use case watch dùng EnsureCanActivateListingWatch và transaction Serializable
+để bảo vệ quota. Ba giới hạn matching được migration bổ sung với mặc định;
+không thay đổi các giá trị quản trị hiện có. Xem [matching](matching.md).
+
+Nhắc lịch đọc setting hiện tại mỗi batch; thay đổi khoảng nhắc áp dụng cho trận chưa được nhắc.
+Trận đã nhắc không gửi lại khi sửa setting hoặc cleanup history. Xem [matching](matching.md).
