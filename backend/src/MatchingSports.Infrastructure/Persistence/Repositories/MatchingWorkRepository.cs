@@ -1,6 +1,8 @@
-﻿using MatchingSports.Application.Features.Matching;
+﻿using MatchingSports.Application.Common;
+using MatchingSports.Application.Features.Matching;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
+using MatchingSports.Shared;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
@@ -77,17 +79,25 @@ internal sealed partial class MatchingRepository
             """).IgnoreQueryFilters().ToListAsync(cancellationToken);
     public async Task<IReadOnlyList<Listing>> LockReminderListingsAsync(DateTimeOffset now, TimeSpan leadTime, int batchSize, CancellationToken cancellationToken)
     {
-        var through = now + leadTime;
-        // Lock both aggregate rows: multiple hosts cannot publish the same reminder or race cancellation.
-        var locked = await db.Listings.FromSqlInterpolated($"""
-            SELECT l.* FROM listings l JOIN matches m ON m.listing_id = l.id
-            WHERE l.deleted_at IS NULL AND l.status = 'CONFIRMED' AND m.status = 'CONFIRMED'
-                AND m.reminder_published_at IS NULL AND m.start_at > {now} AND m.start_at <= {through}
-            ORDER BY m.start_at, m.id LIMIT {batchSize} FOR UPDATE OF l, m SKIP LOCKED
-            """).ToListAsync(cancellationToken);
-        var ids = locked.Select(listing => listing.Id).ToArray();
-        return await ListingGraph(true).Where(listing => ids.Contains(listing.Id)).OrderBy(listing => listing.StartAt)
-            .ThenBy(listing => listing.Id).ToListAsync(cancellationToken);
+        try
+        {
+            var through = now + leadTime;
+            // Lock both aggregate rows: multiple hosts cannot publish the same reminder or race cancellation.
+            var locked = await db.Listings.FromSqlInterpolated($"""
+                SELECT l.* FROM listings l JOIN matches m ON m.listing_id = l.id
+                WHERE l.deleted_at IS NULL AND l.status = 'CONFIRMED' AND m.status = 'CONFIRMED'
+                    AND m.reminder_published_at IS NULL AND m.start_at > {now} AND m.start_at <= {through}
+                ORDER BY m.start_at, m.id LIMIT {batchSize} FOR UPDATE OF l, m SKIP LOCKED
+                """).ToListAsync(cancellationToken);
+            var ids = locked.Select(listing => listing.Id).ToArray();
+            return await ListingGraph(true).Where(listing => ids.Contains(listing.Id)).OrderBy(listing => listing.StartAt)
+                .ThenBy(listing => listing.Id).ToListAsync(cancellationToken);
+        }
+        catch (Exception exception) when (PersistenceTransactionConflicts.IsConflict(exception))
+        {
+            // Workers run outside MediatR, so locking failures also need the stable concurrency contract.
+            throw new ConflictException(ErrorCodes.ConcurrencyConflict, "Có thao tác đồng thời. Vui lòng thử lại ở lượt worker tiếp theo.");
+        }
     }
 
     public void DiscardPendingChanges() => db.ChangeTracker.Clear();

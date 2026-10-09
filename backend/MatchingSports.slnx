@@ -7,4 +7,5 @@
   <Project Path="src/MatchingSports.Migrator/MatchingSports.Migrator.csproj" />
   <Project Path="src/MatchingSports.Shared/MatchingSports.Shared.csproj" />
   <Project Path="tests/MatchingSports.Tests/MatchingSports.Tests.csproj" />
+  <Project Path="tools/MatchingSports.DemoSimulator/MatchingSports.DemoSimulator.csproj" />
 </Solution>

@@ -617,6 +617,13 @@
           "MediatR": "[12.5.0, )"
         }
       },
+      "matchingsports.demosimulator": {
+        "type": "Project",
+        "dependencies": {
+          "MatchingSports.Application": "[1.0.0, )",
+          "MatchingSports.Infrastructure": "[1.0.0, )"
+        }
+      },
       "matchingsports.domain": {
         "type": "Project",
         "dependencies": {

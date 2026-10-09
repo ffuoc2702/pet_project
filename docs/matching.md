@@ -186,6 +186,8 @@ cũ của trận CONFIRMED cần tái lập.
 
 Khóa cả listing/match và transaction Serializable giữ dấu ReminderPublishedAt,
 history snapshot và email outbox trong cùng commit. Rollback không đánh dấu đã nhắc.
+Lỗi serialization/deadlock khi khoá batch được Infrastructure chuyển thành
+ConcurrencyConflict cả khi job chạy ngoài MediatR; worker thử lại ở chu kỳ sau.
 Dấu trên match tồn tại khi history cleanup; nhiều host hoặc đổi setting không tạo lại
 lượt đã commit. Worker dùng actor null, token của match có thể đổi khi xuất bản nhắc;
 client cần tải lại token trước lệnh ghi.

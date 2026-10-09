@@ -41,7 +41,7 @@ internal sealed class PersistenceExceptionBehavior<TRequest, TResponse>
                 ErrorCodes.ReferenceConflict,
                 "Tài nguyên đang tham chiếu dữ liệu không tồn tại hoặc không thể thay đổi.");
         }
-        catch (Exception exception) when (IsTransactionConflict(exception))
+        catch (Exception exception) when (PersistenceTransactionConflicts.IsConflict(exception))
         {
             throw new ConflictException(ErrorCodes.ConcurrencyConflict, "Có thao tác đồng thời. Vui lòng tải lại và thử lại.");
         }
@@ -59,7 +59,11 @@ internal sealed class PersistenceExceptionBehavior<TRequest, TResponse>
         }
     }
 
-    private static bool IsTransactionConflict(Exception exception)
+}
+
+internal static class PersistenceTransactionConflicts
+{
+    public static bool IsConflict(Exception exception)
     {
         // Npgsql's execution strategy can wrap a serialization failure in InvalidOperationException.
         for (Exception? current = exception; current is not null; current = current.InnerException)
