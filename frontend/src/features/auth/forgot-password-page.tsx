@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,7 @@ export default function ForgotPasswordPage() {
     mutationFn: (value: { email: string }) =>
       requestPasswordReset(value.email.trim()),
     onSuccess: (_, value) =>
-      navigate('/reset-password', {
+      navigate(routePath('resetPassword'), {
         state: {
           email: value.email.trim(),
           cooldownUntil: Date.now() + 60_000,
@@ -57,10 +58,10 @@ export default function ForgotPasswordPage() {
         </AppButton>
       </AppForm>
       <div className="auth-links">
-        <NavigationLink type="link" to="/login">
+        <NavigationLink type="link" to={routePath('login')}>
           {t('auth:backToLogin')}
         </NavigationLink>
-        <NavigationLink type="link" to="/reset-password">
+        <NavigationLink type="link" to={routePath('resetPassword')}>
           {t('auth:alreadyHaveCode')}
         </NavigationLink>
       </div>

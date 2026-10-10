@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppTextArea } from '@/shared/ui/controls';
 import { useAppFeedback } from '@/shared/ui/use-app-feedback';
 import { AppButton as Button } from '@/shared/ui/buttons';
@@ -15,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiError } from '@/shared/api/client';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 import { UnsavedChanges } from '@/shared/ui/unsaved-changes';
+import { useResourceLabel } from '@/shared/navigation/use-resource-label';
 import { getSport, saveSport, sportKeys } from './api';
 import type { SportInput } from './types';
 import { sportErrorField } from './validation';
@@ -215,7 +217,15 @@ function Editor({ initial, id }: { initial: SportInput; id?: string }) {
           >
             {t('common:save')}
           </Button>
-          <Button onClick={() => navigate(id ? '/sports/' + id : '/sports')}>
+          <Button
+            onClick={() =>
+              navigate(
+                id
+                  ? routePath('sportDetail', { sportId: id })
+                  : routePath('sports'),
+              )
+            }
+          >
             {t('common:cancel')}
           </Button>
         </Space>
@@ -234,7 +244,7 @@ function useSavedNavigation(
   id: string,
 ) {
   useEffect(() => {
-    void navigate('/sports/' + id, { replace: true });
+    void navigate(routePath('sportDetail', { sportId: id }), { replace: true });
   }, [navigate, id]);
 }
 export default function SportFormPage() {
@@ -244,6 +254,7 @@ export default function SportFormPage() {
     queryFn: ({ signal }) => getSport(sportId!, signal),
     enabled: !!sportId,
   });
+  useResourceLabel('sport', sportId, query.data?.name);
   const { t } = useTranslation();
   if (sportId && query.isPending) return <Card loading />;
   if (query.error)

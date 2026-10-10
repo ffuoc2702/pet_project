@@ -46,18 +46,17 @@ body {
 }
 .topbar {
   background: var(--surface);
-  border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 28px;
+  padding: 0 12px;
   gap: 16px;
 }
 .topbar-name {
   font-weight: 650;
 }
 .main-content {
-  padding: 24px 32px 48px;
+  padding: 12px 12px 12px;
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
@@ -69,8 +68,22 @@ body {
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 24px;
 }
+
+.page-navigation .ant-breadcrumb {
+  font-size: 16px;
+}
+
+.page-navigation .ant-breadcrumb li:last-child {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.page-navigation .ant-breadcrumb a:hover {
+  color: var(--primary);
+  background: transparent;
+}
+
 .hero {
   padding: 48px 36px;
   border: 1px solid var(--border);

@@ -1,5 +1,6 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { App, ConfigProvider, theme } from 'antd';
+import { AppearanceContext } from '@/shared/theme/appearance-context';
 import { createAppTheme } from '@/shared/theme/tokens';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
@@ -24,14 +25,16 @@ export function AppearanceProvider({
     document.documentElement.dataset.mode = dark ? 'dark' : 'light';
   }, [dark]);
   return (
-    <ConfigProvider
-      locale={preferences.languageCode === 'vi' ? viVN : enUS}
-      theme={createAppTheme(dark, preferences.themePreset)}
-    >
-      <App>
-        <ThemeSurface>{children}</ThemeSurface>
-      </App>
-    </ConfigProvider>
+    <AppearanceContext.Provider value={{ dark }}>
+      <ConfigProvider
+        locale={preferences.languageCode === 'vi' ? viVN : enUS}
+        theme={createAppTheme(dark, preferences.themePreset)}
+      >
+        <App>
+          <ThemeSurface>{children}</ThemeSurface>
+        </App>
+      </ConfigProvider>
+    </AppearanceContext.Provider>
   );
 }
 

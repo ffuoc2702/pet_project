@@ -1,8 +1,11 @@
+import { routePath } from '@/shared/config/routes';
+import { env } from '@/shared/config/env';
 import { useAppFeedback } from '@/shared/ui/use-app-feedback';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppDrawer as Drawer } from '@/shared/ui/overlays';
 import { NavigationLink } from '@/shared/ui/navigation-link';
 import { useState } from 'react';
+import { RouteLabelProvider } from '@/shared/navigation/route-label-provider';
 import { Avatar, Grid, Layout, Space, theme } from 'antd';
 import { MenuOutlined, TrophyOutlined } from '@ant-design/icons';
 import {
@@ -23,6 +26,14 @@ import {
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 
 export function AppShell() {
+  return (
+    <RouteLabelProvider>
+      <AppShellContent />
+    </RouteLabelProvider>
+  );
+}
+
+function AppShellContent() {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   const { session } = useSession();
@@ -43,9 +54,9 @@ export function AppShell() {
     }
   });
   const brand = (
-    <Link className="brand" to="/">
+    <Link className="brand" to={routePath('home')}>
       <TrophyOutlined />
-      {!collapsed && <span>MatchingSports</span>}
+      {!collapsed && <span>{env.appName}</span>}
     </Link>
   );
   async function signOut() {
@@ -109,7 +120,7 @@ export function AppShell() {
       )}
       <Drawer
         placement="left"
-        title="MatchingSports"
+        title={env.appName}
         open={open}
         onClose={() => setOpen(false)}
       >
@@ -125,16 +136,13 @@ export function AppShell() {
                 onClick={() => setOpen(true)}
               />
             )}
-            <span className="topbar-name">MatchingSports</span>
+            <PageNavigation />
           </Space>
           <Space>
-            <NavigationLink to="/preferences">
-              {t('common:preferences')}
-            </NavigationLink>
             {session ? (
               <>
-                <Avatar>{session.user.displayName.slice(0, 1)}</Avatar>
                 <span className="user-name">{session.user.displayName}</span>
+                <Avatar>{session.user.displayName.slice(0, 1)}</Avatar>
                 <Button
                   loading={loggingOut}
                   onClick={() => {
@@ -145,7 +153,7 @@ export function AppShell() {
                 </Button>
               </>
             ) : (
-              <NavigationLink to="/login" type="primary">
+              <NavigationLink to={routePath('login')} type="primary">
                 {t('auth:login')}
               </NavigationLink>
             )}
@@ -156,7 +164,6 @@ export function AppShell() {
           tabIndex={-1}
           className="main-content container-fluid"
         >
-          <PageNavigation />
           <ApiErrorAlert error={logoutError} />
           {navigation.state !== 'idle' && (
             <div role="status" className="route-progress">

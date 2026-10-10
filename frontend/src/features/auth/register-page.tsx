@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppPasswordInput } from '@/shared/ui/controls';
 import { useMutation } from '@tanstack/react-query';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -30,7 +31,7 @@ export default function RegisterPage() {
       }),
     onSuccess: (result) => {
       form.resetFields();
-      navigate('/verify-email', {
+      navigate(routePath('verifyEmail'), {
         state: {
           email: result.email,
           otpExpiresAt: result.otpExpiresAt,
@@ -43,7 +44,7 @@ export default function RegisterPage() {
         authFieldErrors(error, ['email', 'password', 'displayName'], t),
       ),
   });
-  if (session) return <Navigate to="/" replace />;
+  if (session) return <Navigate to={routePath('home')} replace />;
   return (
     <AuthLayout
       title={t('auth:register')}
@@ -105,7 +106,7 @@ export default function RegisterPage() {
       </AppForm>
       <div className="auth-links">
         {t('auth:haveAccount')}{' '}
-        <NavigationLink type="link" to="/login">
+        <NavigationLink type="link" to={routePath('login')}>
           {t('auth:login')}
         </NavigationLink>
       </div>

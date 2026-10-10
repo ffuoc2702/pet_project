@@ -5,6 +5,7 @@ import { AppSelect as Select } from '@/shared/ui/controls';
 import { useAppFeedback } from '@/shared/ui/use-app-feedback';
 import { Space } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { themePresets } from '@/shared/theme/presets';
 import { usePreferences } from './context';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 
@@ -75,7 +76,9 @@ export default function PreferencesPage() {
             <Select
               aria-label={t('preferences:preset')}
               value={preferences.themePreset}
-              options={(['blue', 'green', 'purple'] as const).map((value) => ({
+              options={(
+                Object.keys(themePresets) as (keyof typeof themePresets)[]
+              ).map((value) => ({
                 value,
                 label: t('preferences:' + value),
               }))}

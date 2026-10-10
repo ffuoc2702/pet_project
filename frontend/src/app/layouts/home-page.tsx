@@ -1,3 +1,5 @@
+import { routePath } from '@/shared/config/routes';
+import { env } from '@/shared/config/env';
 import { AppCard as Card } from '@/shared/ui/data-display';
 import { NavigationLink } from '@/shared/ui/navigation-link';
 import { Space } from 'antd';
@@ -15,18 +17,24 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <span className="eyebrow">MATCHINGSPORTS</span>
+        <span className="eyebrow">{env.appName}</span>
         <h1>{t('common:welcome')}</h1>
         <p>{t('common:subtitle')}</p>
         <Space wrap>
           <NavigationLink
-            to={session ? '/sports' : '/login?returnTo=%2Fsports'}
+            to={
+              session
+                ? routePath('sports')
+                : routePath('login') +
+                  '?returnTo=' +
+                  encodeURIComponent(routePath('sports'))
+            }
             type="primary"
             size="large"
           >
             {t('common:getStarted')}
           </NavigationLink>
-          <NavigationLink to="/location" size="large">
+          <NavigationLink to={routePath('location')} size="large">
             {t('common:configureLocation')}
           </NavigationLink>
         </Space>
@@ -34,19 +42,19 @@ export default function HomePage() {
       <div className="dashboard-grid">
         {[
           {
-            path: '/sports',
+            path: routePath('sports'),
             icon: <TrophyOutlined />,
             title: 'common:sports',
             text: 'common:introSports',
           },
           {
-            path: '/location',
+            path: routePath('location'),
             icon: <EnvironmentOutlined />,
             title: 'common:location',
             text: 'common:introLocation',
           },
           {
-            path: '/preferences',
+            path: routePath('preferences'),
             icon: <SettingOutlined />,
             title: 'common:preferences',
             text: 'common:introPreferences',

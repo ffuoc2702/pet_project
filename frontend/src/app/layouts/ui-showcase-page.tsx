@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppPasswordInput } from '@/shared/ui';
 import { useState } from 'react';
 import { BellOutlined, InfoCircleOutlined } from '@ant-design/icons';
@@ -42,7 +43,7 @@ export default function UiShowcasePage() {
         title={t('ui:title')}
         description={t('ui:intro')}
         actions={
-          <NavigationLink to="/preferences">
+          <NavigationLink to={routePath('preferences')}>
             {t('common:preferences')}
           </NavigationLink>
         }

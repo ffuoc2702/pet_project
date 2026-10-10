@@ -151,3 +151,22 @@ Ví dụ `navigation-link.tsx` export `NavigationLink`, `use-debounce.ts` export
 imports. AGENTS.md/README.md và suffix chuẩn như .config.ts/.test.ts/.d.ts giữ
 convention của công cụ. Dependency và output sinh tự động không thuộc phạm vi
 đổi tên.
+
+## Metadata và cấu hình động
+
+Route registry tại `src/shared/config/routes.ts` là nguồn duy nhất cho đường dẫn,
+nhãn i18n, permission, parent và metadata breadcrumb. Dùng `routePath()` cho link
+và redirect, không ghép URL trong page. App chỉ lắp ghép registry với router.
+
+Route có nhãn theo bản ghi khai báo `resourceLabel: { type, parameter }`. Feature
+lấy dữ liệu bằng query hiện có và gọi `useResourceLabel(type, id, data?.name)`.
+Breadcrumb/tiêu đề đọc nhãn theo đúng type và ID, dùng nhãn i18n trong khi chưa có
+dữ liệu; nhãn được cập nhật khi dữ liệu thay đổi và gỡ khi page unmount. Navigation
+không gọi API nghiệp vụ hoặc phân nhánh theo tên feature. Tiêu đề trang ghép chuỗi
+breadcrumb; trang auth dùng tiêu đề riêng từ i18n.
+
+Sidebar tree nhận icon dạng ReactNode; renderer không có danh sách icon cố định.
+Tên ứng dụng dùng `VITE_APP_NAME`; tọa độ ban đầu dùng `VITE_MAP_DEFAULT_LATITUDE`
+và `VITE_MAP_DEFAULT_LONGITUDE`. Theme dùng trạng thái dark đã được provider phân
+giải; danh sách preset lấy từ registry palette. Cấu hình build-time vẫn có mặc
+định tại `shared/config/env.ts`, cần build/restart Vite sau khi đổi env.

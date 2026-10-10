@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppPasswordInput, AppOtpInput } from '@/shared/ui/controls';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -69,7 +70,7 @@ export default function ResetPasswordPage() {
           <NavigationLink
             className="auth-success-action"
             type="primary"
-            to="/login"
+            to={routePath('login')}
           >
             {t('auth:backToLogin')}
           </NavigationLink>
@@ -147,7 +148,7 @@ export default function ResetPasswordPage() {
                 ? t('auth:resendIn', { count: seconds })
                 : t('auth:resend')}
             </AppButton>
-            <NavigationLink type="link" to="/login">
+            <NavigationLink type="link" to={routePath('login')}>
               {t('auth:backToLogin')}
             </NavigationLink>
           </div>

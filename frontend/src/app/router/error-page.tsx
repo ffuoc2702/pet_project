@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { NavigationLink } from '@/shared/ui/navigation-link';
 import { Result } from 'antd';
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
@@ -10,7 +11,11 @@ export function ErrorPage() {
     <Result
       status={notFound ? '404' : 'error'}
       title={t(notFound ? 'common:notFound' : 'errors:generic')}
-      extra={<NavigationLink to="/">{t('common:goHome')}</NavigationLink>}
+      extra={
+        <NavigationLink to={routePath('home')}>
+          {t('common:goHome')}
+        </NavigationLink>
+      }
     />
   );
 }

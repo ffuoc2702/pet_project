@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppSearchInput } from '@/shared/ui/controls';
 import { AppCard as Card, AppTag as Tag } from '@/shared/ui/data-display';
 import { AppTable as Table } from '@/shared/ui/table';
@@ -47,7 +48,7 @@ export default function SportsPage() {
       title={<h1 className="page-title">{t('common:sports')}</h1>}
       extra={
         session?.user.permissions.includes('sports.create') && (
-          <NavigationLink to="/sports/new" type="primary">
+          <NavigationLink to={routePath('sportNew')} type="primary">
             {t('common:create')}
           </NavigationLink>
         )
@@ -86,7 +87,9 @@ export default function SportsPage() {
               dataIndex: 'name',
               render: (name: string, item) =>
                 session?.user.permissions.includes('sports.read') ? (
-                  <Link to={'/sports/' + item.id}>{name}</Link>
+                  <Link to={routePath('sportDetail', { sportId: item.id })}>
+                    {name}
+                  </Link>
                 ) : (
                   name
                 ),
@@ -94,7 +97,8 @@ export default function SportsPage() {
             {
               title: t('common:description'),
               dataIndex: 'description',
-              render: (value: string | null) => value || '—',
+              render: (value: string | null) =>
+                value || t('common:noDescription'),
             },
             {
               title: t('common:status'),

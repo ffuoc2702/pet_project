@@ -1,3 +1,13 @@
+import { createElement } from 'react';
+import type { ReactNode } from 'react';
+import {
+  CompassOutlined,
+  HomeOutlined,
+  EnvironmentOutlined,
+  SettingOutlined,
+  TeamOutlined,
+  TrophyOutlined,
+} from '@ant-design/icons';
 import { routes } from './routes';
 import type { RouteDefinition, RouteId } from './routes';
 
@@ -5,25 +15,35 @@ export interface SidebarNode {
   id: string;
   routeId?: RouteId;
   labelKey?: string;
-  icon?: 'home' | 'compass' | 'sports' | 'location' | 'settings' | 'account';
+  icon?: ReactNode;
   children?: SidebarNode[];
 }
 export const sidebarTree: SidebarNode[] = [
-  { id: 'home', routeId: 'home', icon: 'home' },
+  { id: 'home', routeId: 'home', icon: createElement(HomeOutlined) },
   {
     id: 'explore',
     labelKey: 'common:explore',
-    icon: 'compass',
+    icon: createElement(CompassOutlined),
     children: [
-      { id: 'sports', routeId: 'sports', icon: 'sports' },
-      { id: 'location', routeId: 'location', icon: 'location' },
+      { id: 'sports', routeId: 'sports', icon: createElement(TrophyOutlined) },
+      {
+        id: 'location',
+        routeId: 'location',
+        icon: createElement(EnvironmentOutlined),
+      },
     ],
   },
   {
     id: 'account',
     labelKey: 'common:account',
-    icon: 'account',
-    children: [{ id: 'preferences', routeId: 'preferences', icon: 'settings' }],
+    icon: createElement(TeamOutlined),
+    children: [
+      {
+        id: 'preferences',
+        routeId: 'preferences',
+        icon: createElement(SettingOutlined),
+      },
+    ],
   },
 ];
 

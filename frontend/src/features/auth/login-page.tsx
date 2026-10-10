@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppPasswordInput } from '@/shared/ui/controls';
 import { useState } from 'react';
 import { GoogleOutlined } from '@ant-design/icons';
@@ -56,7 +57,7 @@ export default function LoginPage() {
       <ApiErrorAlert error={error} />
       {error instanceof ApiError &&
         error.problem.code === 'EMAIL_NOT_VERIFIED' && (
-          <NavigationLink to="/verify-email">
+          <NavigationLink to={routePath('verifyEmail')}>
             {t('auth:verifyEmail')}
           </NavigationLink>
         )}
@@ -82,7 +83,7 @@ export default function LoginPage() {
           <AppPasswordInput autoComplete="current-password" />
         </AppForm.Item>
         <div className="auth-forgot">
-          <NavigationLink type="link" to="/forgot-password">
+          <NavigationLink type="link" to={routePath('forgotPassword')}>
             {t('auth:forgotPassword')}
           </NavigationLink>
         </div>
@@ -103,7 +104,7 @@ export default function LoginPage() {
       </AppButton>
       <div className="auth-links">
         {t('auth:noAccount')}{' '}
-        <NavigationLink type="link" to="/register">
+        <NavigationLink type="link" to={routePath('register')}>
           {t('auth:register')}
         </NavigationLink>
       </div>

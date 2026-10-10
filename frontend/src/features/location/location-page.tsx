@@ -3,8 +3,9 @@ import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppForm as Form } from '@/shared/ui/forms';
 import { AppInputNumber as InputNumber } from '@/shared/ui/controls';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Space, Spin, theme } from 'antd';
+import { Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useAppearance } from '@/shared/theme/appearance-context';
 import { env } from '@/shared/config/env';
 import { coordinatesSchema } from './coordinates';
 import type { Coordinates } from './coordinates';
@@ -14,10 +15,10 @@ const LocationMap = lazy(() =>
 );
 export default function LocationPage() {
   const { t, i18n } = useTranslation();
-  const { token } = theme.useToken();
+  const { dark } = useAppearance();
   const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: 10.776889,
-    longitude: 106.700806,
+    latitude: env.defaultMapLatitude,
+    longitude: env.defaultMapLongitude,
   });
   const [form] = Form.useForm<Coordinates>();
   const [denied, setDenied] = useState(false);
@@ -59,7 +60,6 @@ export default function LocationPage() {
       { timeout: 10_000, maximumAge: 60_000, enableHighAccuracy: false },
     );
   }
-  const dark = token.colorBgBase === '#000';
   const number = new Intl.NumberFormat(i18n.language, {
     maximumFractionDigits: 6,
   });

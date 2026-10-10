@@ -72,21 +72,27 @@ test('debounces search and restores URL filters when navigating back', async ({
     .fill('football');
   await expect(page).toHaveURL(/search=football/);
   await page.getByRole('link', { name: 'Cầu lông', exact: true }).click();
+  await expect(page).toHaveURL(/sports\/sport$/);
   await expect(page.getByRole('navigation').first()).toBeVisible();
-  await page.getByRole('button', { name: 'Trang trước', exact: true }).click();
+  await page.goBack();
   await expect(page).toHaveURL(/search=football/);
   await expect(
     page.getByRole('searchbox', { name: 'Tìm theo mã hoặc tên' }),
   ).toHaveValue('football');
-  await page.getByRole('button', { name: 'Trang sau', exact: true }).click();
+  await page.goForward();
   await expect(page).toHaveURL(/sports\/sport$/);
 });
-test('direct detail entry has breadcrumb and safe parent fallback', async ({
+test('direct detail entry has dynamic breadcrumb and a parent link', async ({
   page,
 }) => {
   await page.goto('/sports/sport');
   await expect(page.getByRole('heading', { name: 'Cầu lông' })).toBeVisible();
-  await page.getByRole('button', { name: 'Trang trước', exact: true }).click();
+  await expect(page.locator('.page-navigation')).toContainText(sport.name);
+  await expect(page).toHaveTitle(new RegExp(sport.name));
+  await page
+    .locator('.page-navigation')
+    .getByRole('link', { name: 'Môn thể thao', exact: true })
+    .click();
   await expect(page).toHaveURL(/\/sports$/);
 });
 test('manual location remains usable without Maps configuration', async ({
@@ -101,7 +107,10 @@ test('manual location remains usable without Maps configuration', async ({
 test('blocks navigation from an unsaved form', async ({ page }) => {
   await page.goto('/sports/new');
   await page.getByLabel('Tên', { exact: true }).fill('New sport');
-  await page.getByRole('button', { name: 'Trang trước', exact: true }).click();
+  await page
+    .locator('.page-navigation')
+    .getByRole('link', { name: 'Môn thể thao', exact: true })
+    .click();
   await expect(
     page.getByText('Thay đổi chưa lưu', { exact: true }),
   ).toBeVisible();
@@ -135,4 +144,24 @@ test('captures desktop and compact layouts for visual review', async ({
     path: testInfo.outputPath('compact.png'),
     fullPage: true,
   });
+});
+
+test('updates resource breadcrumbs and titles on edit and after switching records', async ({
+  page,
+}) => {
+  const other = { ...sport, id: 'other', name: 'Tên mới từ API' };
+  await page.route('**/api/v1/sports/other', (route) =>
+    route.fulfill({ json: { data: other } }),
+  );
+  await page.goto('/sports/sport/edit');
+  await expect(
+    page
+      .locator('.page-navigation')
+      .getByRole('link', { name: sport.name, exact: true }),
+  ).toBeVisible();
+  await expect(page).toHaveTitle(new RegExp(sport.name));
+  await page.goto('/sports/other');
+  await expect(page.locator('.page-navigation')).toContainText(other.name);
+  await expect(page.locator('.page-navigation')).not.toContainText(sport.name);
+  await expect(page).toHaveTitle(new RegExp(other.name));
 });

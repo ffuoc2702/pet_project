@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppCard as Card, AppTag as Tag } from '@/shared/ui/data-display';
 import { AppTable as Table } from '@/shared/ui/table';
 import { NavigationLink } from '@/shared/ui/navigation-link';
@@ -7,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '@/features/auth';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
+import { useResourceLabel } from '@/shared/navigation/use-resource-label';
 import { getSport, sportKeys } from './api';
 import type { SportFormat } from './types';
 
@@ -18,6 +20,7 @@ export default function SportDetailPage() {
     queryKey: sportKeys.detail(sportId),
     queryFn: ({ signal }) => getSport(sportId, signal),
   });
+  useResourceLabel('sport', sportId, query.data?.name);
   const sport = query.data;
   return (
     <Card
@@ -28,7 +31,7 @@ export default function SportDetailPage() {
       extra={
         sport &&
         session?.user.permissions.includes('sports.update') && (
-          <NavigationLink to={'/sports/' + sportId + '/edit'}>
+          <NavigationLink to={routePath('sportEdit', { sportId })}>
             {t('common:edit')}
           </NavigationLink>
         )

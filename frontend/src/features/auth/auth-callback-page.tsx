@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AuthLayout } from './auth-layout';
 import { Navigate } from 'react-router-dom';
@@ -10,8 +11,9 @@ import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 export default function AuthCallbackPage() {
   const { t } = useTranslation();
   const { session, initialized, error } = useSession();
-  if (session) return <Navigate to="/" replace />;
-  if (initialized && !error) return <Navigate to="/login" replace />;
+  if (session) return <Navigate to={routePath('home')} replace />;
+  if (initialized && !error)
+    return <Navigate to={routePath('login')} replace />;
   return (
     <AuthLayout title={t('auth:login')} description={t('auth:loginIntro')}>
       {error ? (

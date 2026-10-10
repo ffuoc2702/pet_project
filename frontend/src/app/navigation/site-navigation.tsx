@@ -1,36 +1,17 @@
-import { AppButton as Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useMatches, useNavigate } from 'react-router-dom';
-import { Breadcrumb, Menu, Space } from 'antd';
+import { Link, useLocation, useMatches } from 'react-router-dom';
+import { Breadcrumb, Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import {
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
-  CompassOutlined,
-  HomeOutlined,
-  EnvironmentOutlined,
-  SettingOutlined,
-  TeamOutlined,
-  TrophyOutlined,
-} from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '@/features/auth';
-import { getSport, sportKeys } from '@/features/sports';
+import { useRouteLabels } from '@/shared/navigation/route-label-context';
+import { resolveRouteLabel } from '@/shared/navigation/resource-label';
+import { env } from '@/shared/config/env';
 import { ancestorKeys, sidebarTree, visibleSidebar } from './sidebar';
 import type { SidebarNode } from './sidebar';
 import { breadcrumbRoutes, routePath, routes } from './routes';
 import type { RouteId, RouteDefinition } from './routes';
-import { useNavigationHistory } from './history';
 
-const icons = {
-  home: <HomeOutlined />,
-  compass: <CompassOutlined />,
-  sports: <TrophyOutlined />,
-  location: <EnvironmentOutlined />,
-  settings: <SettingOutlined />,
-  account: <TeamOutlined />,
-};
 function useCurrentRoute() {
   const matches = useMatches();
   const last = matches.at(-1);
@@ -74,7 +55,7 @@ export function Sidebar({
   function items(values: SidebarNode[]): MenuProps['items'] {
     return values.map((node) => ({
       key: node.id,
-      icon: node.icon && icons[node.icon],
+      icon: node.icon,
       label: node.routeId ? (
         <Link to={routePath(node.routeId)} onClick={close}>
           {t(routes[node.routeId].labelKey)}
@@ -114,69 +95,37 @@ export function Sidebar({
 export function PageNavigation() {
   const { t } = useTranslation();
   const { id, params } = useCurrentRoute();
-  const { session } = useSession();
-  const navigate = useNavigate();
+  const { labels } = useRouteLabels();
   const location = useLocation();
-  const history = useNavigationHistory();
-  const sportId = params.sportId;
-  const sport = useQuery({
-    queryKey: sportKeys.detail(sportId || ''),
-    queryFn: ({ signal }) => getSport(sportId!, signal),
-    enabled: !!sportId && !!session?.user.permissions.includes('sports.read'),
-  });
   const chain = breadcrumbRoutes(id);
-  const parent: RouteDefinition = routes[id];
+  const items = chain.map((routeId) => ({
+    routeId,
+    label: resolveRouteLabel(
+      routes[routeId],
+      params,
+      Object.values(labels),
+      t(routes[routeId].labelKey),
+    ),
+  }));
+  const title = [
+    ...items.slice(items.length > 1 ? 1 : 0).map((item) => item.label),
+    env.appName,
+  ].join(' · ');
   useEffect(() => {
-    const title =
-      sportId && sport.data ? sport.data.name : t(routes[id].labelKey);
-    document.title = title + ' · MatchingSports';
-  }, [id, sportId, sport.data, t, location.key]);
+    document.title = title;
+  }, [title, location.key]);
   return (
     <div className="page-navigation">
       <Breadcrumb
-        items={chain.map((routeId, index) => ({
+        items={items.map((item, index) => ({
           title:
-            index === chain.length - 1 ? (
-              routeId === 'sportDetail' ? (
-                sport.data?.name || t(routes[routeId].labelKey)
-              ) : (
-                t(routes[routeId].labelKey)
-              )
+            index === items.length - 1 ? (
+              item.label
             ) : (
-              <Link to={routePath(routeId, params)}>
-                {routeId === 'sportDetail'
-                  ? sport.data?.name || t(routes[routeId].labelKey)
-                  : t(routes[routeId].labelKey)}
-              </Link>
+              <Link to={routePath(item.routeId, params)}>{item.label}</Link>
             ),
         }))}
       />
-      <Space>
-        <Button
-          aria-label={t('common:back')}
-          icon={<ArrowLeftOutlined aria-hidden="true" />}
-          onClick={() => {
-            if (history.canBack) void navigate(-1);
-            else
-              void navigate(
-                parent.parent ? routePath(parent.parent, params) : '/',
-              );
-          }}
-          disabled={!history.canBack && id === 'home'}
-        >
-          {t('common:back')}
-        </Button>
-        <Button
-          aria-label={t('common:forward')}
-          icon={<ArrowRightOutlined aria-hidden="true" />}
-          disabled={!history.canForward}
-          onClick={() => {
-            void navigate(1);
-          }}
-        >
-          {t('common:forward')}
-        </Button>
-      </Space>
     </div>
   );
 }

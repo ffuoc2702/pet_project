@@ -1,9 +1,11 @@
+import { routePath } from '@/shared/config/routes';
+import { env } from '@/shared/config/env';
+import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { TrophyOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AppCard } from '@/shared/ui/data-display';
-import { NavigationLink } from '@/shared/ui/navigation-link';
 
 export function AuthLayout({
   title,
@@ -15,20 +17,20 @@ export function AuthLayout({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
+  useEffect(() => {
+    document.title = title + ' · ' + env.appName;
+  }, [title]);
   return (
     <div className="auth-layout">
       <header className="auth-header">
-        <Link className="brand" to="/">
+        <Link className="brand" to={routePath('home')}>
           <TrophyOutlined />
-          <span>MatchingSports</span>
+          <span>{env.appName}</span>
         </Link>
-        <NavigationLink to="/preferences">
-          {t('common:preferences')}
-        </NavigationLink>
       </header>
       <main id="main" className="auth-main">
         <section className="auth-story" aria-labelledby="auth-story-title">
-          <span className="eyebrow">MatchingSports</span>
+          <span className="eyebrow">{env.appName}</span>
           <h2 id="auth-story-title">{t('auth:storyTitle')}</h2>
           <p>{t('auth:storyBody')}</p>
           <div className="auth-story-note">

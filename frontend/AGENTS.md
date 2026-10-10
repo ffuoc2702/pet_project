@@ -17,7 +17,10 @@ Kế thừa hướng dẫn tại ../AGENTS.md và áp dụng ../SKILL.md.
   Chỉ tạo abstraction/thư mục khi có nơi sử dụng cụ thể.
 - Component không gọi fetch trực tiếp. Dùng HTTP client và TanStack Query;
   truyền AbortSignal, giữ pagination/filter/sort trong URL và không tải toàn bộ list.
-- Route registry là nguồn route ID, permission, breadcrumb; sidebar tree cấu hình
+- Route registry tại `shared/config/routes.ts` là nguồn route ID, đường dẫn,
+  permission và breadcrumb; feature dùng `routePath()` cho link/redirect. Nhãn
+  bản ghi khai báo `resourceLabel` và cung cấp qua `useResourceLabel`; navigation
+  không gọi API nghiệp vụ hoặc phân nhánh theo feature. Sidebar tree cấu hình
   bằng route ID. Backend quyết định quyền; ẩn menu không thay authorization.
 - Access token chỉ trong memory; refresh cookie HttpOnly do backend thiết lập.
   Không log token, body auth, email hoặc vị trí chính xác. Không tự retry mutation

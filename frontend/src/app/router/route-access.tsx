@@ -1,3 +1,4 @@
+import { routePath } from '@/shared/config/routes';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppCard as Card } from '@/shared/ui/data-display';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -41,7 +42,8 @@ export function RouteAccess({
       <Navigate
         replace
         to={
-          '/login?expired=1&returnTo=' +
+          routePath('login') +
+          '?expired=1&returnTo=' +
           encodeURIComponent(location.pathname + location.search)
         }
       />
