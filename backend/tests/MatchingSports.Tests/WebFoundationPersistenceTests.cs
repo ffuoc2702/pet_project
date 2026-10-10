@@ -31,7 +31,14 @@ public sealed class WebFoundationPersistenceTests
             Assert.Equal("Existing sport", sport.Name);
             Assert.Null(sport.Description);
             var userId = Guid.NewGuid();
-            db.Users.Add(new User { Id = userId, Email = "preferences@example.test", UserName = "preferences@example.test" });
+            db.Users.Add(new User
+            {
+                Id = userId,
+                Email = "preferences@example.test",
+                UserName = "preferences@example.test",
+                NormalizedEmail = "PREFERENCES@EXAMPLE.TEST",
+                NormalizedUserName = "PREFERENCES@EXAMPLE.TEST"
+            });
             var preferences = UserPreferences.Create(userId);
             preferences.Update("en", "dark", "purple");
             db.UserPreferences.Add(preferences);
@@ -42,7 +49,8 @@ public sealed class WebFoundationPersistenceTests
             Assert.NotEqual(Guid.Empty, preferences.ConcurrencyToken);
             await using var competing = new MatchingSportsDbContext(options, audit);
             var stale = await competing.UserPreferences.SingleAsync(item => item.UserId == userId);
-            var originalCreatedAt = preferences.CreatedAt;
+            var originalCreatedAt = (await db.UserPreferences.AsNoTracking()
+                .SingleAsync(item => item.UserId == userId)).CreatedAt;
             preferences.Update("vi", "light", "green");
             using (audit.BeginScope(userId))
                 await db.SaveChangesAsync();
