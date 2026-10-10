@@ -1,5 +1,6 @@
-import { NavigationLink } from '@/shared/ui/NavigationLink';
-import { Card, Space } from 'antd';
+import { AppCard as Card } from '@/shared/ui/data-display';
+import { NavigationLink } from '@/shared/ui/navigation-link';
+import { Space } from 'antd';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {

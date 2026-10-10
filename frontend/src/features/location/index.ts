@@ -1,1 +1,1 @@
-export const locationPage = () => import('./LocationPage');
+export const locationPage = () => import('./location-page');

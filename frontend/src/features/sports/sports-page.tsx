@@ -1,12 +1,15 @@
-import { NavigationLink } from '@/shared/ui/NavigationLink';
+import { AppSearchInput } from '@/shared/ui/controls';
+import { AppCard as Card, AppTag as Tag } from '@/shared/ui/data-display';
+import { AppTable as Table } from '@/shared/ui/table';
+import { NavigationLink } from '@/shared/ui/navigation-link';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, Input, Space, Table, Tag } from 'antd';
+import { Space } from 'antd';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '@/features/auth';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
-import { ApiErrorAlert } from '@/shared/ui/ApiErrorAlert';
+import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 import { getSports } from './api';
 import type { Sport } from './types';
 
@@ -51,7 +54,7 @@ export default function SportsPage() {
       }
     >
       <Space orientation="vertical" style={{ width: '100%' }} size="large">
-        <Input.Search
+        <AppSearchInput
           aria-label={t('common:search')}
           placeholder={t('common:search')}
           value={input}

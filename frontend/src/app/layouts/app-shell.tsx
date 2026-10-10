@@ -1,28 +1,38 @@
-import { NavigationLink } from '@/shared/ui/NavigationLink';
+import { useAppFeedback } from '@/shared/ui/use-app-feedback';
+import { AppButton as Button } from '@/shared/ui/buttons';
+import { AppDrawer as Drawer } from '@/shared/ui/overlays';
+import { NavigationLink } from '@/shared/ui/navigation-link';
 import { useState } from 'react';
-import { App, Avatar, Button, Drawer, Grid, Layout, Space, theme } from 'antd';
+import { Avatar, Grid, Layout, Space, theme } from 'antd';
 import { MenuOutlined, TrophyOutlined } from '@ant-design/icons';
 import {
   Link,
   Outlet,
   ScrollRestoration,
   useNavigation,
+  useMatches,
 } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSession, logout } from '@/features/auth';
-import { Sidebar, PageNavigation } from '../navigation/Navigation';
-import { ApiErrorAlert } from '@/shared/ui/ApiErrorAlert';
+import { Sidebar, PageNavigation } from '../navigation/site-navigation';
+import {
+  routes,
+  type RouteId,
+  type RouteDefinition,
+} from '../navigation/routes';
+import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 
 export function AppShell() {
   const { t } = useTranslation();
   const { token } = theme.useToken();
   const { session } = useSession();
-  const { message } = App.useApp();
+  const { message } = useAppFeedback();
   const screens = Grid.useBreakpoint();
   const [open, setOpen] = useState(false);
   const [logoutError, setLogoutError] = useState<unknown>();
   const [loggingOut, setLoggingOut] = useState(false);
   const navigation = useNavigation();
+  const matches = useMatches();
   const [collapsed, setCollapsed] = useState(() => {
     try {
       return (
@@ -50,6 +60,14 @@ export function AppShell() {
       setLoggingOut(false);
     }
   }
+  const activeId = matches.at(-1)?.id as RouteId;
+  if ((routes[activeId] as RouteDefinition | undefined)?.layout === 'auth')
+    return (
+      <>
+        <Outlet />
+        <ScrollRestoration />
+      </>
+    );
   return (
     <Layout
       className="app-shell"

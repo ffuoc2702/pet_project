@@ -1,18 +1,27 @@
+import { AppTextArea } from '@/shared/ui/controls';
+import { useAppFeedback } from '@/shared/ui/use-app-feedback';
+import { AppButton as Button } from '@/shared/ui/buttons';
+import { AppCard as Card } from '@/shared/ui/data-display';
+import { AppForm as Form } from '@/shared/ui/forms';
+import {
+  AppInput as Input,
+  AppInputNumber as InputNumber,
+} from '@/shared/ui/controls';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { App, Button, Card, Form, Input, InputNumber, Space } from 'antd';
+import { Space } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '@/shared/api/client';
-import { ApiErrorAlert } from '@/shared/ui/ApiErrorAlert';
-import { UnsavedChanges } from '@/shared/ui/UnsavedChanges';
+import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
+import { UnsavedChanges } from '@/shared/ui/unsaved-changes';
 import { getSport, saveSport, sportKeys } from './api';
 import type { SportInput } from './types';
 import { sportErrorField } from './validation';
 
 function Editor({ initial, id }: { initial: SportInput; id?: string }) {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { message } = useAppFeedback();
   const navigate = useNavigate();
   const client = useQueryClient();
   const [form] = Form.useForm<SportInput>();
@@ -107,7 +116,7 @@ function Editor({ initial, id }: { initial: SportInput; id?: string }) {
           name="description"
           rules={[max(2000)]}
         >
-          <Input.TextArea rows={3} maxLength={2000} showCount />
+          <AppTextArea rows={3} maxLength={2000} showCount />
         </Form.Item>
         <Form.List
           name="formats"
@@ -168,7 +177,7 @@ function Editor({ initial, id }: { initial: SportInput; id?: string }) {
                     name={[field.name, 'description']}
                     rules={[max(2000)]}
                   >
-                    <Input.TextArea rows={2} maxLength={2000} />
+                    <AppTextArea rows={2} maxLength={2000} />
                   </Form.Item>
                   <Button
                     danger

@@ -1,7 +1,7 @@
 import '@/shared/i18n';
 import { act, render, waitFor } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
-import { LocationMap } from '@/features/location/LocationMap';
+import { LocationMap } from '@/features/location/location-map';
 
 const sdk = vi.hoisted(() => {
   const callbacks = new Map<string, (event: unknown) => void>();

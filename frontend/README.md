@@ -3,6 +3,10 @@
 Base React + TypeScript strict + Vite, tổ chức theo feature.
 Áp dụng [AGENTS.md](AGENTS.md) và [SKILL.md](../SKILL.md) của repo.
 
+Bộ UI custom trên Ant Design, tokens/theme, auth flows và quy tắc mở rộng:
+[docs/ui-base.md](docs/ui-base.md). Chạy dev và mở `/dev/ui` để xem component
+showcase; production không bật route này.
+
 ## Chạy local
 
 Node 22.12+ và backend .NET 10:
@@ -105,6 +109,7 @@ Không dùng schema cũ làm nguồn chính nếu chưa sinh lại từ backend 
 
 ```powershell
 npm run typecheck
+npm run check:names
 npm run lint
 npm run format:check
 npm test
@@ -134,3 +139,11 @@ preferences, responsive drawer, tọa độ thủ công và form chưa lưu.
 
 CI chạy frontend checks/E2E và backend checks/PostgreSQL integration tests.
 Mobile sau dùng lại API, mã lỗi và preferences, còn navigation và SDK map dùng native.
+
+Quy tắc tên file áp dụng toàn bộ frontend: kebab-case, kể cả component và hook.
+Tên định danh trong code: component PascalCase, hook camelCase với tiền tố use.
+Ví dụ `navigation-link.tsx` export `NavigationLink`, `use-debounce.ts` export
+`useDebounce`. `check:names` kiểm tra cả casing import/export tĩnh và dynamic
+imports. AGENTS.md/README.md và suffix chuẩn như .config.ts/.test.ts/.d.ts giữ
+convention của công cụ. Dependency và output sinh tự động không thuộc phạm vi
+đổi tên.

@@ -4,16 +4,16 @@ import { preferencesPage } from '@/features/preferences';
 import { locationPage } from '@/features/location';
 import { createBrowserRouter } from 'react-router-dom';
 import type { ComponentType } from 'react';
-import { AppShell } from '../layouts/AppShell';
+import { AppShell } from '../layouts/app-shell';
 import { routes } from '../navigation/routes';
 import type { RouteId, RouteDefinition } from '../navigation/routes';
 import { attachHistory } from '../navigation/history';
-import { RouteAccess } from './RouteAccess';
-import { ErrorPage } from './ErrorPage';
-import { LoadingPage } from './LoadingPage';
+import { RouteAccess } from './route-access';
+import { ErrorPage } from './error-page';
+import { LoadingPage } from './loading-page';
 
 const pages: Record<RouteId, () => Promise<{ default: ComponentType }>> = {
-  home: () => import('../layouts/HomePage'),
+  home: () => import('../layouts/home-page'),
   sports: sportsPages.list,
   sportNew: sportsPages.form,
   sportDetail: sportsPages.detail,
@@ -22,30 +22,43 @@ const pages: Record<RouteId, () => Promise<{ default: ComponentType }>> = {
   preferences: preferencesPage,
   login: authPages.login,
   authCallback: authPages.callback,
+  register: authPages.register,
+  verifyEmail: authPages.verifyEmail,
+  forgotPassword: authPages.forgotPassword,
+  resetPassword: authPages.resetPassword,
+  uiShowcase: import.meta.env.DEV
+    ? () => import('../layouts/ui-showcase-page')
+    : async () => ({ default: ErrorPage }),
 };
 export const router = createBrowserRouter([
   {
     Component: AppShell,
     HydrateFallback: LoadingPage,
     ErrorBoundary: ErrorPage,
-    children: (Object.keys(routes) as RouteId[]).map((id) => {
-      const route: RouteDefinition = routes[id];
-      return {
-        id,
-        path: route.path,
-        handle: { routeId: id },
-        lazy: async () => {
-          const { default: Page } = await pages[id]();
-          return {
-            Component: () => (
-              <RouteAccess permission={route.permission}>
-                <Page />
-              </RouteAccess>
-            ),
-          };
-        },
-      };
-    }),
+    children: (Object.keys(routes) as RouteId[])
+      .filter(
+        (id) =>
+          import.meta.env.DEV ||
+          !(routes[id] as RouteDefinition).developmentOnly,
+      )
+      .map((id) => {
+        const route: RouteDefinition = routes[id];
+        return {
+          id,
+          path: route.path,
+          handle: { routeId: id },
+          lazy: async () => {
+            const { default: Page } = await pages[id]();
+            return {
+              Component: () => (
+                <RouteAccess permission={route.permission}>
+                  <Page />
+                </RouteAccess>
+              ),
+            };
+          },
+        };
+      }),
   },
 ]);
 attachHistory(router);

@@ -1,11 +1,16 @@
-import { Alert, Button, Card, Form, Select, Space, App } from 'antd';
+import { AppAlert as Alert, AppCard as Card } from '@/shared/ui/data-display';
+import { AppButton as Button } from '@/shared/ui/buttons';
+import { AppForm as Form } from '@/shared/ui/forms';
+import { AppSelect as Select } from '@/shared/ui/controls';
+import { useAppFeedback } from '@/shared/ui/use-app-feedback';
+import { Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { usePreferences } from './context';
-import { ApiErrorAlert } from '@/shared/ui/ApiErrorAlert';
+import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 
 export default function PreferencesPage() {
   const { t } = useTranslation();
-  const { message } = App.useApp();
+  const { message } = useAppFeedback();
   const {
     preferences,
     setPreferences,

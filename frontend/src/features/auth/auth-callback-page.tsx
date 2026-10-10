@@ -1,9 +1,11 @@
+import { AppButton as Button } from '@/shared/ui/buttons';
+import { AuthLayout } from './auth-layout';
 import { Navigate } from 'react-router-dom';
-import { Button, Card, Spin } from 'antd';
+import { Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSession } from './use-session';
 import { refreshSession } from './session';
-import { ApiErrorAlert } from '@/shared/ui/ApiErrorAlert';
+import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 
 export default function AuthCallbackPage() {
   const { t } = useTranslation();
@@ -11,7 +13,7 @@ export default function AuthCallbackPage() {
   if (session) return <Navigate to="/" replace />;
   if (initialized && !error) return <Navigate to="/login" replace />;
   return (
-    <Card title={t('auth:login')}>
+    <AuthLayout title={t('auth:login')} description={t('auth:loginIntro')}>
       {error ? (
         <>
           <ApiErrorAlert error={error} />
@@ -28,6 +30,6 @@ export default function AuthCallbackPage() {
           <div className="loading-space" />
         </Spin>
       )}
-    </Card>
+    </AuthLayout>
   );
 }

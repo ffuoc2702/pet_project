@@ -1,5 +1,6 @@
+import { AppModal as Modal } from './overlays';
 import { useEffect } from 'react';
-import { Modal } from 'antd';
+
 import { useBlocker } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 

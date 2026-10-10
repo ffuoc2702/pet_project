@@ -43,10 +43,38 @@ export default defineConfig(
   },
   {
     files: ['src/features/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}'],
+    ignores: ['src/app/providers/appearance-provider.tsx'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
+          paths: [
+            {
+              name: 'antd',
+              importNames: [
+                'Button',
+                'Input',
+                'InputNumber',
+                'Select',
+                'Checkbox',
+                'Form',
+                'Card',
+                'Alert',
+                'Table',
+                'Tag',
+                'Tooltip',
+                'Badge',
+                'Modal',
+                'Drawer',
+                'Pagination',
+                'Skeleton',
+                'Empty',
+                'App',
+              ],
+              message:
+                'Use custom components and useAppFeedback from @/shared/ui.',
+            },
+          ],
           patterns: [
             {
               group: ['@/features/*/*'],
@@ -63,6 +91,33 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
+          paths: [
+            {
+              name: 'antd',
+              importNames: [
+                'Button',
+                'Input',
+                'InputNumber',
+                'Select',
+                'Checkbox',
+                'Form',
+                'Card',
+                'Alert',
+                'Table',
+                'Tag',
+                'Tooltip',
+                'Badge',
+                'Modal',
+                'Drawer',
+                'Pagination',
+                'Skeleton',
+                'Empty',
+                'App',
+              ],
+              message:
+                'Use custom components and useAppFeedback from @/shared/ui.',
+            },
+          ],
           patterns: [
             {
               group: ['@/features/*/*', '@/app/**'],

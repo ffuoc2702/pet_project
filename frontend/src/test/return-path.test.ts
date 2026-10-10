@@ -7,6 +7,10 @@ it('rejects external or auth redirect targets including backslash URLs', () => {
     '/\\evil.example',
     'https://evil.example',
     '/login',
+    '/register',
+    '/verify-email',
+    '/forgot-password',
+    '/reset-password',
     '/auth/callback',
     '/api/v1/auth/web/google',
   ]) {

@@ -1,6 +1,7 @@
+import { AppButton as Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useMatches, useNavigate } from 'react-router-dom';
-import { Breadcrumb, Button, Menu, Space } from 'antd';
+import { Breadcrumb, Menu, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   ArrowLeftOutlined,

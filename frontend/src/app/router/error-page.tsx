@@ -1,4 +1,4 @@
-import { NavigationLink } from '@/shared/ui/NavigationLink';
+import { NavigationLink } from '@/shared/ui/navigation-link';
 import { Result } from 'antd';
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

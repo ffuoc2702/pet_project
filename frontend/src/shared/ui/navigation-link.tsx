@@ -1,4 +1,5 @@
-import { Button } from 'antd';
+import { AppButton as Button } from './buttons';
+
 import type { ButtonProps } from 'antd';
 import { useHref, useLinkClickHandler } from 'react-router-dom';
 import type { To } from 'react-router-dom';

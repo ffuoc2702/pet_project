@@ -6,7 +6,15 @@ export function safeReturnPath(
   const url = new URL(candidate, origin);
   if (
     url.origin !== origin ||
-    ['/login', '/auth', '/api'].some(
+    [
+      '/login',
+      '/register',
+      '/verify-email',
+      '/forgot-password',
+      '/reset-password',
+      '/auth',
+      '/api',
+    ].some(
       (path) => url.pathname === path || url.pathname.startsWith(path + '/'),
     )
   )

@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "npm run check:names && eslint .",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
@@ -18,7 +18,8 @@
     "format:check": "prettier --check .",
     "test:e2e": "node scripts/playwright.mjs test",
     "generate:api": "node scripts/generate-api.mjs",
-    "browser:install": "node scripts/playwright.mjs install --with-deps --no-shell chromium"
+    "browser:install": "node scripts/playwright.mjs install --with-deps --no-shell chromium",
+    "check:names": "node scripts/check-file-names.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.4",

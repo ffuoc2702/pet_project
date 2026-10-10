@@ -1,5 +1,7 @@
+import { AppAlert as Alert } from '@/shared/ui/data-display';
+import { AppButton as Button } from '@/shared/ui/buttons';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Button, Space, Spin } from 'antd';
+import { Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { loadGoogleMaps } from '@/shared/integrations/google-maps/loader';
 import { env } from '@/shared/config/env';

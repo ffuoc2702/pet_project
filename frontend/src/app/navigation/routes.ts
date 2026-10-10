@@ -7,13 +7,20 @@ export type RouteId =
   | 'location'
   | 'preferences'
   | 'login'
-  | 'authCallback';
+  | 'authCallback'
+  | 'register'
+  | 'verifyEmail'
+  | 'forgotPassword'
+  | 'resetPassword'
+  | 'uiShowcase';
 export interface RouteDefinition {
   path: string;
   labelKey: string;
   parent?: RouteId;
   menuRoute?: RouteId;
   permission?: string;
+  layout?: 'auth';
+  developmentOnly?: boolean;
 }
 export const routes = {
   home: { path: '/', labelKey: 'common:home' },
@@ -50,8 +57,44 @@ export const routes = {
     labelKey: 'common:preferences',
     parent: 'home',
   },
-  login: { path: '/login', labelKey: 'auth:login', parent: 'home' },
+  login: {
+    layout: 'auth',
+    path: '/login',
+    labelKey: 'auth:login',
+    parent: 'home',
+  },
+  register: {
+    layout: 'auth',
+    path: '/register',
+    labelKey: 'auth:register',
+    parent: 'home',
+  },
+  verifyEmail: {
+    layout: 'auth',
+    path: '/verify-email',
+    labelKey: 'auth:verifyEmail',
+    parent: 'home',
+  },
+  forgotPassword: {
+    layout: 'auth',
+    path: '/forgot-password',
+    labelKey: 'auth:forgotPassword',
+    parent: 'home',
+  },
+  resetPassword: {
+    layout: 'auth',
+    path: '/reset-password',
+    labelKey: 'auth:resetPassword',
+    parent: 'home',
+  },
+  uiShowcase: {
+    path: '/dev/ui',
+    labelKey: 'ui:title',
+    developmentOnly: true,
+    parent: 'home',
+  },
   authCallback: {
+    layout: 'auth',
     path: '/auth/callback',
     labelKey: 'auth:login',
     parent: 'home',

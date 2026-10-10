@@ -1,4 +1,6 @@
-import { Alert, Button } from 'antd';
+import { AppButton as Button } from './buttons';
+import { AppAlert as Alert } from './data-display';
+
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '@/shared/api/client';
 

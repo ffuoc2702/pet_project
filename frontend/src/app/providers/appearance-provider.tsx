@@ -1,9 +1,9 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { App, ConfigProvider, theme } from 'antd';
+import { createAppTheme } from '@/shared/theme/tokens';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import { usePreferences } from '@/features/preferences';
-import { themePresets } from '@/shared/theme/presets';
 
 const media = window.matchMedia('(prefers-color-scheme: dark)');
 function subscribe(listener: () => void) {
@@ -26,17 +26,33 @@ export function AppearanceProvider({
   return (
     <ConfigProvider
       locale={preferences.languageCode === 'vi' ? viVN : enUS}
-      theme={{
-        algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        cssVar: {},
-        token: {
-          colorPrimary: themePresets[preferences.themePreset],
-          borderRadius: 10,
-          fontFamily: 'Inter, system-ui, sans-serif',
-        },
-      }}
+      theme={createAppTheme(dark, preferences.themePreset)}
     >
-      <App>{children}</App>
+      <App>
+        <ThemeSurface>{children}</ThemeSurface>
+      </App>
     </ConfigProvider>
+  );
+}
+
+function ThemeSurface({ children }: { children: React.ReactNode }) {
+  const { token } = theme.useToken();
+  return (
+    <div
+      className="theme-root"
+      style={
+        {
+          '--surface': token.colorBgContainer,
+          '--page-bg': token.colorBgLayout,
+          '--text': token.colorText,
+          '--muted': token.colorTextSecondary,
+          '--border': token.colorBorderSecondary,
+          '--primary': token.colorPrimary,
+          '--radius': `${token.borderRadius}px`,
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </div>
   );
 }

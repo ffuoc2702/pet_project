@@ -1,21 +1,16 @@
+import { AppAlert as Alert, AppCard as Card } from '@/shared/ui/data-display';
+import { AppButton as Button } from '@/shared/ui/buttons';
+import { AppForm as Form } from '@/shared/ui/forms';
+import { AppInputNumber as InputNumber } from '@/shared/ui/controls';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import {
-  Alert,
-  Button,
-  Card,
-  Form,
-  InputNumber,
-  Space,
-  Spin,
-  theme,
-} from 'antd';
+import { Space, Spin, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { env } from '@/shared/config/env';
 import { coordinatesSchema } from './coordinates';
 import type { Coordinates } from './coordinates';
 
 const LocationMap = lazy(() =>
-  import('./LocationMap').then((module) => ({ default: module.LocationMap })),
+  import('./location-map').then((module) => ({ default: module.LocationMap })),
 );
 export default function LocationPage() {
   const { t, i18n } = useTranslation();

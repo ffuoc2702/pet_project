@@ -6,7 +6,15 @@ import en from './en.json';
 await i18n.use(initReactI18next).init({
   resources: { vi, en },
   defaultNS: 'common',
-  ns: ['common', 'auth', 'preferences', 'location', 'errors', 'validation'],
+  ns: [
+    'common',
+    'auth',
+    'preferences',
+    'location',
+    'errors',
+    'validation',
+    'ui',
+  ],
   supportedLngs: ['vi', 'en'],
   lng: document.documentElement.lang === 'en' ? 'en' : 'vi',
   fallbackLng: 'vi',

@@ -8,7 +8,7 @@ import './index.css';
 import '@/shared/i18n';
 import { queryClient } from '@/shared/api/query-client';
 import { PreferencesProvider } from '@/features/preferences';
-import { AppearanceProvider } from '@/app/providers/AppearanceProvider';
+import { AppearanceProvider } from '@/app/providers/appearance-provider';
 import { router } from '@/app/router/router';
 
 createRoot(document.getElementById('root')!).render(
