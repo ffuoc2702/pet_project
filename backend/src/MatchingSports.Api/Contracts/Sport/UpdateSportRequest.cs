@@ -12,6 +12,8 @@ public sealed class UpdateSportRequest
     [StringLength(100, ErrorMessage = "Tên môn thể thao không được vượt quá 100 ký tự.")]
     public string Name { get; init; } = null!;
 
+    [StringLength(2000, ErrorMessage = "Mô tả không được vượt quá 2000 ký tự.")]
+    public string? Description { get; init; }
     [Required(ErrorMessage = "Danh sách thể thức là bắt buộc.")]
     [MinLength(1, ErrorMessage = "Phải có ít nhất một thể thức.")]
     public List<SportFormatRequest> Formats { get; init; } = null!;

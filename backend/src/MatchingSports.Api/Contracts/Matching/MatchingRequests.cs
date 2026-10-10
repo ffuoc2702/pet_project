@@ -14,6 +14,8 @@ public class ListingDetailsRequest
     public ListingMode? Mode { get; init; }
     [Required(ErrorMessage = "Tiêu đề là bắt buộc."), StringLength(160, ErrorMessage = "Tiêu đề không được vượt quá 160 ký tự.")]
     public string Title { get; init; } = null!;
+    [StringLength(4000, ErrorMessage = "Mô tả không được vượt quá 4000 ký tự.")]
+    public string? Description { get; init; }
     [StringLength(4000, ErrorMessage = "Ghi chú không được vượt quá 4000 ký tự.")]
     public string? Note { get; init; }
     [EnumDataType(typeof(SportLevel), ErrorMessage = "Trình độ không hợp lệ.")]

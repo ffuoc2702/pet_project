@@ -2,7 +2,7 @@
 
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed record SportFormatInput(Guid? Id, string? Code, string? DisplayName, short SideSize, string Action)
+public sealed record SportFormatInput(Guid? Id, string? Code, string? DisplayName, short SideSize, string Action, string? Description = null)
 {
     internal static SportFormatDetails[] ToDetails(IReadOnlyCollection<SportFormatInput> formats)
     {
@@ -12,5 +12,5 @@ public sealed record SportFormatInput(Guid? Id, string? Code, string? DisplayNam
             ?? throw new ArgumentException("Thể thức không được là null.", nameof(formats))).ToArray();
     }
 
-    internal SportFormatDetails ToDetail() => SportFormatDetails.FromAction(Action, Id, Code, DisplayName, SideSize);
+    internal SportFormatDetails ToDetail() => SportFormatDetails.FromAction(Action, Id, Code, DisplayName, SideSize, Description);
 }

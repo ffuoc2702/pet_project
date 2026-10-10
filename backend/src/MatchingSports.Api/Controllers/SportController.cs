@@ -38,7 +38,7 @@ public sealed class SportController(IMediator mediator, IMapper mapper, ICurrent
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateSportCommand(
-            currentUser.UserId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats)), cancellationToken);
+            currentUser.UserId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats), request.Description), cancellationToken);
         return OkResponse(result);
     }
 
@@ -51,7 +51,7 @@ public sealed class SportController(IMediator mediator, IMapper mapper, ICurrent
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new UpdateSportCommand(
-            currentUser.UserId, sportId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats)), cancellationToken);
+            currentUser.UserId, sportId, request.Code, request.Name, mapper.Map<List<SportFormatInput>>(request.Formats), request.Description), cancellationToken);
         return OkResponse(result);
     }
 

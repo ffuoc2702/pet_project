@@ -29,6 +29,7 @@ public sealed class ApplicationMappingProfile : Profile
         CreateMap<SportFormat, SportFormatDto>();
         CreateMap<Sport, SportDto>();
         CreateMap<UserProfile, UserProfileDto>();
+        CreateMap<UserPreferences, Features.UserPreferences.UserPreferencesDto>();
         CreateMap<SystemSettings, SystemSettingsDto>();
         CreateMap<UserSportProfile, UserSportProfileDto>()
             .ForMember(dto => dto.PreferredFormats, options => options.MapFrom(profile => profile.PreferredFormats.OrderBy(format => format.Code)));

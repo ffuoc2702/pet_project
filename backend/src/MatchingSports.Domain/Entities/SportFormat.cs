@@ -7,6 +7,7 @@ public sealed class SportFormat : AuditableEntity
     public Guid Id { get; set; }
     public Guid SportId { get; set; }
     public string Code { get; set; } = null!;
+    public string? Description { get; private set; }
     public string DisplayName { get; set; } = null!;
     public short SideSize { get; set; }
     public bool IsActive { get; set; } = true;
@@ -24,6 +25,7 @@ public sealed class SportFormat : AuditableEntity
     {
         if (details is null)
             throw new ArgumentNullException(nameof(details), "Thông tin chi tiết không được là null.");
+        Description = details.Description;
         Code = details.Code;
         DisplayName = details.DisplayName;
         SideSize = details.SideSize;

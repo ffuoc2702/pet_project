@@ -18,6 +18,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<Sport> Sports => Set<Sport>();
     public DbSet<SportFormat> SportFormats => Set<SportFormat>();
+    public DbSet<UserPreferences> UserPreferences => Set<UserPreferences>();
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<UserSportProfile> UserSportProfiles => Set<UserSportProfile>();
     public DbSet<OtpChallenge> OtpChallenges => Set<OtpChallenge>();
@@ -48,6 +49,19 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         builder.HasPostgresExtension("postgis");
 
         ConfigureCatalog(builder);
+        var preferences = builder.Entity<UserPreferences>();
+        preferences.ToTable("user_preferences");
+        preferences.HasKey(x => x.UserId);
+        preferences.HasOne<User>().WithOne().HasForeignKey<UserPreferences>(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+        preferences.Property(x => x.LanguageCode).HasMaxLength(2).IsRequired();
+        preferences.Property(x => x.ColorMode).HasMaxLength(10).IsRequired();
+        preferences.Property(x => x.ThemePreset).HasMaxLength(20).IsRequired();
+        preferences.Property(x => x.ConcurrencyToken).IsConcurrencyToken();
+        builder.Entity<Sport>().Property(x => x.Description).HasMaxLength(2000);
+        builder.Entity<SportFormat>().Property(x => x.Description).HasMaxLength(2000);
+        builder.Entity<Permission>().Property(x => x.Description).HasMaxLength(2000);
+        builder.Entity<Listing>().Property(x => x.Description).HasMaxLength(4000);
+        builder.Entity<NotificationConfig>().Property(x => x.Description).HasMaxLength(2000);
         ConfigureIdentityAndProfiles(builder);
         ConfigureTeams(builder);
         TeamPersistenceConfiguration.Configure(builder);

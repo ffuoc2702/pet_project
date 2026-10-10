@@ -2,6 +2,8 @@
 
 public static class ErrorCodes
 {
+    public const string InvalidUserPreferences = "INVALID_USER_PREFERENCES";
+    public const string InvalidCsrfToken = "INVALID_CSRF_TOKEN";
     public const string InvalidMatchingOperation = "INVALID_MATCHING_OPERATION";
     public const string ListingNotFound = "LISTING_NOT_FOUND";
     public const string ListingRequestNotFound = "LISTING_REQUEST_NOT_FOUND";

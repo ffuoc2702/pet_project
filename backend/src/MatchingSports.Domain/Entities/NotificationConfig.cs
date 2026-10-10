@@ -11,6 +11,7 @@ public sealed class NotificationConfig : ConcurrentAuditableEntity
     public NotificationScheduleType ScheduleType { get; private set; }
     public string? CronString { get; private set; }
     public NotificationCritical Critical { get; private set; }
+    public string? Description { get; private set; }
     public string Title { get; private set; } = null!;
     public string Body { get; private set; } = null!;
     public string BodyText { get; private set; } = null!;
@@ -136,7 +137,7 @@ public sealed class NotificationConfig : ConcurrentAuditableEntity
 
     public NotificationConfigValues GetValues() => new(IsSendNow, ScheduleType, CronString, Critical, Title, Body, BodyText,
         AvailableAt, ExpiredAfter, MaxSendTimes, AudienceType, _users.Select(x => x.UserId).ToArray(),
-        _teams.Select(x => x.TeamId).ToArray(), InAppEnabled, EmailEnabled, PushEnabled, SmsEnabled, Metadata, TimeZoneId);
+        _teams.Select(x => x.TeamId).ToArray(), InAppEnabled, EmailEnabled, PushEnabled, SmsEnabled, Metadata, TimeZoneId, Description);
 
     private void Apply(NotificationConfigValues values, INotificationSchedule schedule)
     {
@@ -144,6 +145,7 @@ public sealed class NotificationConfig : ConcurrentAuditableEntity
         _ = schedule.GetNextOccurrence("* * * * *", values.TimeZoneId, values.AvailableAt);
         if (values.ScheduleType == NotificationScheduleType.SCHEDULED)
             _ = schedule.GetNextOccurrence(values.CronString!, values.TimeZoneId, values.AvailableAt, true);
+        Description = values.Description;
         IsSendNow = values.IsSendNow; ScheduleType = values.ScheduleType; CronString = values.CronString;
         Critical = values.Critical; Title = values.Title; Body = values.Body; BodyText = values.BodyText;
         AvailableAt = values.AvailableAt; ExpiredAfter = values.ExpiredAfter; MaxSendTimes = values.MaxSendTimes;

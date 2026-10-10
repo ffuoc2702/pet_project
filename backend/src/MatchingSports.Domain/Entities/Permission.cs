@@ -1,4 +1,6 @@
-﻿namespace MatchingSports.Domain.Entities;
+﻿using MatchingSports.Domain.ValueObjects;
+
+namespace MatchingSports.Domain.Entities;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711", Justification = "Business permission entity; unrelated to legacy Code Access Security.")]
 public sealed class Permission : AuditableEntity
@@ -9,6 +11,7 @@ public sealed class Permission : AuditableEntity
 
     public Guid Id { get; private set; }
     public string Code { get; private set; } = null!;
+    public string? Description { get; private set; }
     public string Name { get; private set; } = null!;
     public IReadOnlyCollection<RolePermission> RolePermissions => _rolePermissions.AsReadOnly();
 
@@ -24,7 +27,9 @@ public sealed class Permission : AuditableEntity
         Name = normalizedName;
     }
 
-    public static Permission Create(string code, string name)
+    public void UpdateDescription(string? description) => Description = ResourceDescription.Normalize(description);
+
+    public static Permission Create(string code, string name, string? description = null)
     {
         if (code is null)
             throw new ArgumentNullException(nameof(code), "Mã không được để trống.");
@@ -42,6 +47,6 @@ public sealed class Permission : AuditableEntity
         if (normalizedName.Length > 150)
             throw new ArgumentException("Tên quyền không được vượt quá 150 ký tự.", nameof(name));
 
-        return new Permission { Id = Guid.NewGuid(), Code = normalizedCode, Name = normalizedName };
+        return new Permission { Id = Guid.NewGuid(), Code = normalizedCode, Name = normalizedName, Description = ResourceDescription.Normalize(description) };
     }
 }

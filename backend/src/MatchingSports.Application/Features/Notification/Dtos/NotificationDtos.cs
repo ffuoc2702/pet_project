@@ -7,10 +7,11 @@ public sealed record NotificationInput(
     bool IsSendNow, NotificationScheduleType ScheduleType, string? CronString, NotificationCritical Critical,
     string Title, string Body, DateTimeOffset AvailableAt, DateTimeOffset? ExpiredAfter, int? MaxSendTimes,
     NotificationAudienceType AudienceType, IReadOnlyCollection<Guid> UserIds, IReadOnlyCollection<Guid> TeamIds,
-    bool InAppEnabled, bool EmailEnabled, bool PushEnabled, bool SmsEnabled, string Metadata, string TimeZoneId);
+    bool InAppEnabled, bool EmailEnabled, bool PushEnabled, bool SmsEnabled, string Metadata, string TimeZoneId, string? Description = null);
 
 public sealed record NotificationConfigDto : ConcurrentBaseDto
 {
+    public string? Description { get; init; }
     public Guid Id { get; init; }
     public bool IsSendNow { get; init; }
     public NotificationScheduleType ScheduleType { get; init; }

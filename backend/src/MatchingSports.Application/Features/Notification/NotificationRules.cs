@@ -19,7 +19,7 @@ internal static class NotificationRules
         return new NotificationConfigValues(input.IsSendNow, input.ScheduleType, input.CronString, input.Critical,
             input.Title, content.Html, content.Text, input.IsSendNow ? now : input.AvailableAt, input.ExpiredAfter, input.MaxSendTimes,
             input.AudienceType, input.UserIds, input.TeamIds, input.InAppEnabled, input.EmailEnabled,
-            input.PushEnabled, input.SmsEnabled, input.Metadata, input.TimeZoneId).NormalizeAndValidate();
+            input.PushEnabled, input.SmsEnabled, input.Metadata, input.TimeZoneId, input.Description).NormalizeAndValidate();
     }
 
     public static T Validate<T>(Func<T> action)

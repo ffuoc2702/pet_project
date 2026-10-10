@@ -4,6 +4,7 @@ namespace MatchingSports.Application.Features.Sport;
 
 public sealed record SportFormatDto : BaseDto
 {
+    public string? Description { get; init; }
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
     public string DisplayName { get; set; } = null!;
@@ -13,6 +14,7 @@ public sealed record SportFormatDto : BaseDto
 
 public sealed record SportDto : BaseDto
 {
+    public string? Description { get; init; }
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
     public string Name { get; set; } = null!;

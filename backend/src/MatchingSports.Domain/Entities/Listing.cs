@@ -12,6 +12,7 @@ public sealed class Listing : ConcurrentAuditableEntity
     public Guid SportId { get; set; }
     public Guid FormatId { get; set; }
     public ListingMode Mode { get; set; }
+    public string? Description { get; private set; }
     public string Title { get; set; } = null!;
     public string? Note { get; set; }
     public SportLevel LevelMin { get; set; } = SportLevel.BEGINNER;
@@ -61,6 +62,7 @@ public sealed class Listing : ConcurrentAuditableEntity
     private void ApplyValues(ListingValues values, DateTimeOffset now)
     {
         values.Validate(now);
+        Description = ResourceDescription.Normalize(values.Description, 4000);
         SportId = values.SportId; FormatId = values.FormatId; HostTeamId = values.HostTeamId; Mode = values.Mode;
         Title = values.Title.Trim(); Note = StringNormalizer.StartEndSpaceTrim(values.Note);
         LevelMin = values.LevelMin; LevelMax = values.LevelMax; OpenSlots = values.OpenSlots;
