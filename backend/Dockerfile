@@ -10,6 +10,9 @@ RUN dotnet publish src/MatchingSports.Api/MatchingSports.Api.csproj -c Release -
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgssapi-krb5-2 \
+    && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /app/keys && chown "$APP_UID" /app/keys
 USER $APP_UID
 

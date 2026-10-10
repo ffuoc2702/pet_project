@@ -25,7 +25,6 @@ public sealed class WebAuthController(IMediator mediator, IAntiforgery antiforge
     [HttpGet("csrf")]
     public ActionResult<BaseResponse<WebCsrfResponse>> Csrf()
     {
-        Response.Headers.CacheControl = "no-store";
         return OkResponse(new WebCsrfResponse(antiforgery.GetAndStoreTokens(HttpContext).RequestToken!));
     }
 

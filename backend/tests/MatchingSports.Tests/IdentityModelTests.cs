@@ -2,6 +2,7 @@
 using MatchingSports.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace MatchingSports.Tests;
 
@@ -58,12 +59,21 @@ public sealed class IdentityModelTests
         Assert.Null(db.Model.FindEntityType(typeof(IdentityRole<Guid>)));
     }
 
+    [Fact]
+    public void IdentityModelMatchesAppliedMigrationSchema()
+    {
+        using var db = CreateDbContext();
+
+        Assert.False(db.Database.HasPendingModelChanges());
+    }
+
     private static MatchingSportsDbContext CreateDbContext()
     {
         var options = new DbContextOptionsBuilder<MatchingSportsDbContext>()
             .UseNpgsql(
                 "Host=localhost;Database=model_validation;Username=postgres;Password=postgres",
                 npgsql => npgsql.UseNetTopologySuite())
+            .ConfigureWarnings(warnings => warnings.Throw(CoreEventId.PossibleIncorrectRequiredNavigationWithQueryFilterInteractionWarning))
             .Options;
         return new MatchingSportsDbContext(options);
     }

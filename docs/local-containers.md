@@ -60,6 +60,10 @@ docker compose down
 `down` dừng API/migrator của stack này. PostgreSQL hiện có và volume DataProtection
 vẫn được giữ. Khi thay code, chạy lại script để build và cập nhật container.
 
-Compose này dùng Development để phục vụ frontend local qua HTTP. Khi deploy,
+Compose này dùng Development để phục vụ frontend local qua HTTP.
+`Http__HttpsRedirectionEnabled=false` chỉ có hiệu lực trong Development để tránh
+redirect sang cổng HTTPS không tồn tại; các environment khác vẫn bật redirect.
+Image runtime cài `libgssapi-krb5-2` để Npgsql có thư viện native GSSAPI cần thiết.
+Khi deploy,
 dùng HTTPS reverse proxy, environment Production, secret manager và cấu hình
 forwarded headers cho proxy tin cậy.

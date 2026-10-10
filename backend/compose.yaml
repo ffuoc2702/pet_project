@@ -29,6 +29,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       DOTNET_ENVIRONMENT: Development
       Database__Initialize: "false"
+      Http__HttpsRedirectionEnabled: "false"
       DataProtection__KeyDirectory: /app/keys
     extra_hosts:
       - host.docker.internal:host-gateway

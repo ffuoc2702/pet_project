@@ -42,7 +42,12 @@ public sealed class WebAuthHttpTests
             Assert.Equal(0, identity.Logins);
             var deniedJson = await denied.Content.ReadFromJsonAsync<JsonElement>();
             Assert.Equal("INVALID_CSRF_TOKEN", deniedJson.GetProperty("code").GetString());
-            var csrf = await client.GetFromJsonAsync<JsonElement>("/api/v1/auth/web/csrf");
+            using var csrfResponse = await client.GetAsync("/api/v1/auth/web/csrf");
+            csrfResponse.EnsureSuccessStatusCode();
+            Assert.True(csrfResponse.Headers.CacheControl!.NoCache);
+            Assert.True(csrfResponse.Headers.CacheControl.NoStore);
+            Assert.Contains(csrfResponse.Headers.Pragma, header => header.Name == "no-cache");
+            var csrf = await csrfResponse.Content.ReadFromJsonAsync<JsonElement>();
             client.DefaultRequestHeaders.Add("X-CSRF-TOKEN", csrf.GetProperty("data").GetProperty("requestToken").GetString());
             using var login = await client.PostAsJsonAsync("/api/v1/auth/web/login", new { email = "user@example.test", password = "Password123!" });
             Assert.Equal(HttpStatusCode.OK, login.StatusCode);

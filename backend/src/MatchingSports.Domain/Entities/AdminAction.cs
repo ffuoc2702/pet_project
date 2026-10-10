@@ -19,8 +19,6 @@ public sealed class AdminAction
     public Guid? CorrelationId { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
-    public User AdminUser { get; private set; } = null!;
-
     public static AdminAction Create(Guid adminUserId, AdminActionType actionType, string targetType,
         Guid targetId, string beforeJson, string afterJson, string? reason = null,
         string metadataJson = "{}", Guid? correlationId = null)

@@ -140,7 +140,9 @@ var app = builder.Build();
 app.UseForwardedHeaders();
 if (!app.Environment.IsDevelopment())
     app.UseHsts();
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment()
+    || app.Configuration.GetValue<bool>("Http:HttpsRedirectionEnabled", true))
+    app.UseHttpsRedirection();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseSerilogRequestLogging(options =>
 {

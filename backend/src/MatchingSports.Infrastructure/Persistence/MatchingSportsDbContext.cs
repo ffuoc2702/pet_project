@@ -507,8 +507,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         actions.Property(x => x.AfterJson).HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb").IsRequired();
         actions.HasIndex(x => new { x.AdminUserId, x.CreatedAt });
         actions.Property(x => x.CreatedAt).HasDefaultValueSql("now()");
-        // Audit history remains visible when the actor is soft-deleted.
-        actions.HasOne(x => x.AdminUser).WithMany(x => x.AdminActions).HasForeignKey(x => x.AdminUserId).OnDelete(DeleteBehavior.Restrict);
+        // Keep only the actor ID: a required navigation to filtered User can hide audit history.
+        actions.HasOne<User>().WithMany(x => x.AdminActions).HasForeignKey(x => x.AdminUserId).OnDelete(DeleteBehavior.Restrict);
         actions.HasIndex(x => new { x.TargetType, x.TargetId, x.CreatedAt }).IsDescending(false, false, true).HasDatabaseName("ix_admin_actions_target");
     }
 
