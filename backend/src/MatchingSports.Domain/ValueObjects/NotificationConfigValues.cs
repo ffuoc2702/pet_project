@@ -9,7 +9,7 @@ public sealed record NotificationConfigValues(
     DateTimeOffset AvailableAt, DateTimeOffset? ExpiredAfter, int? MaxSendTimes,
     NotificationAudienceType AudienceType, IReadOnlyCollection<Guid> UserIds, IReadOnlyCollection<Guid> TeamIds,
     bool InAppEnabled, bool EmailEnabled, bool PushEnabled, bool SmsEnabled,
-    string Metadata, string TimeZoneId)
+    string Metadata, string TimeZoneId, string? Description = null)
 {
     public NotificationConfigValues NormalizeAndValidate()
     {
@@ -44,6 +44,7 @@ public sealed record NotificationConfigValues(
         catch (ArgumentException exception) { throw new ArgumentException(exception.GetValidationMessage(), nameof(Metadata), exception); }
         return this with
         {
+            Description = ResourceDescription.Normalize(Description),
             Title = Title.Trim(),
             Metadata = normalizedMetadata,
             CronString = string.IsNullOrWhiteSpace(CronString) ? null : CronString.Trim(),

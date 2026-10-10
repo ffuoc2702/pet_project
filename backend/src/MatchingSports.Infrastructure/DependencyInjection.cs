@@ -11,6 +11,7 @@ using MatchingSports.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,9 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddScoped<IAuditActorContext, AuditActorContext>();
+        var dataProtection = services.AddDataProtection().SetApplicationName("MatchingSports");
+        if (configuration["DataProtection:KeyDirectory"] is { Length: > 0 } keyDirectory)
+            dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keyDirectory));
         var connectionString = configuration.GetConnectionString("matchingsports")
             ?? throw new InvalidOperationException("Chưa cấu hình chuỗi kết nối 'matchingsports'.");
 
@@ -155,6 +159,7 @@ public static class DependencyInjection
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IOtpEmailSender, GmailOtpEmailSender>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUserPreferencesRepository, UserPreferencesRepository>();
         services.AddScoped<ITeamRepository, TeamRepository>();
         services.AddScoped<MatchingRepository>();
         services.AddScoped<IMatchingRepository>(provider => provider.GetRequiredService<MatchingRepository>());

@@ -7,7 +7,7 @@ using SportEntity = MatchingSports.Domain.Entities.Sport;
 
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed record CreateSportCommand(Guid ActorUserId, string Code, string Name, IReadOnlyCollection<SportFormatInput> Formats)
+public sealed record CreateSportCommand(Guid ActorUserId, string Code, string Name, IReadOnlyCollection<SportFormatInput> Formats, string? Description = null)
     : IRequest<SportDto>, IPermissionAuthorizedRequest
 {
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.CreateSports];
@@ -22,7 +22,7 @@ public sealed class CreateSportCommandHandler(ISportRepository sports, IUnitOfWo
         try
         {
             var formats = SportFormatInput.ToDetails(request.Formats);
-            sport = SportEntity.Create(request.Code, request.Name, formats);
+            sport = SportEntity.Create(request.Code, request.Name, formats, request.Description);
         }
         catch (ArgumentException exception)
         {

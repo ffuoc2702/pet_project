@@ -6,21 +6,22 @@ public sealed class Sport : AuditableEntity
 {
     public Guid Id { get; set; }
     public string Code { get; set; } = null!;
+    public string? Description { get; private set; }
     public string Name { get; set; } = null!;
     public bool IsActive { get; set; } = true;
 
-    public static Sport Create(string code, string name, IReadOnlyCollection<SportFormatDetails> formats)
+    public static Sport Create(string code, string name, IReadOnlyCollection<SportFormatDetails> formats, string? description = null)
     {
         var sport = new Sport { Id = Guid.NewGuid() };
         if (formats is null)
             throw new ArgumentNullException(nameof(formats), "Danh sách thể thức không được là null.");
         if (formats.Any(format => format is null || format.Action != "NEW"))
             throw new ArgumentException("Khi tạo môn thể thao, chỉ chấp nhận thể thức có thao tác NEW.", nameof(formats));
-        sport.UpdateDetails(code, name, formats);
+        sport.UpdateDetails(code, name, formats, description);
         return sport;
     }
 
-    public void UpdateDetails(string code, string name, IReadOnlyCollection<SportFormatDetails> formats)
+    public void UpdateDetails(string code, string name, IReadOnlyCollection<SportFormatDetails> formats, string? description = null)
     {
         if (code is null)
             throw new ArgumentNullException(nameof(code), "Mã không được để trống.");
@@ -37,7 +38,9 @@ public sealed class Sport : AuditableEntity
         if (normalizedName.Length > 100)
             throw new ArgumentException("Tên môn thể thao không được vượt quá 100 ký tự.", nameof(name));
 
+        var normalizedDescription = ResourceDescription.Normalize(description);
         var updates = PrepareFormatUpdates(formats);
+        Description = normalizedDescription;
         Code = normalizedCode;
         Name = normalizedName;
         foreach (var (format, details, isNew) in updates)
@@ -52,7 +55,7 @@ public sealed class Sport : AuditableEntity
     }
 
     private List<(SportFormat Format, SportFormatDetails Details, bool IsNew)> PrepareFormatUpdates(
-        IReadOnlyCollection<SportFormatDetails> formats)
+        IReadOnlyCollection<SportFormatDetails> formats, string? description = null)
     {
         if (formats is null)
             throw new ArgumentNullException(nameof(formats), "Danh sách thể thức không được là null.");

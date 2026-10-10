@@ -6,7 +6,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
-  globalIgnores(['dist']),
+  globalIgnores(['dist', '.cache', 'test-results', 'playwright-report']),
   {
     extends: [js.configs.recommended, tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -22,6 +22,110 @@ export default defineConfig(
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
+      ],
+    },
+  },
+  {
+    files: ['src/shared/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/**', '@/app/**'],
+              message: 'Shared must not depend on features or app.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/features/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}'],
+    ignores: ['src/app/providers/appearance-provider.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'antd',
+              importNames: [
+                'Button',
+                'Input',
+                'InputNumber',
+                'Select',
+                'Checkbox',
+                'Form',
+                'Card',
+                'Alert',
+                'Table',
+                'Tag',
+                'Tooltip',
+                'Badge',
+                'Modal',
+                'Drawer',
+                'Pagination',
+                'Skeleton',
+                'Empty',
+                'App',
+              ],
+              message:
+                'Use custom components and useAppFeedback from @/shared/ui.',
+            },
+          ],
+          patterns: [
+            {
+              group: ['@/features/*/*'],
+              message: 'Use the feature public entry point.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'antd',
+              importNames: [
+                'Button',
+                'Input',
+                'InputNumber',
+                'Select',
+                'Checkbox',
+                'Form',
+                'Card',
+                'Alert',
+                'Table',
+                'Tag',
+                'Tooltip',
+                'Badge',
+                'Modal',
+                'Drawer',
+                'Pagination',
+                'Skeleton',
+                'Empty',
+                'App',
+              ],
+              message:
+                'Use custom components and useAppFeedback from @/shared/ui.',
+            },
+          ],
+          patterns: [
+            {
+              group: ['@/features/*/*', '@/app/**'],
+              message:
+                'Features use public feature entries and must not depend on app.',
+            },
+          ],
+        },
       ],
     },
   },

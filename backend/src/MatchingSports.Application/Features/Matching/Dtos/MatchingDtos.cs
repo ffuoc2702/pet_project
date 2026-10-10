@@ -13,6 +13,7 @@ public sealed record ListingDto : ConcurrentBaseDto
     public Guid FormatId { get; init; }
     public ListingMode Mode { get; init; }
     public string Title { get; init; } = string.Empty;
+    public string? Description { get; init; }
     public string? Note { get; init; }
     public SportLevel LevelMin { get; init; }
     public SportLevel LevelMax { get; init; }

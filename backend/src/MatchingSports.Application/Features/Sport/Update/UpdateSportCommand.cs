@@ -6,7 +6,7 @@ using MediatR;
 
 namespace MatchingSports.Application.Features.Sport;
 
-public sealed record UpdateSportCommand(Guid ActorUserId, Guid SportId, string Code, string Name, IReadOnlyCollection<SportFormatInput> Formats)
+public sealed record UpdateSportCommand(Guid ActorUserId, Guid SportId, string Code, string Name, IReadOnlyCollection<SportFormatInput> Formats, string? Description = null)
     : IRequest<SportDto>, IPermissionAuthorizedRequest
 {
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.UpdateSports];
@@ -26,7 +26,7 @@ public sealed class UpdateSportCommandHandler(ISportRepository sports, IUnitOfWo
             if (sport.IsActive && !string.IsNullOrWhiteSpace(request.Code) && !string.IsNullOrWhiteSpace(request.Name)
                 && await sports.HasActiveDuplicateAsync(request.Code.Trim().ToUpperInvariant(), request.Name.Trim(), sport.Id, cancellationToken))
                 throw new ConflictException(ErrorCodes.DuplicateResource, "Mã hoặc tên đã được sử dụng bởi môn thể thao đang hoạt động.");
-            sport.UpdateDetails(request.Code, request.Name, formats);
+            sport.UpdateDetails(request.Code, request.Name, formats, request.Description);
         }
         catch (ArgumentException exception)
         {
