@@ -102,9 +102,9 @@ src/MatchingSports.Application/Abstractions/Persistence/
 
 Yêu cầu Docker và .NET 10 SDK:
 
-```powershell
-dotnet restore .\MatchingSports.slnx
-dotnet run --project .\src\MatchingSports.AppHost
+```bash
+dotnet restore ./MatchingSports.slnx
+dotnet run --project ./src/MatchingSports.AppHost
 ```
 
 AppHost sử dụng image `postgis/postgis:18-3.6`. Ở Development, API tự apply migration và seed catalog khi khởi động.
@@ -115,11 +115,11 @@ Migration đầu tiên và SQL tương ứng nằm tại `src/MatchingSports.Inf
 
 Tạo migration tiếp theo:
 
-```powershell
-dotnet ef migrations add <Name> `
-  --project .\src\MatchingSports.Infrastructure `
-  --startup-project .\src\MatchingSports.Infrastructure `
-  --output-dir Persistence\Migrations
+```bash
+dotnet ef migrations add <Name> \
+  --project ./src/MatchingSports.Infrastructure \
+  --startup-project ./src/MatchingSports.Infrastructure \
+  --output-dir Persistence/Migrations
 ```
 
 ## Endpoint nền
@@ -135,14 +135,14 @@ Backend tự quản lý ASP.NET Core Identity, JWT access token, refresh-session
 
 Các secret không được commit vào `appsettings.json`. Cấu hình local bằng user-secrets trên project API:
 
-```powershell
-dotnet user-secrets set "Auth:Jwt:SigningKey" "<random-secret-at-least-32-bytes>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Otp:Pepper" "<independent-random-secret-at-least-32-bytes>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Google:ClientId" "<google-oauth-client-id>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Google:ClientSecret" "<google-oauth-client-secret>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Gmail:SenderEmail" "<gmail-address>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Gmail:Username" "<gmail-address>" --project .\backend\src\MatchingSports.Api
-dotnet user-secrets set "Auth:Gmail:AppPassword" "<gmail-app-password>" --project .\backend\src\MatchingSports.Api
+```bash
+dotnet user-secrets set "Auth:Jwt:SigningKey" "<random-secret-at-least-32-bytes>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Otp:Pepper" "<independent-random-secret-at-least-32-bytes>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Google:ClientId" "<google-oauth-client-id>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Google:ClientSecret" "<google-oauth-client-secret>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:SenderEmail" "<gmail-address>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:Username" "<gmail-address>" --project ./backend/src/MatchingSports.Api
+dotnet user-secrets set "Auth:Gmail:AppPassword" "<gmail-app-password>" --project ./backend/src/MatchingSports.Api
 ```
 
 Google OAuth client cần đăng ký redirect URI `https://<api-host>/signin-google`. Với Aspire local, dùng HTTPS URL thực tế của resource `api` hiển thị trên dashboard.

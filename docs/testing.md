@@ -31,15 +31,17 @@ Các lệnh restore/build/test/format và quy tắc package/lock file nằm tron
 
 Sau khi restore, chạy từ backend/:
 
-```powershell
-.\scripts\Test.ps1
+Script dùng Bash và Python 3 khi lấy cấu hình từ Docker; trên Windows dùng Git Bash.
+
+```bash
+bash ./scripts/test.sh
 ```
 
 Script mặc định dùng container đang chạy `matchingsports-postgres-dev`, lấy
 thông tin đăng nhập và cổng đã publish qua Docker, rồi đặt
 `MATCHINGSPORTS_RBAC_TEST_CONNECTION` chỉ trong quá trình chạy test. Không ghi
-mật khẩu vào repo hoặc in chuỗi kết nối. Dùng `-DatabaseContainer <tên>` để
-chọn container khác, hoặc `-NoBuild` khi đã build Release.
+mật khẩu vào repo hoặc in chuỗi kết nối. Dùng `--database-container <tên>` để
+chọn container khác, hoặc `--no-build` khi đã build Release.
 
 Nếu dùng PostgreSQL ngoài Docker, đặt biến môi trường trên trước khi chạy
 script. Database trong chuỗi kết nối phải bắt đầu bằng

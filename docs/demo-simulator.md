@@ -6,33 +6,35 @@ Console C#/.NET 10 tại `backend/tools/MatchingSports.DemoSimulator`. Mặc đ�
 
 Bật container `matchingsports-postgres-dev`, chạy từ `backend/`:
 
-```powershell
-.\scripts\Demo.ps1 -RunId cv-demo-01
+Script dùng Bash và Python 3; trên Windows chạy trong Git Bash.
+
+```bash
+bash ./scripts/demo.sh --run-id cv-demo-01
 ```
 
 Script lấy kết nối từ Docker và hỏi mật khẩu chung bằng secure prompt. Mật khẩu phải đạt policy Identity (ít nhất 10 ký tự, hoa/thường/số/ký tự đặc biệt). Dữ liệu được giữ trong database container để đăng nhập qua API. Email dạng `demo.cv-demo-01.001@example.test`; ID/email đầy đủ trong report.json. Tài khoản giả được xác nhận email bằng seed Identity, chỉ nhận role USER.
 
 Chạy trong database test riêng rồi tự xoá:
 
-```powershell
-.\scripts\Demo.ps1 -Mode test -RunId smoke-01
+```bash
+bash ./scripts/demo.sh --mode test --run-id smoke-01
 ```
 
 Test mode tạo database ngẫu nhiên `matchingsports_rbac_test_demo_*`; cần quyền tạo/xoá database và extension PostGIS. Báo cáo vẫn được giữ, nhưng tài khoản không còn sau cleanup. Mỗi lượt test là database mới.
 
 Điều chỉnh quy mô:
 
-```powershell
-.\scripts\Demo.ps1 -Users 70 -Teams 10 -Listings 25 -RunId cv-demo-02
+```bash
+bash ./scripts/demo.sh --users 70 --teams 10 --listings 25 --run-id cv-demo-02
 ```
 
-Users: 16–200; teams: 2–20; cần ít nhất `teams × 5 + 6` người; listings: 8–50. RunId: 1–32 ký tự chữ thường, số, dấu gạch ngang. Dùng `-DatabaseContainer <tên>` để đổi container; `-NoBuild` sau khi build Release.
+Users: 16–200; teams: 2–20; cần ít nhất `teams × 5 + 6` người; listings: 8–50. RunId: 1–32 ký tự chữ thường, số, dấu gạch ngang. Dùng `--database-container <tên>` để đổi container; `--no-build` sau khi build Release.
 
 ## Cấu hình
 
-Tool đọc environment hoặc user-secrets của project riêng: `ConnectionStrings__matchingsports`, `Demo__Password` (user-secrets: `ConnectionStrings:matchingsports`, `Demo:Password`). Không truyền password trên command line hoặc ghi vào repo. Dùng `Demo.ps1 -UseUserSecrets` để bỏ đọc Docker và secure prompt khi đã cấu hình đủ secrets/environment.
+Tool đọc environment hoặc user-secrets của project riêng: `ConnectionStrings__matchingsports`, `Demo__Password` (user-secrets: `ConnectionStrings:matchingsports`, `Demo:Password`). Không truyền password trên command line hoặc ghi vào repo. Dùng `demo.sh --use-user-secrets` để bỏ đọc Docker và secure prompt khi đã cấu hình đủ secrets/environment.
 
-```powershell
+```bash
 dotnet run --project tools/MatchingSports.DemoSimulator --configuration Release -- --run-id cv-demo-01 --mode demo
 dotnet run --project tools/MatchingSports.DemoSimulator --configuration Release -- --help
 ```
@@ -66,4 +68,4 @@ Chạy lại cùng database/RunId/tham số/mật khẩu sẽ tái sử dụng d
 
 ## Kiểm thử
 
-`DemoSimulatorTests`: CLI sai, toàn kịch bản, chạy lại không tăng bản ghi, resume sau action đã commit, từ chối mật khẩu thay đổi, audit team và cleanup test DB. Chạy bằng `backend/scripts/Test.ps1`.
+`DemoSimulatorTests`: CLI sai, toàn kịch bản, chạy lại không tăng bản ghi, resume sau action đã commit, từ chối mật khẩu thay đổi, audit team và cleanup test DB. Chạy bằng `backend/scripts/test.sh`.

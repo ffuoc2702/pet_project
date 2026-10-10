@@ -1,0 +1,43 @@
+name: matchingsports-backend
+
+services:
+  migrator:
+    image: matchingsports-migrator:local
+    build:
+      context: .
+      target: migrator
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      DataProtection__KeyDirectory: /app/keys
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./.artifacts/container/appsettings.Development.json:/app/appsettings.Development.json:ro
+      - data-protection:/app/keys
+    restart: "no"
+
+  api:
+    image: matchingsports-api:local
+    build:
+      context: .
+      target: api
+    container_name: matchingsports-api-dev
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DOTNET_ENVIRONMENT: Development
+      Database__Initialize: "false"
+      DataProtection__KeyDirectory: /app/keys
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    volumes:
+      - ./.artifacts/container/appsettings.Development.json:/app/appsettings.Development.json:ro
+      - data-protection:/app/keys
+    restart: unless-stopped
+
+volumes:
+  data-protection:

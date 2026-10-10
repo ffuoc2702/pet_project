@@ -1,4 +1,4 @@
-﻿# Tìm kèo, tham gia và quản lý trận
+# Tìm kèo, tham gia và quản lý trận
 
 ## Phạm vi và mô hình
 
@@ -171,7 +171,7 @@ và MatchingAuthorizationTests kiểm tra mapping và permission pipeline.
 MatchingPersistenceTests chạy PostgreSQL/PostGIS trong database riêng, bao gồm
 vãng lai/đối thủ, quyền sau chuyển đội trưởng, contact, HTTP giả actor, radius/
 UTC/level, dedup/email, batch qua restart, rollback/retry, quota, chỗ cuối,
-hủy/duyệt đồng thời, hoàn tất, hủy quản trị/audit và tự hết hạn. Chạy từ backend bằng scripts/Test.ps1 để lấy
+hủy/duyệt đồng thời, hoàn tất, hủy quản trị/audit và tự hết hạn. Chạy từ backend bằng scripts/test.sh để lấy
 kết nối container; fixture tự tạo/xóa database test, không dùng dữ liệu app.
 
 ## Nhắc lịch trận đấu

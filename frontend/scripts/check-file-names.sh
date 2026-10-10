@@ -1,9 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+node --input-type=module - "$@" <<'NODE'
 import { readdir, readFile } from 'node:fs/promises';
 import { join, posix } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = process.cwd();
 const ignoredDirectories = new Set([
   'node_modules',
   'dist',
@@ -114,3 +117,4 @@ if (issues.length) {
     `Checked ${files.length} frontend files: naming and local import casing are valid.\n`,
   );
 }
+NODE

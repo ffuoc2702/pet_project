@@ -5,6 +5,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddRouting();
+builder.Services.AddAutoMapper(configuration =>
+{
+    if (builder.Configuration["AutoMapper:LicenseKey"] is { Length: > 0 } licenseKey)
+        configuration.LicenseKey = licenseKey;
+}, typeof(MatchingSports.Application.DependencyInjection).Assembly);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 using var host = builder.Build();

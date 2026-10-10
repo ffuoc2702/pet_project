@@ -9,15 +9,16 @@ showcase; production không bật route này.
 
 ## Chạy local
 
-Node 22.12+ và backend .NET 10:
+Node 22.12+, Bash (Windows dùng Git Bash) và backend .NET 10:
 
-```powershell
+```bash
 npm ci
-Copy-Item .env.example .env.local
+cp .env.example .env.local
 npm run dev
 ```
 
-Sửa SERVER_HTTPS theo URL API của Aspire. Proxy local chuyển /api và
+SERVER_HTTP mặc định trỏ tới API container ở cổng 8080; nếu dùng Aspire,
+thay bằng SERVER_HTTPS theo URL API của Aspire. Proxy local chuyển /api và
 /signin-google tới backend, giữ Host của web. Kiểm tra certificate backend
 bị tắt chỉ trong development; production dùng HTTPS có certificate hợp lệ.
 Với Google OAuth local, đặt DEV_HTTPS=true, tin certificate local của Vite,
@@ -98,7 +99,7 @@ Google callback redirect cố định /auth/callback, không truyền token tron
 Contract frontend cho các feature mẫu tại types.ts/shared/api/contracts.ts.
 Có thể kiểm tra contract bằng OpenAPI backend:
 
-```powershell
+```bash
 npm run generate:api -- <path-or-url-to-openapi.json>
 ```
 
@@ -107,7 +108,7 @@ Không dùng schema cũ làm nguồn chính nếu chưa sinh lại từ backend 
 
 ## Kiểm tra
 
-```powershell
+```bash
 npm run typecheck
 npm run check:names
 npm run lint
@@ -139,6 +140,9 @@ preferences, responsive drawer, tọa độ thủ công và form chưa lưu.
 
 CI chạy frontend checks/E2E và backend checks/PostgreSQL integration tests.
 Mobile sau dùng lại API, mã lỗi và preferences, còn navigation và SDK map dùng native.
+
+Chạy API backend bằng Docker và cấu hình Vite proxy theo
+[hướng dẫn container local](../docs/local-containers.md).
 
 Quy tắc tên file áp dụng toàn bộ frontend: kebab-case, kể cả component và hook.
 Tên định danh trong code: component PascalCase, hook camelCase với tiền tố use.
