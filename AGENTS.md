@@ -139,11 +139,11 @@ phân biệt actor với người dùng mục tiêu. Identity không thay thế 
 
 Chạy từ backend/ khi sửa code backend:
 
-```powershell
-dotnet restore .\MatchingSports.slnx --locked-mode
-dotnet build .\MatchingSports.slnx --configuration Release --no-restore
-dotnet test .\MatchingSports.slnx --configuration Release --no-build --no-restore
-dotnet format .\MatchingSports.slnx --verify-no-changes --no-restore
+```bash
+dotnet restore ./MatchingSports.slnx --locked-mode
+dotnet build ./MatchingSports.slnx --configuration Release --no-restore
+dotnet test ./MatchingSports.slnx --configuration Release --no-build --no-restore
+dotnet format ./MatchingSports.slnx --verify-no-changes --no-restore
 ```
 
 Chỉ cập nhật package/lock file khi task cần. Nếu không chạy được kiểm tra, nêu
@@ -178,6 +178,13 @@ Với thay đổi danh tính hoặc phân quyền, đọc:
 - [docs/authorization.md](docs/authorization.md)
 - [PermissionAuthorizationBehavior](backend/src/MatchingSports.Application/Common/Authorization/PermissionAuthorizationBehavior.cs)
 - [IPermissionAuthorizedRequest](backend/src/MatchingSports.Application/Common/Authorization/IPermissionAuthorizedRequest.cs)
+
+## Script tooling
+
+- Script entrypoint trong repository dùng Bash (`.sh`), tên `kebab-case`, line ending LF.
+- Trên Windows chạy trong Git Bash; Linux/macOS dùng Bash. Gọi bằng `bash path/to/script.sh`.
+- Không thêm script PowerShell. Logic cần parse JSON/TypeScript có thể gọi Python 3/Node trong script Bash.
+- Không log secret hoặc bật tracing quanh credentials; quote biến và dùng array khi truyền argument.
 
 ## Các kĩ năng
 

@@ -1,4 +1,4 @@
-﻿# MatchingSports Backend
+# MatchingSports Backend
 
 Backend .NET 10 theo Clean Architecture, dùng ASP.NET Core, MediatR, AutoMapper,
 EF Core, PostgreSQL/PostGIS, Serilog ECS và OpenTelemetry.
@@ -7,13 +7,13 @@ EF Core, PostgreSQL/PostGIS, Serilog ECS và OpenTelemetry.
 
 Khởi động PostgreSQL/PostGIS local:
 
-```powershell
-docker run --name matchingsports-postgres-dev `
-  -e POSTGRES_DB=matchingsports `
-  -e POSTGRES_USER=postgres `
-  -e POSTGRES_PASSWORD=postgres `
-  -p 5432:5432 `
-  -v matchingsports-postgres-dev-data:/var/lib/postgresql/data `
+```bash
+docker run --name matchingsports-postgres-dev \
+  -e POSTGRES_DB=matchingsports \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  -v matchingsports-postgres-dev-data:/var/lib/postgresql/data \
   -d postgis/postgis:18-3.6
 ```
 
@@ -31,17 +31,17 @@ Hoặc chạy `MatchingSports.AppHost`; AppHost sẽ tạo PostgreSQL, chạy
 
 API production không tự migrate database. Chạy migrator như một deployment job:
 
-```powershell
-$env:ConnectionStrings__matchingsports = "Host=...;Database=matchingsports;Username=...;Password=..."
-dotnet run --project .\src\MatchingSports.Migrator\MatchingSports.Migrator.csproj --configuration Release
+```bash
+export ConnectionStrings__matchingsports="Host=...;Database=matchingsports;Username=...;Password=..."
+dotnet run --project ./src/MatchingSports.Migrator/MatchingSports.Migrator.csproj --configuration Release
 ```
 
 Tạo migration mới:
 
-```powershell
-dotnet ef migrations add MigrationName `
-  --project .\src\MatchingSports.Infrastructure `
-  --startup-project .\src\MatchingSports.Infrastructure
+```bash
+dotnet ef migrations add MigrationName \
+  --project ./src/MatchingSports.Infrastructure \
+  --startup-project ./src/MatchingSports.Infrastructure
 ```
 
 Seed trong `DatabaseInitializer` là idempotent và chỉ chứa catalog dữ liệu nền.
@@ -59,13 +59,13 @@ Seed trong `DatabaseInitializer` là idempotent và chỉ chứa catalog dữ li
 
 ## Quality checks
 
-```powershell
-dotnet restore .\MatchingSports.slnx --locked-mode
+```bash
+dotnet restore ./MatchingSports.slnx --locked-mode
 dotnet tool restore
-dotnet format .\MatchingSports.slnx --verify-no-changes --no-restore
-dotnet build .\MatchingSports.slnx --configuration Release --no-restore
-dotnet test .\MatchingSports.slnx --configuration Release --no-build --no-restore
-dotnet list .\MatchingSports.slnx package --vulnerable --include-transitive
+dotnet format ./MatchingSports.slnx --verify-no-changes --no-restore
+dotnet build ./MatchingSports.slnx --configuration Release --no-restore
+dotnet test ./MatchingSports.slnx --configuration Release --no-build --no-restore
+dotnet list ./MatchingSports.slnx package --vulnerable --include-transitive
 ```
 
 Build dùng warnings-as-errors, package lock files và architecture tests.
@@ -262,12 +262,12 @@ Mặc định `Seed:Admin:Enabled` là false; không có mật khẩu admin mặ
 Bật rõ ràng và cung cấp email, mật khẩu từ environment/user-secrets/secret manager.
 Không commit password vào appsettings hoặc truyền password qua command line:
 
-```powershell
-$env:Seed__Admin__Enabled = "true"
-$env:Seed__Admin__Email = "<admin-email>"
+```bash
+export Seed__Admin__Enabled="true"
+export Seed__Admin__Email="<admin-email>"
 # Seed__Admin__Password phải được inject từ secret manager hoặc environment bảo mật.
 # Seed__Admin__DisplayName tùy chọn; mặc định Administrator.
-dotnet run --project .\src\MatchingSports.Migrator --configuration Release
+dotnet run --project ./src/MatchingSports.Migrator --configuration Release
 ```
 
 Seeder tạo một user có profile, ACTIVE, email đã xác thực bằng `UserManager`;
@@ -297,8 +297,8 @@ Tách list/read và seed admin không thay đổi schema; initializer bổ sung 
 permission và account dựa trên cấu hình, không sửa migration đã triển khai.
 Trong production chạy deployment migrator trước API:
 
-```powershell
-dotnet run --project .\src\MatchingSports.Migrator --configuration Release
+```bash
+dotnet run --project ./src/MatchingSports.Migrator --configuration Release
 ```
 
 `GET /api/v1/auth/me` cần `profile.read`, `PUT /api/v1/auth/me` cần
@@ -313,9 +313,9 @@ database PostgreSQL rỗng, riêng biệt, tên bắt đầu `matchingsports_rba
 Không trỏ biến này vào database development/production; fixture sẽ từ chối.
 Không đặt connection string thật trong git:
 
-```powershell
-$env:MATCHINGSPORTS_RBAC_TEST_CONNECTION = "<isolated-test-connection>"
-dotnet test .\MatchingSports.slnx --configuration Release --filter FullyQualifiedName~RoleAuthorizationDatabaseTests
+```bash
+export MATCHINGSPORTS_RBAC_TEST_CONNECTION="<isolated-test-connection>"
+dotnet test ./MatchingSports.slnx --configuration Release --filter FullyQualifiedName~RoleAuthorizationDatabaseTests
 ```
 
 Test kiểm tra migration + seed, role tùy chỉnh, nhiều membership, hợp quyền,
@@ -346,6 +346,6 @@ và worker [matching](../docs/matching.md).
 
 ## Mô phỏng người dùng và tìm kèo
 
-Chạy `.\scripts\Demo.ps1 -RunId cv-demo-01` từ backend để tạo 50 người dùng,
-6 team và 15 kèo. Dùng `-Mode test` để tạo/dọn database cô lập.
+Chạy `bash ./scripts/demo.sh --run-id cv-demo-01` từ backend để tạo 50 người dùng,
+6 team và 15 kèo. Dùng `--mode test` để tạo/dọn database cô lập.
 Xem [hướng dẫn simulator](../docs/demo-simulator.md) về cấu hình và checkpoint.

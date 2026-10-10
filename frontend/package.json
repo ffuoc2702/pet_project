@@ -16,10 +16,10 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "node scripts/playwright.mjs test",
-    "generate:api": "node scripts/generate-api.mjs",
-    "browser:install": "node scripts/playwright.mjs install --with-deps --no-shell chromium",
-    "check:names": "node scripts/check-file-names.mjs"
+    "test:e2e": "bash scripts/playwright.sh test",
+    "generate:api": "bash scripts/generate-api.sh",
+    "browser:install": "bash scripts/playwright.sh install --with-deps --no-shell chromium",
+    "check:names": "bash scripts/check-file-names.sh"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.4",

@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+node --input-type=module - "$@" <<'NODE'
 import { mkdir, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
@@ -10,3 +14,4 @@ const input = /^https?:\/\//.test(source)
 const schema = await openapiTS(input);
 await mkdir('src/shared/api/generated', { recursive: true });
 await writeFile('src/shared/api/generated/schema.d.ts', astToString(schema));
+NODE
