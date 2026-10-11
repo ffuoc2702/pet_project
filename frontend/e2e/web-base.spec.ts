@@ -165,3 +165,68 @@ test('updates resource breadcrumbs and titles on edit and after switching record
   await expect(page.locator('.page-navigation')).not.toContainText(sport.name);
   await expect(page).toHaveTitle(new RegExp(other.name));
 });
+
+test('keeps the current screen under one loader until destination data is ready', async ({
+  page,
+}) => {
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let requests = 0;
+  await page.route('**/api/v1/sports/sport', async (route) => {
+    requests++;
+    await pending;
+    await route.fulfill({ json: { data: sport } });
+  });
+  await page.goto('/sports');
+  const previousTitle = await page.locator('h1').textContent();
+  await page.getByRole('link', { name: sport.name, exact: true }).click();
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(1);
+  await expect(
+    page.locator('.app-loading-fullscreen .app-loading-dots > span'),
+  ).toHaveCount(3);
+  await expect(page.locator('h1')).toHaveText(previousTitle!);
+  await expect(page).toHaveURL(/\/sports$/);
+  await page.screenshot({ path: test.info().outputPath('loading-wave.png') });
+  release();
+  await expect(page).toHaveURL(/\/sports\/sport$/);
+  await expect(page.getByRole('heading', { name: sport.name })).toBeVisible();
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
+  expect(requests).toBe(1);
+  await page.getByRole('link', { name: 'Chỉnh sửa', exact: true }).click();
+  await expect(page).toHaveURL(/\/edit$/);
+  await expect(page.getByLabel('Tên', { exact: true })).toHaveValue(sport.name);
+  await expect(page.getByLabel('Mã', { exact: true })).toHaveValue(sport.code);
+});
+
+test('direct edit entry stays on loading until the form can be populated', async ({
+  page,
+}) => {
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/api/v1/sports/sport', async (route) => {
+    await pending;
+    await route.fulfill({ json: { data: sport } });
+  });
+  await page.goto('/sports/sport/edit');
+  await expect(page.locator('.app-loading-fullscreen')).toBeVisible();
+  await expect(page.getByLabel('Tên', { exact: true })).toHaveCount(0);
+  release();
+  await expect(page.getByLabel('Tên', { exact: true })).toHaveValue(sport.name);
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
+});
+
+test('failed route data releases loading and shows the API error', async ({
+  page,
+}) => {
+  await page.route('**/api/v1/sports/sport', (route) =>
+    route.fulfill({ status: 404, json: { code: 'RESOURCE_NOT_FOUND' } }),
+  );
+  await page.goto('/sports');
+  await page.getByRole('link', { name: sport.name, exact: true }).click();
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
+});

@@ -1,3 +1,4 @@
+import { sportDetailQuery } from './queries';
 import { routePath } from '@/shared/config/routes';
 import { AppTextArea } from '@/shared/ui/controls';
 import { useAppFeedback } from '@/shared/ui/use-app-feedback';
@@ -17,7 +18,7 @@ import { ApiError } from '@/shared/api/client';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 import { UnsavedChanges } from '@/shared/ui/unsaved-changes';
 import { useResourceLabel } from '@/shared/navigation/use-resource-label';
-import { getSport, saveSport, sportKeys } from './api';
+import { saveSport, sportKeys } from './api';
 import type { SportInput } from './types';
 import { sportErrorField } from './validation';
 
@@ -250,8 +251,7 @@ function useSavedNavigation(
 export default function SportFormPage() {
   const { sportId } = useParams();
   const query = useQuery({
-    queryKey: sportKeys.detail(sportId || ''),
-    queryFn: ({ signal }) => getSport(sportId!, signal),
+    ...sportDetailQuery(sportId || ''),
     enabled: !!sportId,
   });
   useResourceLabel('sport', sportId, query.data?.name);

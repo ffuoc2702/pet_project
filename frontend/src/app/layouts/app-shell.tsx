@@ -5,16 +5,11 @@ import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppDrawer as Drawer } from '@/shared/ui/overlays';
 import { NavigationLink } from '@/shared/ui/navigation-link';
 import { useState } from 'react';
+import { NavigationLoading } from '../router/navigation-loading';
 import { RouteLabelProvider } from '@/shared/navigation/route-label-provider';
 import { Avatar, Grid, Layout, Space, theme } from 'antd';
 import { MenuOutlined, TrophyOutlined } from '@ant-design/icons';
-import {
-  Link,
-  Outlet,
-  ScrollRestoration,
-  useNavigation,
-  useMatches,
-} from 'react-router-dom';
+import { Link, Outlet, ScrollRestoration, useMatches } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSession, logout } from '@/features/auth';
 import { Sidebar, PageNavigation } from '../navigation/site-navigation';
@@ -28,7 +23,9 @@ import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 export function AppShell() {
   return (
     <RouteLabelProvider>
-      <AppShellContent />
+      <NavigationLoading>
+        <AppShellContent />
+      </NavigationLoading>
     </RouteLabelProvider>
   );
 }
@@ -42,7 +39,6 @@ function AppShellContent() {
   const [open, setOpen] = useState(false);
   const [logoutError, setLogoutError] = useState<unknown>();
   const [loggingOut, setLoggingOut] = useState(false);
-  const navigation = useNavigation();
   const matches = useMatches();
   const [collapsed, setCollapsed] = useState(() => {
     try {
@@ -165,11 +161,6 @@ function AppShellContent() {
           className="main-content container-fluid"
         >
           <ApiErrorAlert error={logoutError} />
-          {navigation.state !== 'idle' && (
-            <div role="status" className="route-progress">
-              {t('common:loading')}
-            </div>
-          )}
           <Outlet />
         </Layout.Content>
       </Layout>

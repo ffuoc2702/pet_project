@@ -1,8 +1,9 @@
+import { AppLoading } from '@/shared/ui/loading';
 import { routePath } from '@/shared/config/routes';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppCard as Card } from '@/shared/ui/data-display';
 import { Navigate, useLocation } from 'react-router-dom';
-import { Result, Spin } from 'antd';
+import { Result } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSession, refreshSession } from '@/features/auth';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
@@ -18,12 +19,7 @@ export function RouteAccess({
   const location = useLocation();
   const { t } = useTranslation();
   if (!permission) return children;
-  if (!initialized)
-    return (
-      <Spin description={t('common:loading')}>
-        <div className="loading-space" />
-      </Spin>
-    );
+  if (!initialized) return <AppLoading />;
   if (error && !session)
     return (
       <Card>

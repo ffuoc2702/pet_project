@@ -14,7 +14,7 @@ export const foundation = {
     info: '#2563eb',
   },
   light: {
-    page: '#f5f7fa',
+    page: '#ffffff',
     surface: '#ffffff',
     text: '#182230',
     muted: '#526174',

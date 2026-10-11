@@ -1,3 +1,4 @@
+import { sportDetailQuery } from './queries';
 import { routePath } from '@/shared/config/routes';
 import { AppCard as Card, AppTag as Tag } from '@/shared/ui/data-display';
 import { AppTable as Table } from '@/shared/ui/table';
@@ -9,17 +10,13 @@ import { useTranslation } from 'react-i18next';
 import { useSession } from '@/features/auth';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
 import { useResourceLabel } from '@/shared/navigation/use-resource-label';
-import { getSport, sportKeys } from './api';
 import type { SportFormat } from './types';
 
 export default function SportDetailPage() {
   const { sportId = '' } = useParams();
   const { t, i18n } = useTranslation();
   const { session } = useSession();
-  const query = useQuery({
-    queryKey: sportKeys.detail(sportId),
-    queryFn: ({ signal }) => getSport(sportId, signal),
-  });
+  const query = useQuery(sportDetailQuery(sportId));
   useResourceLabel('sport', sportId, query.data?.name);
   const sport = query.data;
   return (

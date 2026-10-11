@@ -1,6 +1,7 @@
 import { Table, Pagination, type TableProps } from 'antd';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppLoading } from './loading';
 import { AppEmpty } from './data-display';
 export function AppPagination(props: ComponentProps<typeof Pagination>) {
   const { t } = useTranslation();
@@ -28,6 +29,11 @@ export function AppTable<Row extends object>(props: TableProps<Row>) {
     <Table<Row>
       size="middle"
       {...props}
+      loading={
+        typeof props.loading === 'object'
+          ? { ...props.loading, indicator: <AppLoading decorative /> }
+          : { spinning: !!props.loading, indicator: <AppLoading decorative /> }
+      }
       pagination={pagination}
       locale={{ emptyText: <AppEmpty />, ...props.locale }}
     />

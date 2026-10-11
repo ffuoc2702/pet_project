@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useSession } from '@/features/auth';
 import { useDebouncedCallback } from '@/shared/hooks/use-debounced-callback';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
-import { getSports } from './api';
+import { sportsListQuery } from './queries';
 import type { Sport } from './types';
 
 export default function SportsPage() {
@@ -22,10 +22,7 @@ export default function SportsPage() {
   const pageNumber = Math.max(1, Number(params.get('page')) || 1);
   const pageSize = Math.min(100, Math.max(1, Number(params.get('size')) || 20));
   const [input, setInput] = useState(search);
-  const query = useQuery({
-    queryKey: ['sports', { pageNumber, pageSize, search }],
-    queryFn: ({ signal }) => getSports(pageNumber, pageSize, search, signal),
-  });
+  const query = useQuery(sportsListQuery(params));
   const updateSearch = (value: string) => {
     setParams(
       (previous) => {

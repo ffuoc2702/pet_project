@@ -48,3 +48,9 @@ Kế thừa hướng dẫn tại ../AGENTS.md và áp dụng ../SKILL.md.
 Chạy trong frontend: `npm ci`, `npm run typecheck`, `npm run lint`,
 `npm run format:check`, `npm test`, `npm run build`, `npm run test:e2e`.
 Không báo pass khi chưa chạy; ghi rõ lý do kiểm tra bị chặn.
+
+- Loading chỉ dùng `AppLoading`/`AppLoadingBoundary` từ shared UI. Route có dữ liệu
+  khởi tạo form/page phải đăng ký loader tại `prepareRoutes`, dùng query options
+  chung với page và await đủ các nguồn trước khi router commit màn mới. Không
+  thay màn rồi fetch dữ liệu để điền form; giữ màn hiện tại dưới loading trong khi
+  chờ. Không nuốt lỗi loader hoặc lấy stale response cho route đã bị hủy.

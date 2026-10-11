@@ -1,3 +1,4 @@
+import { AppLoading } from '@/shared/ui/loading';
 import { useEffect, useSyncExternalStore } from 'react';
 import { App, ConfigProvider, theme } from 'antd';
 import { AppearanceContext } from '@/shared/theme/appearance-context';
@@ -27,6 +28,7 @@ export function AppearanceProvider({
   return (
     <AppearanceContext.Provider value={{ dark }}>
       <ConfigProvider
+        spin={{ indicator: <AppLoading decorative /> }}
         locale={preferences.languageCode === 'vi' ? viVN : enUS}
         theme={createAppTheme(dark, preferences.themePreset)}
       >

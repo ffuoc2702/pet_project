@@ -2,8 +2,9 @@ import { AppAlert as Alert, AppCard as Card } from '@/shared/ui/data-display';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AppForm as Form } from '@/shared/ui/forms';
 import { AppInputNumber as InputNumber } from '@/shared/ui/controls';
+import { AppLoading } from '@/shared/ui/loading';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { Space, Spin } from 'antd';
+import { Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useAppearance } from '@/shared/theme/appearance-context';
 import { env } from '@/shared/config/env';
@@ -74,7 +75,7 @@ export default function LocationPage() {
           <Alert title={t('location:denied')} type="warning" showIcon />
         )}
         {env.googleMapsApiKey && env.googleMapsMapId ? (
-          <Suspense fallback={<Spin />}>
+          <Suspense fallback={<AppLoading />}>
             <LocationMap
               coordinates={coordinates}
               onChange={select}

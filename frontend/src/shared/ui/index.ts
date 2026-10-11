@@ -1,4 +1,5 @@
 export * from './controls';
+export { AppLoading, AppLoadingBoundary } from './loading';
 export * from './data-display';
 export { AppTable, AppPagination } from './table';
 export * from './overlays';

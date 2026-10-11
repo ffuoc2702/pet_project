@@ -1,4 +1,5 @@
-import { Alert, Badge, Card, Empty, Skeleton, Tag, Tooltip } from 'antd';
+import { Alert, Badge, Card, Empty, Tag, Tooltip } from 'antd';
+import { AppLoading, AppLoadingBoundary } from './loading';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,8 +15,15 @@ export function AppTag(props: ComponentProps<typeof Tag>) {
 export function AppAlert(props: ComponentProps<typeof Alert>) {
   return <Alert showIcon role="alert" {...props} />;
 }
-export function AppCard(props: ComponentProps<typeof Card>) {
-  return <Card {...props} />;
+export function AppCard({
+  loading = false,
+  ...props
+}: ComponentProps<typeof Card>) {
+  return (
+    <AppLoadingBoundary busy={loading}>
+      <Card {...props} />
+    </AppLoadingBoundary>
+  );
 }
 export function AppEmpty(props: ComponentProps<typeof Empty>) {
   const { t } = useTranslation();
@@ -27,6 +35,7 @@ export function AppEmpty(props: ComponentProps<typeof Empty>) {
     />
   );
 }
-export function AppSkeleton(props: ComponentProps<typeof Skeleton>) {
-  return <Skeleton active {...props} />;
+// Compatibility alias: skeleton placeholders use the same loading visual.
+export function AppSkeleton() {
+  return <AppLoading />;
 }

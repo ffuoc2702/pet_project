@@ -1,3 +1,4 @@
+export { getPreferences } from './api';
 export { PreferencesProvider } from './preferences-provider';
 export { usePreferences } from './context';
 export type { Preferences } from './preferences';

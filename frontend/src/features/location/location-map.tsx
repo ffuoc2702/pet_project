@@ -1,7 +1,8 @@
 import { AppAlert as Alert } from '@/shared/ui/data-display';
 import { AppButton as Button } from '@/shared/ui/buttons';
+import { AppLoadingBoundary } from '@/shared/ui/loading';
 import { useEffect, useRef, useState } from 'react';
-import { Space, Spin } from 'antd';
+import { Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { loadGoogleMaps } from '@/shared/integrations/google-maps/loader';
 import { env } from '@/shared/config/env';
@@ -104,13 +105,13 @@ export function LocationMap({
           }
         />
       )}
-      <Spin spinning={status === 'loading'}>
+      <AppLoadingBoundary busy={status === 'loading'}>
         <div
           ref={container}
           className="map-container"
           aria-label={t('location:mapLabel')}
         />
-      </Spin>
+      </AppLoadingBoundary>
       {status === 'ready' && (
         <Space>
           <Button

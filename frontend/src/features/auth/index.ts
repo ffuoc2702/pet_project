@@ -1,5 +1,11 @@
 export { useSession } from './use-session';
-export { login, logout, refreshSession } from './session';
+export {
+  initializeSession,
+  getSessionSnapshot,
+  login,
+  logout,
+  refreshSession,
+} from './session';
 export type { CurrentUser } from './types';
 export const authPages = {
   login: () => import('./login-page'),

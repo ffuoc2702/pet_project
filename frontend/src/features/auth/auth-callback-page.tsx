@@ -1,8 +1,8 @@
+import { AppLoading } from '@/shared/ui/loading';
 import { routePath } from '@/shared/config/routes';
 import { AppButton as Button } from '@/shared/ui/buttons';
 import { AuthLayout } from './auth-layout';
 import { Navigate } from 'react-router-dom';
-import { Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSession } from './use-session';
 import { refreshSession } from './session';
@@ -28,9 +28,7 @@ export default function AuthCallbackPage() {
           </Button>
         </>
       ) : (
-        <Spin description={t('common:loading')}>
-          <div className="loading-space" />
-        </Spin>
+        <AppLoading />
       )}
     </AuthLayout>
   );

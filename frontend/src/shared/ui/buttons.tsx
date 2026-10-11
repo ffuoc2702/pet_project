@@ -1,4 +1,5 @@
 import { Button, type ButtonProps } from 'antd';
+import { AppLoading } from './loading';
 export function AppButton({ loading = false, ...props }: ButtonProps) {
   const busy = typeof loading === 'boolean' ? loading : true;
   return (
@@ -9,7 +10,14 @@ export function AppButton({ loading = false, ...props }: ButtonProps) {
         typeof props.children === 'string' ? props.children : undefined
       }
       {...props}
-      loading={loading}
+      loading={
+        busy
+          ? {
+              ...(typeof loading === 'object' ? loading : {}),
+              icon: <AppLoading decorative />,
+            }
+          : false
+      }
     />
   );
 }

@@ -1,7 +1,9 @@
 import { authPages } from '@/features/auth';
-import { sportsPages } from '@/features/sports';
+import { sportsPages, loadSports, loadSport } from '@/features/sports';
 import { preferencesPage } from '@/features/preferences';
 import { locationPage } from '@/features/location';
+import { createRouteLoader } from './route-loader';
+import type { LoaderFunction } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom';
 import type { ComponentType } from 'react';
 import { AppShell } from '../layouts/app-shell';
@@ -30,6 +32,11 @@ const pages: Record<RouteId, () => Promise<{ default: ComponentType }>> = {
     ? () => import('../layouts/ui-showcase-page')
     : async () => ({ default: ErrorPage }),
 };
+const prepareRoutes: Partial<Record<RouteId, LoaderFunction>> = {
+  sports: loadSports,
+  sportDetail: loadSport,
+  sportEdit: loadSport,
+};
 export const router = createBrowserRouter([
   {
     Component: AppShell,
@@ -47,6 +54,7 @@ export const router = createBrowserRouter([
           id,
           path: route.path,
           handle: { routeId: id },
+          loader: createRouteLoader(route.permission, prepareRoutes[id]),
           lazy: async () => {
             const { default: Page } = await pages[id]();
             return {

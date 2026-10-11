@@ -170,3 +170,24 @@ Tên ứng dụng dùng `VITE_APP_NAME`; tọa độ ban đầu dùng `VITE_MAP_
 và `VITE_MAP_DEFAULT_LONGITUDE`. Theme dùng trạng thái dark đã được provider phân
 giải; danh sách preset lấy từ registry palette. Cấu hình build-time vẫn có mặc
 định tại `shared/config/env.ts`, cần build/restart Vite sau khi đổi env.
+
+## Loading và dữ liệu trước khi chuyển trang
+
+`AppLoading` là loading chung gồm ba chấm lượn sóng, dùng màu semantic và hỗ trợ
+`prefers-reduced-motion`. Button/table/card/bản đồ và route fallback dùng cùng
+component, không dùng spinner/skeleton riêng.
+
+Router giữ màn hiện tại dưới loading fullscreen khi module hoặc loader của màn
+mới chưa hoàn tất. `createRouteLoader` chờ session, permission và preferences;
+feature đăng ký loader để chờ tất cả query cần cho form/page trong `prepareRoutes`.
+Sports dùng chung query options giữa loader và page để dữ liệu nằm trong cache
+trước khi form mount. Nếu cache còn mới và đủ dữ liệu, chuyển trang ngay.
+
+Khi thêm màn có nhiều nguồn dữ liệu, loader phải await tất cả bằng `Promise.all`
+và khai báo query key/options dùng chung với page. Không tải dữ liệu khởi tạo form
+chỉ trong `useEffect` sau khi chuyển màn. Form tạo mới dùng default đồng bộ không
+cần chờ API. Google Maps là tích hợp tùy chọn; tọa độ form có sẵn trước khi SDK tải.
+
+Navigation bị hủy ngừng chờ ngay, không hủy query mà route khác đang dùng chung;
+queryFn vẫn nhận AbortSignal của TanStack Query. API thất bại chuyển tới error
+boundary có mã lỗi/đường dẫn quay về, không giữ loading vô hạn hoặc hiện form trống.

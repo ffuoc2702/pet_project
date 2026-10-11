@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSession } from '@/features/auth';
 import { i18n } from '@/shared/i18n';
@@ -40,7 +40,7 @@ export function PreferencesProvider({
     setValue(value);
     persistPreferences(value);
   }
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (query.data) {
       const value = preferencesSchema.parse(query.data);
       setValue(value);
