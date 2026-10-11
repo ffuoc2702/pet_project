@@ -24,11 +24,12 @@
     "code": "Mã",
     "active": "Đang hoạt động",
     "inactive": "Ngừng hoạt động",
+    "sportStatus": "Trạng thái môn {{name}}",
     "status": "Trạng thái",
     "actions": "Thao tác",
     "details": "Chi tiết",
     "edit": "Chỉnh sửa",
-    "create": "Tạo môn thể thao",
+    "create": "Thêm mới",
     "cancel": "Hủy",
     "formats": "Thể thức",
     "sideSize": "Số người mỗi bên",
@@ -55,7 +56,11 @@
     "configureLocation": "Chọn địa điểm",
     "updated": "Cập nhật",
     "skipToContent": "Đến nội dung chính",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "allStatuses": "Tất cả trạng thái",
+    "tableBorders": "Đường viền bảng",
+    "horizontalBorders": "Viền ngang",
+    "verticalBorders": "Viền dọc"
   },
   "auth": {
     "login": "Đăng nhập",

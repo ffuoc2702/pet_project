@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+test.use({ launchOptions: { ignoreDefaultArgs: ['--hide-scrollbars'] } });
 const user = {
   id: 'user',
   displayName: 'Player',
@@ -15,6 +16,23 @@ const sport = {
   formats: [],
   updatedAt: '2026-10-01T00:00:00Z',
 };
+
+async function allowStatusChanges(page: import('@playwright/test').Page) {
+  await page.route('**/api/v1/auth/web/refresh', (route) =>
+    route.fulfill({
+      json: {
+        data: {
+          accessToken: 'test',
+          user: {
+            ...user,
+            permissions: [...user.permissions, 'sports.deactivate'],
+          },
+          accessTokenExpiresAt: '2099-01-01T00:00:00Z',
+        },
+      },
+    }),
+  );
+}
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/v1/**', async (route) => {
     const path = new URL(route.request().url()).pathname;
@@ -104,6 +122,20 @@ test('manual location remains usable without Maps configuration', async ({
   await page.getByRole('button', { name: 'Nhập tọa độ' }).click();
   await expect(page.getByRole('status')).toContainText('21,0278');
 });
+test('sport and format descriptions stop accepting input after 200 characters', async ({
+  page,
+}) => {
+  await page.goto('/sports/new');
+  const descriptions = page.getByRole('textbox', { name: /^Mô tả/ });
+  await expect(descriptions).toHaveCount(2);
+  for (const description of await descriptions.all()) {
+    await description.fill('x'.repeat(200));
+    await description.press('End');
+    await page.keyboard.insertText('overflow');
+    await expect(description).toHaveValue('x'.repeat(200));
+  }
+});
+
 test('blocks navigation from an unsaved form', async ({ page }) => {
   await page.goto('/sports/new');
   await page.getByLabel('Tên', { exact: true }).fill('New sport');
@@ -229,4 +261,382 @@ test('failed route data releases loading and shows the API error', async ({
   await page.getByRole('link', { name: sport.name, exact: true }).click();
   await expect(page.getByRole('alert')).toBeVisible();
   await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
+});
+
+test('sports card reuses the toolbar, filters status and renders configured table borders', async ({
+  page,
+}) => {
+  const requests: URL[] = [];
+  await page.route('**/api/v1/sports?**', (route) => {
+    const url = new URL(route.request().url());
+    expect(url.searchParams.has('activeOnly')).toBe(false);
+    requests.push(url);
+    const inactive = url.searchParams.get('isActive') === 'false';
+    return route.fulfill({
+      json: {
+        data: [{ ...sport, isActive: !inactive }],
+        pagination: { totalItems: 1, pageNumber: 1, pageSize: 20 },
+      },
+    });
+  });
+  await page.goto('/sports?page=2');
+  const card = page.locator('.app-table-card');
+  await expect(card).toBeVisible();
+  await expect(card.locator('.app-table-toolbar')).toBeVisible();
+  await expect(card.getByRole('table')).toBeVisible();
+  const toolbar = await page.locator('.app-table-toolbar').boundingBox();
+  const search = await page.locator('.app-table-toolbar-search').boundingBox();
+  expect(Math.abs(search!.width / toolbar!.width - 0.5)).toBeLessThan(0.02);
+  await page.getByLabel('Trạng thái', { exact: true }).click();
+  await page
+    .locator('.ant-select-dropdown')
+    .getByText('Ngừng hoạt động', { exact: true })
+    .click();
+  await expect(page).toHaveURL(/status=inactive/);
+  await expect
+    .poll(() => requests.at(-1)?.searchParams.get('isActive'))
+    .toBe('false');
+  await expect(page).toHaveURL(/page=1/);
+  await expect(
+    page.getByRole('switch', { name: 'Trạng thái môn ' + sport.name }),
+  ).not.toBeChecked();
+  await expect(page.locator('.ant-table')).toHaveClass(/ant-table-bordered/);
+  await expect(page.locator('.ant-table-thead > tr > th').first()).toHaveCSS(
+    'border-bottom-width',
+    '1px',
+  );
+  await expect(page.locator('.ant-table-row > td').first()).toHaveCSS(
+    'border-right-width',
+    '1px',
+  );
+  await page.reload();
+  await expect(page.locator('.app-table-toolbar-filters')).toContainText(
+    'Ngừng hoạt động',
+  );
+  await page.screenshot({
+    path: test.info().outputPath('sports-page.png'),
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 375, height: 812 });
+  const compactToolbar = await page.locator('.app-table-toolbar').boundingBox();
+  const compactSearch = await page
+    .locator('.app-table-toolbar-search')
+    .boundingBox();
+  const compactFilters = await page
+    .locator('.app-table-toolbar-filters')
+    .boundingBox();
+  expect(compactFilters!.y).toBeGreaterThanOrEqual(
+    compactSearch!.y + compactSearch!.height,
+  );
+  expect(Math.abs(compactSearch!.width - compactToolbar!.width)).toBeLessThan(
+    1,
+  );
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(375);
+  await page.screenshot({
+    path: test.info().outputPath('sports-page-compact.png'),
+    fullPage: true,
+  });
+});
+
+test('sport switch waits for the API, preserves status on errors and supports reactivation', async ({
+  page,
+}) => {
+  await allowStatusChanges(page);
+  let active = true;
+  let activationFails = true;
+  let deactivateCount = 0;
+  let activateCount = 0;
+  let release!: () => void;
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route('**/api/v1/sports?**', (route) =>
+    route.fulfill({
+      json: {
+        data: [{ ...sport, isActive: active }],
+        pagination: { totalItems: 1, pageNumber: 1, pageSize: 20 },
+      },
+    }),
+  );
+  await page.route('**/api/v1/sports/sport/deactivate', async (route) => {
+    expect(route.request().method()).toBe('POST');
+    deactivateCount++;
+    await pending;
+    active = false;
+    await route.fulfill({ json: { data: { ...sport, isActive: active } } });
+  });
+  await page.route('**/api/v1/sports/sport/activate', (route) => {
+    expect(route.request().method()).toBe('POST');
+    activateCount++;
+    if (activationFails)
+      return route.fulfill({
+        status: 409,
+        json: { code: 'DUPLICATE_RESOURCE' },
+      });
+    active = true;
+    return route.fulfill({ json: { data: { ...sport, isActive: active } } });
+  });
+  await page.goto('/sports');
+  const control = page.locator('button[role="switch"]');
+  await expect(control).toBeChecked();
+  const height = (await page.locator('.ant-table-row').boundingBox())!.height;
+  await control.click();
+  await expect(control).toBeDisabled();
+  await expect(control).toBeChecked();
+  await expect(
+    page.locator('.app-loading-fullscreen .app-loading-dots > span'),
+  ).toHaveCount(3);
+  await expect(page.locator('.app-loading')).toHaveCount(1);
+  expect((await page.locator('.ant-table-row').boundingBox())!.height).toBe(
+    height,
+  );
+  expect(deactivateCount).toBe(1);
+  release();
+  await expect(control).not.toBeChecked();
+  await expect(control).toBeEnabled();
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
+  await control.click();
+  await expect(page.locator('.ant-message-error')).toBeVisible();
+  await expect(control).not.toBeChecked();
+  await expect(control).toBeEnabled();
+  expect(activateCount).toBe(1);
+  activationFails = false;
+  await control.click();
+  await expect(control).toBeChecked();
+  expect(activateCount).toBe(2);
+  await page.screenshot({
+    path: test.info().outputPath('sport-status-switch.png'),
+  });
+});
+
+test('deactivating a sport removes it from the active filter and updates pagination', async ({
+  page,
+}) => {
+  await allowStatusChanges(page);
+  let active = true;
+  await page.route('**/api/v1/sports?**', (route) => {
+    const filter = new URL(route.request().url()).searchParams.get('isActive');
+    const data =
+      filter === 'true' && !active ? [] : [{ ...sport, isActive: active }];
+    return route.fulfill({
+      json: {
+        data,
+        pagination: { totalItems: data.length, pageNumber: 1, pageSize: 20 },
+      },
+    });
+  });
+  await page.route('**/api/v1/sports/sport/deactivate', (route) => {
+    active = false;
+    return route.fulfill({ json: { data: { ...sport, isActive: active } } });
+  });
+  await page.goto('/sports?status=active');
+  await page.getByRole('switch').click();
+  await expect(page.getByRole('switch')).toHaveCount(0);
+  await expect(
+    page.getByText('Không có kết quả', { exact: true }),
+  ).toBeVisible();
+  await expect(page).toHaveURL(/status=active/);
+});
+
+test('sport status switch respects the permission for the requested transition', async ({
+  page,
+}) => {
+  // The default user can update/reactivate, but cannot deactivate.
+  await page.goto('/sports');
+  await expect(page.getByRole('switch')).toBeDisabled();
+  await page.getByRole('switch').hover();
+  await expect(page.getByRole('tooltip')).toContainText('Đang hoạt động');
+  await page.route('**/api/v1/sports?**', (route) =>
+    route.fulfill({
+      json: {
+        data: [{ ...sport, isActive: false }],
+        pagination: { totalItems: 1, pageNumber: 1, pageSize: 20 },
+      },
+    }),
+  );
+  await page.reload();
+  await expect(page.getByRole('switch')).not.toBeChecked();
+  await expect(page.getByRole('switch')).toBeEnabled();
+  await page.route('**/api/v1/auth/web/refresh', (route) =>
+    route.fulfill({
+      json: {
+        data: {
+          accessToken: 'test',
+          user: { ...user, permissions: ['sports.list', 'sports.read'] },
+          accessTokenExpiresAt: '2099-01-01T00:00:00Z',
+        },
+      },
+    }),
+  );
+  await page.reload();
+  await expect(page.getByRole('switch')).toBeDisabled();
+});
+
+test('sport tooltip and select popups stay open without changing page scroll geometry', async ({
+  page,
+}) => {
+  await allowStatusChanges(page);
+  await page.setViewportSize({ width: 1100, height: 420 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.route('**/api/v1/sports?**', (route) =>
+    route.fulfill({
+      json: {
+        data: Array.from({ length: 20 }, (_, index) => ({
+          ...sport,
+          id: 'sport-' + index,
+          name: sport.name + ' ' + index,
+        })),
+        pagination: { totalItems: 30, pageNumber: 1, pageSize: 20 },
+      },
+    }),
+  );
+  await page.goto('/sports');
+  await page.getByRole('switch').first().hover();
+  await expect(page.getByRole('tooltip')).toContainText('Đang hoạt động');
+  await page.mouse.move(1000, 20);
+  await page.getByLabel('Trạng thái', { exact: true }).click();
+  await expect(page.locator('.ant-select-dropdown:visible')).toBeVisible();
+  await expect(
+    page.locator(
+      '.ant-select-dropdown:visible .ant-select-item-option-content',
+    ),
+  ).toHaveText(['Tất cả trạng thái', 'Đang hoạt động', 'Ngừng hoạt động']);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.ant-select-dropdown:visible')).toHaveCount(0);
+  const size = page.getByRole('combobox', { name: 'kích thước trang' });
+  await size.scrollIntoViewIfNeeded();
+  const before = await page.evaluate(() => ({
+    height: document.documentElement.scrollHeight,
+    width: document.documentElement.clientWidth,
+    scrollY: window.scrollY,
+  }));
+  await size.click();
+  await expect(page.locator('.ant-select-dropdown:visible')).toBeVisible();
+  const frames = await page.evaluate(async () => {
+    const values = [];
+    for (let index = 0; index < 30; index++) {
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => resolve()),
+      );
+      values.push({
+        height: document.documentElement.scrollHeight,
+        width: document.documentElement.clientWidth,
+        scrollY: window.scrollY,
+      });
+    }
+    return values;
+  });
+  expect(
+    frames.every(
+      (frame) =>
+        frame.height === before.height &&
+        frame.width === before.width &&
+        frame.scrollY === before.scrollY,
+    ),
+  ).toBe(true);
+  await expect(page.locator('.ant-select-dropdown:visible')).toBeVisible();
+});
+
+test('table text is limited to three lines and exposes full content only when clipped', async ({
+  page,
+}) => {
+  const description = Array.from(
+    { length: 8 },
+    (_, index) => `Dòng mô tả ${index + 1}`,
+  ).join('\n');
+  await page.route('**/api/v1/sports?**', (route) =>
+    route.fulfill({
+      json: {
+        data: [{ ...sport, description }],
+        pagination: { totalItems: 1, pageNumber: 1, pageSize: 20 },
+      },
+    }),
+  );
+  await page.goto('/sports');
+  const cell = page
+    .locator('.app-table-cell-content')
+    .filter({ hasText: description });
+  await expect(cell).toBeVisible();
+  const dimensions = await cell.evaluate((element) => ({
+    height: element.clientHeight,
+    fullHeight: element.scrollHeight,
+    lineHeight: parseFloat(getComputedStyle(element).lineHeight),
+    lines: getComputedStyle(element).webkitLineClamp,
+  }));
+  expect(dimensions.lines).toBe('3');
+  expect(dimensions.height).toBeLessThanOrEqual(dimensions.lineHeight * 3 + 1);
+  expect(dimensions.fullHeight).toBeGreaterThan(dimensions.height);
+  await cell.hover();
+  await expect(page.getByRole('tooltip')).toHaveText(description);
+  await page.mouse.move(5, 5);
+  await expect(page.getByRole('tooltip')).toHaveCount(0);
+  await page.getByRole('link', { name: 'Cầu lông', exact: true }).hover();
+  await expect(page.getByRole('tooltip')).toHaveCount(0);
+  await expect(page.getByRole('switch')).toBeVisible();
+  await page.setViewportSize({ width: 375, height: 812 });
+  await expect(cell).toHaveAttribute('tabindex', '0');
+});
+
+test('reduced motion keeps popup measurements synchronous and options inside the viewport', async ({
+  page,
+}) => {
+  await allowStatusChanges(page);
+  await page.setViewportSize({ width: 1879, height: 957 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/sports');
+  await page.getByLabel('Trạng thái', { exact: true }).click();
+  const dropdown = page.locator('.ant-select-dropdown:visible');
+  await expect(dropdown).toBeInViewport();
+  // Ant measures the popup immediately after resetting its position. A transition
+  // on left/top would report the previous position even with a 0.01ms duration.
+  const measurement = await dropdown.evaluate((element) => {
+    const popup = element as HTMLElement;
+    const left = popup.style.left;
+    const top = popup.style.top;
+    const before = popup.getBoundingClientRect();
+    popup.style.left = `${popup.offsetLeft + 40}px`;
+    popup.style.top = `${popup.offsetTop + 40}px`;
+    const after = popup.getBoundingClientRect();
+    popup.style.left = left;
+    popup.style.top = top;
+    return { x: after.x - before.x, y: after.y - before.y };
+  });
+  expect(measurement.x).toBeCloseTo(40, 0);
+  expect(measurement.y).toBeCloseTo(40, 0);
+  await dropdown.getByText('Ngừng hoạt động', { exact: true }).click();
+  await expect(page).toHaveURL(/status=inactive/);
+  await page.getByRole('switch').hover();
+  await expect(page.getByRole('tooltip')).toBeInViewport();
+});
+
+test('dropdown options remain selectable when the page barely fits the viewport', async ({
+  page,
+}) => {
+  await page.goto('/sports');
+  const card = (await page.locator('.app-table-card').boundingBox())!;
+  const height = Math.ceil(card.y + card.height) + 2;
+  await page.setViewportSize({
+    width: 1280,
+    height,
+  });
+  await expect(page.locator('.theme-root')).toHaveCSS(
+    'min-height',
+    `${height}px`,
+  );
+  const before = await page.evaluate(
+    () => document.documentElement.scrollHeight,
+  );
+  await page.getByLabel('Trạng thái', { exact: true }).click();
+  const dropdown = page.locator('.ant-select-dropdown:visible');
+  await expect(
+    dropdown.getByText('Ngừng hoạt động', { exact: true }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBe(
+    before,
+  );
+  await dropdown.getByText('Ngừng hoạt động', { exact: true }).click();
+  await expect(page).toHaveURL(/status=inactive/);
+  await expect(dropdown).toHaveCount(0);
 });

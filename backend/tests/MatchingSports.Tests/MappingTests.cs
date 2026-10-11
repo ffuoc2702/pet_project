@@ -45,9 +45,9 @@ public sealed class MappingTests
         Assert.Null(defaults.SearchString);
         if (query is GetSportsQuery sport)
         {
-            Assert.True(sport.ActiveOnly);
-            var filters = mapper.Map<GetSportsQuery>(new GetSportsRequest { ActiveOnly = false, SportCode = "FOOTBALL" });
-            Assert.False(filters.ActiveOnly);
+            Assert.Null(sport.IsActive);
+            var filters = mapper.Map<GetSportsQuery>(new GetSportsRequest { IsActive = false, SportCode = "FOOTBALL" });
+            Assert.False(filters.IsActive);
             Assert.Equal("FOOTBALL", filters.SportCode);
         }
     }

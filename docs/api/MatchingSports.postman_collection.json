@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "MatchingSports — All APIs",
-    "description": "96 endpoint nghiệp vụ + /health và /alive. Snapshot theo source hiện tại.\nImport vào Postman; đặt baseUrl theo API đang chạy, email/password hoặc accessToken trong Variables. Login/Refresh tự lưu accessToken và refreshToken. Đọc/tạo resource để lấy ID và concurrency token; list trả mảng không tự chọn ID. Biến targetUserId là người dùng mục tiêu, currentUserId là người đăng nhập. ID/token để trống cần điền từ response. Query tuỳ chọn có sẵn nhưng mặc định tắt; bật nhóm latitude/longitude/radiusMeters cùng nhau. Thời gian mẫu được tính lại trước mỗi request. Một số lệnh admin cần đăng nhập tài khoản có permission tương ứng. Chọn từng request phù hợp với trạng thái resource; collection chứa cả thao tác xoá/huỷ. Không chứa mật khẩu/token thực.",
+    "description": "98 endpoint nghiệp vụ + /health và /alive. Snapshot theo source hiện tại.\nImport vào Postman; đặt baseUrl theo API đang chạy, email/password hoặc accessToken trong Variables. Login/Refresh tự lưu accessToken và refreshToken. Đọc/tạo resource để lấy ID và concurrency token; list trả mảng không tự chọn ID. Biến targetUserId là người dùng mục tiêu, currentUserId là người đăng nhập. ID/token để trống cần điền từ response. Query tuỳ chọn có sẵn nhưng mặc định tắt; bật nhóm latitude/longitude/radiusMeters cùng nhau. Thời gian mẫu được tính lại trước mỗi request. Một số lệnh admin cần đăng nhập tài khoản có permission tương ứng. Chọn từng request phù hợp với trạng thái resource; collection chứa cả thao tác xoá/huỷ. Không chứa mật khẩu/token thực.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -3864,7 +3864,7 @@
               ],
               "query": [
                 {
-                  "key": "ActiveOnly",
+                  "key": "IsActive",
                   "value": "false",
                   "disabled": true,
                   "description": "Tuỳ chọn. "
@@ -4115,6 +4115,60 @@
               ]
             },
             "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.deactivate"
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/sports/{sportId}/activate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sports/{{sportId}}/activate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sports",
+                "{{sportId}}",
+                "activate"
+              ]
+            },
+            "description": "Cần JWT. Permission: sports.update. Trả SportDto sau cập nhật trạng thái."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/sports/{sportId}/deactivate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/sports/{{sportId}}/deactivate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "sports",
+                "{{sportId}}",
+                "deactivate"
+              ]
+            },
+            "description": "Cần JWT. Permission: sports.deactivate. Trả SportDto sau cập nhật trạng thái."
           },
           "response": []
         }

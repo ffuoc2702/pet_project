@@ -21,7 +21,7 @@ export const foundation = {
     border: '#d7dee8',
   },
   dark: {
-    page: '#101828',
+    page: '#182230',
     surface: '#182230',
     text: '#f2f4f7',
     muted: '#b4c0d0',

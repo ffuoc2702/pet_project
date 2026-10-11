@@ -263,12 +263,27 @@ public sealed class RoleAuthorizationDatabaseTests
             Assert.Equal(5, detail.Formats.Single(format => format.Code == "TEAM").SideSize);
             Assert.False(detail.Formats.Single(format => format.Code == "OLD").IsActive);
             var query = new GetSportsQuery { ActorUserId = actorId, SportCode = code };
-            var active = await mediator.Send(query);
+            var active = await mediator.Send(query with { IsActive = true });
             Assert.Empty(active.Items);
             Assert.Equal(0, active.TotalItems);
-            var all = await mediator.Send(query with { ActiveOnly = false });
+            var all = await mediator.Send(query);
             Assert.False(Assert.Single(all.Items).IsActive);
             Assert.Equal(1, all.TotalItems);
+            Assert.Equal(3, Assert.Single(all.Items).Formats.Count);
+            var inactive = await mediator.Send(query with { IsActive = false });
+            Assert.False(Assert.Single(inactive.Items).IsActive);
+            Assert.Equal(1, inactive.TotalItems);
+            var inactiveNextPage = await mediator.Send(query with { IsActive = false, PageNumber = 2, PageSize = 1 });
+            Assert.Empty(inactiveNextPage.Items);
+            Assert.Equal(1, inactiveNextPage.TotalItems);
+            Assert.Equal(3, Assert.Single(inactive.Items).Formats.Count);
+            var activated = await mediator.Send(new ActivateSportCommand(actorId, sportId));
+            Assert.True(activated.IsActive);
+            Assert.Equal(actorId, activated.UpdatedBy);
+            Assert.Equal(3, activated.Formats.Count);
+            Assert.False(activated.Formats.Single(format => format.Code == "OLD").IsActive);
+            Assert.True((await mediator.Send(new ActivateSportCommand(actorId, sportId))).IsActive);
+            await mediator.Send(new DeactivateSportCommand(actorId, sportId));
         }
 
         await using (var scope = provider.CreateAsyncScope())
@@ -278,6 +293,9 @@ public sealed class RoleAuthorizationDatabaseTests
                 [new SportFormatInput(null, "DEFAULT", "Default", 1, "NEW")]));
             Assert.True(reused.IsActive);
             Assert.NotEqual(sportId, reused.Id);
+            var conflict = await Assert.ThrowsAsync<ConflictException>(() => mediator.Send(new ActivateSportCommand(actorId, sportId)));
+            Assert.Equal(ErrorCodes.DuplicateResource, conflict.Code);
+            Assert.False((await mediator.Send(new GetSportByIdQuery(actorId, sportId))).IsActive);
         }
     }
 
@@ -319,7 +337,6 @@ public sealed class RoleAuthorizationDatabaseTests
             ActorUserId = actorId,
             SportCode = sport.Code,
             SearchString = $"  {sport.Code.ToLowerInvariant()}  ",
-            ActiveOnly = false,
             FromDate = sport.UpdatedAt,
             ToDate = sport.UpdatedAt,
             PageSize = 1

@@ -6,12 +6,12 @@ X-Correlation-ID: local-smoke-test
 
 ###
 
-GET {{Api_HostAddress}}/api/v1/sport?pageNumber=1&pageSize=20
+GET {{Api_HostAddress}}/api/v1/sports?pageNumber=1&pageSize=20
 Accept: application/json
 
 ###
 
-GET {{Api_HostAddress}}/api/v1/sport?pageNumber=1&pageSize=10&sportCode=FOOTBALL&activeOnly=true
+GET {{Api_HostAddress}}/api/v1/sports?pageNumber=1&pageSize=10&sportCode=FOOTBALL&isActive=true
 Accept: application/json
 
 ###

@@ -2233,7 +2233,7 @@
       "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.list",
       "bodyFields": [],
       "queryFields": [
-        "ActiveOnly",
+        "IsActive",
         "SportCode",
         "Id",
         "SearchString",
@@ -2280,6 +2280,22 @@
       "path": "/api/v1/sports/{sportId}",
       "screenId": "ADMIN-03",
       "description": "Nguồn: Swagger v1 và authorization trong controller.\nCần JWT. Permission: sports.deactivate",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sports/{sportId}/activate",
+      "screenId": "ADMIN-01",
+      "description": "Cần JWT. Permission: sports.update",
+      "bodyFields": [],
+      "queryFields": []
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/sports/{sportId}/deactivate",
+      "screenId": "ADMIN-01",
+      "description": "Cần JWT. Permission: sports.deactivate",
       "bodyFields": [],
       "queryFields": []
     },

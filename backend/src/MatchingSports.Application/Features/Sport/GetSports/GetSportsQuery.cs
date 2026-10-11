@@ -9,7 +9,7 @@ public sealed record GetSportsQuery : BaseQuery<SportDto>, IPermissionAuthorized
 {
     public Guid ActorUserId { get; init; }
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.ListSports];
-    public bool ActiveOnly { get; init; } = true;
+    public bool? IsActive { get; init; }
     public string? SportCode { get; init; }
 }
 

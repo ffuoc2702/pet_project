@@ -44,7 +44,11 @@ listings và notification_configs. Team/Role/Report giữ cột hiện có.
 Dữ liệu cũ giữ nguyên và Description mới là null.
 
 Domain chuẩn hóa trim và trắng thành null trước mutation:
-môn/thể thức/quyền/cấu hình thông báo tối đa 2000 ký tự; kèo tối đa 4000.
+mỗi trường Description tối đa 200 ký tự, gồm môn/thể thức/quyền/vai trò/đội/kèo/
+cấu hình thông báo/báo cáo. API validation và cột database dùng cùng giới hạn.
+Frontend giới hạn nhập mô tả môn/thể thức và hiển thị bộ đếm 200 ký tự.
+Migration `LimitDescriptionsTo200Characters` dừng nếu dữ liệu cũ vượt 200 ký tự;
+cần chỉnh sửa nội dung đó có chủ ý trước khi triển khai, không tự cắt hoặc xóa.
 API write và DTO read truyền Description cho môn/thể thức, kèo, cấu hình.
 Permission là catalog do seed quản lý, có Create/UpdateDescription trong Domain
 và DTO đọc; không thêm endpoint ghi permission ngoài phạm vi quyền hiện có.

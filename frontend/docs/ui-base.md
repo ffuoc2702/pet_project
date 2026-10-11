@@ -109,3 +109,56 @@ focus, table pagination, responsive và ảnh desktop/compact. API trong E2E
 Google backend để kiểm chứng provider thật trên môi trường tích hợp.
 
 Thiết kế hiện tại theo tokens dự án; chưa đối chiếu Figma vì chưa có frame/link.
+
+Bố cục bảng dùng chung:
+
+```tsx
+<AppCard className="app-table-card">
+  <AppTableToolbar
+    search={<AppSearchInput value={search} onChange={handleSearch} />}
+    filters={
+      <AppSelect value={status} options={statusOptions} onChange={setStatus} />
+    }
+  />
+  <AppTable borders={borders} columns={columns} dataSource={rows} rowKey="id" />
+</AppCard>
+```
+
+Import `AppTableToolbar` từ `@/shared/ui/table-toolbar`;
+`AppCard` từ `@/shared/ui/data-display`; `AppTable` và type `TableBorders` từ `@/shared/ui/table`. Khởi tạo `borders` với
+`{ horizontal: true, vertical: true }`. Feature quản lý query/filter và trạng thái;
+shared UI quản lý bố cục và CSS tại `shared/ui/table.css`.
+`AppTable` mặc định giới hạn text/link trong mỗi ô ở 3 dòng (`maxCellLines={3}`).
+Nội dung vượt giới hạn hiển thị dấu `…`; hover hoặc focus xem tooltip đầy đủ.
+Tooltip chỉ xuất hiện khi nội dung thực sự bị cắt và được đo lại khi đổi kích thước.
+Đổi giới hạn cả bảng bằng `maxCellLines={2}` hoặc tắt bằng `maxCellLines={false}`;
+ghi đè một cột bằng `maxLines: 5`/`maxLines: false` trong `columns`.
+Render dạng control, badge hoặc UI phức tạp giữ nguyên; giới hạn áp dụng cho text,
+số và link chứa text. Columns có nhóm cũng dùng cùng cơ chế.
+Search chiếm 50% hàng desktop, 100% trên màn nhỏ. `filters` có thể nhận nhiều
+control; `options` nhận nội dung tùy chọn của màn. Không sao chép CSS vào feature.
+
+`AppSwitch` trong `shared/ui/controls` dùng Ant Design, nhận `checked`, `disabled`,
+`loading`, `onChange`. `AppButton`, `AppSwitch`, `AppCard`, `AppTable` đăng ký
+trạng thái chờ bằng `useAppLoading` vào `AppLoadingProvider` tại root navigation.
+Provider hiển thị một overlay fullscreen 3 chấm và giữ màn hiện tại, kể cả khi
+nhiều thao tác cùng chờ; chỉ tắt khi navigation và mọi nguồn đã hoàn tất.
+Button/switch bị khóa khi chờ và không render spinner bên trong.
+Feature xử lý API và quyền, không đặt I/O trong base. Các control custom mới có
+trạng thái chờ cũng phải dùng `useAppLoading`, không tạo overlay riêng.
+
+`AppSwitch` chuyển tiếp ref và event trực tiếp tới Switch của Ant Design để
+tooltip xác định đúng phần tử đích. CSS gốc dùng `scrollbar-gutter: stable`
+và chặn overflow ngang của body; table vẫn cuộn ngang trong container riêng.
+`AppearanceProvider` dùng `getAppPopupContainer` cho mọi popup Ant Design,
+bao gồm `AppSelect`, tooltip và select phân trang của table. Popup thuộc container
+modal/drawer hiện tại hoặc `.theme-root`, có fallback `body` khi không có trigger.
+`.theme-root` có `position: relative; overflow: clip` để phép đo/vị trí tạm của
+popup không làm phát sinh scrollbar của document. Không đặt popup vào ô table
+hoặc parent bất kỳ vì có thể bị vùng cuộn của table cắt mất.
+Sidebar chỉ animate width/min-width/max-width/flex-basis; không animate chiều
+cao theo viewport vì sẽ làm scrollbar và phép đo popup thay đổi liên tục.
+Trong chế độ `prefers-reduced-motion: reduce`, CSS chung tắt transition bằng
+`transition: none`, không gán duration nhỏ cho tất cả phần tử. Duration khác 0
+có thể tạo transition trên `left`/`top`, làm Ant đo tọa độ cũ và đặt popup ra
+ngoài viewport. Loading giữ animation bounce nhẹ theo cấu hình riêng.

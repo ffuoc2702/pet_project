@@ -1,5 +1,13 @@
-import { Input, InputNumber, Select, Checkbox, type SelectProps } from 'antd';
+import {
+  Input,
+  InputNumber,
+  Select,
+  Checkbox,
+  Switch,
+  type SelectProps,
+} from 'antd';
 import type { ComponentProps } from 'react';
+import { useAppLoading } from './use-app-loading';
 export { AppButton, AppIconButton } from './buttons';
 export { AppForm, AppFormItem } from './forms';
 export function AppInput(props: ComponentProps<typeof Input>) {
@@ -42,4 +50,19 @@ export function AppSelect<ValueType = unknown>(props: SelectProps<ValueType>) {
 }
 export function AppCheckbox(props: ComponentProps<typeof Checkbox>) {
   return <Checkbox {...props} />;
+}
+
+export function AppSwitch({
+  loading = false,
+  ...props
+}: ComponentProps<typeof Switch>) {
+  useAppLoading(loading);
+  return (
+    <Switch
+      {...props}
+      aria-busy={loading}
+      loading={false}
+      disabled={loading ? true : props.disabled}
+    />
+  );
 }

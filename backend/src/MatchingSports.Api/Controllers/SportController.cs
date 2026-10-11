@@ -55,6 +55,19 @@ public sealed class SportController(IMediator mediator, IMapper mapper, ICurrent
         return OkResponse(result);
     }
 
+    [HttpPost("{sportId:guid}/activate")]
+    [Authorize(Policy = PermissionCodes.UpdateSports)]
+    [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<BaseResponse<SportDto>>> ActivateSport(
+        Guid sportId,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new ActivateSportCommand(
+            currentUser.UserId, sportId), cancellationToken);
+        return OkResponse(result);
+    }
+
+    [HttpPost("{sportId:guid}/deactivate")]
     [HttpDelete("{sportId:guid}")]
     [Authorize(Policy = PermissionCodes.DeactivateSports)]
     [ProducesResponseType<BaseResponse<SportDto>>(StatusCodes.Status200OK)]

@@ -49,10 +49,8 @@ internal sealed class SportRepository(MatchingSportsDbContext db)
     {
         IQueryable<Sport> sports = db.Sports.AsNoTracking();
 
-        if (query.ActiveOnly)
-        {
-            sports = sports.Where(sport => sport.IsActive);
-        }
+        if (query.IsActive.HasValue)
+            sports = sports.Where(sport => sport.IsActive == query.IsActive.Value);
 
         if (!string.IsNullOrWhiteSpace(query.SportCode))
         {
@@ -77,14 +75,8 @@ internal sealed class SportRepository(MatchingSportsDbContext db)
 
         var totalItems = await sports.LongCountAsync(cancellationToken);
 
-        sports = query.ActiveOnly
-            ? sports.Include(sport =>
-                sport.Formats
-                    .Where(format => format.IsActive)
-                    .OrderByDescending(format => format.UpdatedAt))
-            : sports.Include(sport =>
-                sport.Formats
-                    .OrderByDescending(format => format.UpdatedAt));
+        sports = sports.Include(sport =>
+            sport.Formats.OrderByDescending(format => format.UpdatedAt));
 
         var offset = checked((query.PageNumber - 1) * query.PageSize);
         var items = await sports

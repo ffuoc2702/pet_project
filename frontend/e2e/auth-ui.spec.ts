@@ -211,8 +211,18 @@ test('custom overlays inherit dark theme and English locale, table paginates and
     page.getByRole('heading', { name: 'UI components' }),
   ).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-mode', 'dark');
+  await page.getByRole('button', { name: 'Loading', exact: true }).click();
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(1);
+  await expect(page.locator('button .app-loading')).toHaveCount(0);
+  await expect(page.locator('.app-loading-fullscreen')).toHaveCount(0);
   await page.getByRole('button', { name: 'Open modal', exact: true }).click();
   const dialog = page.getByRole('dialog');
+  await dialog.getByRole('combobox', { name: 'Choose an option' }).click();
+  const modalDropdown = dialog.locator('.ant-select-dropdown:visible');
+  await modalDropdown.getByText('Secondary', { exact: true }).click();
+  await expect(
+    dialog.locator('.ant-select').getByText('Secondary', { exact: true }),
+  ).toBeVisible();
   await expect(
     dialog.getByRole('button', { name: 'Confirm', exact: true }),
   ).toBeVisible();
@@ -225,6 +235,23 @@ test('custom overlays inherit dark theme and English locale, table paginates and
   await expect(
     page.getByRole('button', { name: 'Open modal', exact: true }),
   ).toBeFocused();
+  await page.getByRole('button', { name: 'Open drawer', exact: true }).click();
+  await page
+    .getByRole('dialog')
+    .getByRole('combobox', { name: 'Choose an option' })
+    .click();
+  await page
+    .locator('.ant-drawer-section .ant-select-dropdown:visible')
+    .getByText('Primary', { exact: true })
+    .click();
+  await expect(
+    page
+      .getByRole('dialog')
+      .locator('.ant-select')
+      .getByText('Primary', { exact: true }),
+  ).toBeVisible();
+  await page.locator('.ant-drawer-close').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
   await page
     .getByRole('button', { name: 'Helpful information', exact: true })
     .hover();

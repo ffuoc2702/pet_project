@@ -174,12 +174,12 @@ public sealed class SportTests
         var detail = await mediator.Send(new GetSportByIdQuery(actorId, created.Id), cancellation.Token);
         Assert.False(detail.IsActive);
         Assert.Equal(created.Id, detail.Id);
-        var page = await mediator.Send(new GetSportsQuery { ActorUserId = actorId, ActiveOnly = false }, cancellation.Token);
+        var page = await mediator.Send(new GetSportsQuery { ActorUserId = actorId }, cancellation.Token);
         Assert.Equal(created.Id, Assert.Single(page.Items).Id);
         Assert.Equal(1, page.TotalItems);
         Assert.Equal(PaginationDefaults.DefaultPageNumber, page.PageNumber);
         Assert.Equal(PaginationDefaults.DefaultPageSize, page.PageSize);
-        var activePage = await mediator.Send(new GetSportsQuery { ActorUserId = actorId }, cancellation.Token);
+        var activePage = await mediator.Send(new GetSportsQuery { ActorUserId = actorId, IsActive = true }, cancellation.Token);
         Assert.Empty(activePage.Items);
         Assert.Equal(3, store.SaveCount);
         Assert.Equal(6, store.AuthorizationReadCount);
@@ -193,9 +193,11 @@ public sealed class SportTests
     [InlineData("create", false)]
     [InlineData("update", false)]
     [InlineData("deactivate", false)]
+    [InlineData("activate", false)]
     [InlineData("create", true)]
     [InlineData("update", true)]
     [InlineData("deactivate", true)]
+    [InlineData("activate", true)]
     public async Task MissingActorOrWritePermissionStopsRepositoryAndCommit(string action, bool actorExists)
     {
         var store = new StubStore { ActorExists = actorExists, Permissions = [PermissionCodes.ReadSports, PermissionCodes.ListSports] };
@@ -215,6 +217,7 @@ public sealed class SportTests
     [InlineData("create", PermissionCodes.UpdateSports)]
     [InlineData("update", PermissionCodes.DeactivateSports)]
     [InlineData("deactivate", PermissionCodes.CreateSports)]
+    [InlineData("activate", PermissionCodes.DeactivateSports)]
     public async Task OtherWritePermissionDoesNotAuthorizeAction(string action, string permission)
     {
         var store = new StubStore { Permissions = [permission] };
@@ -231,6 +234,7 @@ public sealed class SportTests
     [Theory]
     [InlineData("update")]
     [InlineData("deactivate")]
+    [InlineData("activate")]
     public async Task MissingSportDoesNotCommit(string action)
     {
         var store = new StubStore();
@@ -269,6 +273,7 @@ public sealed class SportTests
     [InlineData("create")]
     [InlineData("update")]
     [InlineData("deactivate")]
+    [InlineData("activate")]
     public async Task CancellationAtCommitIsPropagated(string action)
     {
         var sport = Sport.Create("OLD", "Old name", CreateFormatDetails());
@@ -376,6 +381,65 @@ public sealed class SportTests
         Assert.Equal(0, store.SaveCount);
     }
 
+    [Fact]
+    public async Task ActivationThroughControllerPreservesFormatsAndPassesActorAndCancellation()
+    {
+        var sport = Sport.Create("TEST", "Test", CreateFormatDetails());
+        sport.Deactivate();
+        var store = new StubStore { Sport = sport, Permissions = [PermissionCodes.UpdateSports] };
+        using var provider = CreateProvider(store);
+        var actorId = Guid.NewGuid();
+        using var cancellation = new CancellationTokenSource();
+        var controller = new SportController(provider.GetRequiredService<IMediator>(), provider.GetRequiredService<AutoMapper.IMapper>(), new StubCurrentUser(actorId))
+        {
+            ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
+        };
+        var response = await controller.ActivateSport(sport.Id, cancellation.Token);
+        var contract = Assert.IsType<BaseResponse<SportDto>>(Assert.IsType<OkObjectResult>(response.Result).Value);
+        Assert.True(contract.Data!.IsActive);
+        Assert.Equal(sport.Id, contract.Data.Id);
+        Assert.Equal(Assert.Single(sport.Formats).Id, Assert.Single(contract.Data.Formats).Id);
+        Assert.Equal(actorId, store.LastActorId);
+        Assert.Equal(cancellation.Token, store.LastReadToken);
+        Assert.Equal(cancellation.Token, store.LastSaveToken);
+        Assert.Equal(1, store.SaveCount);
+        await controller.ActivateSport(sport.Id, cancellation.Token);
+        Assert.True(sport.IsActive);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ActivationRejectsActiveDuplicateWithoutChangingStateOrCommitting(bool duplicateCode)
+    {
+        var sport = Sport.Create("TEST", "Test", CreateFormatDetails());
+        sport.Deactivate();
+        var duplicate = Sport.Create(duplicateCode ? "TEST" : "OTHER", duplicateCode ? "Other name" : "Test", CreateFormatDetails());
+        var store = new StubStore { Sport = sport, OtherSport = duplicate };
+        using var provider = CreateProvider(store);
+        var error = await Assert.ThrowsAsync<ConflictException>(() => provider.GetRequiredService<IMediator>()
+            .Send(new ActivateSportCommand(Guid.NewGuid(), sport.Id)));
+        Assert.Equal(ErrorCodes.DuplicateResource, error.Code);
+        Assert.False(sport.IsActive);
+        Assert.Equal(0, store.SaveCount);
+    }
+
+    [Fact]
+    public async Task ActivationRequiresAnActiveFormatBeforeChangingState()
+    {
+        var sport = Sport.Create("TEST", "Test", CreateFormatDetails());
+        sport.Deactivate();
+        Assert.Single(sport.Formats).Deactivate();
+        Assert.Throws<ArgumentException>(() => sport.Activate());
+        Assert.False(sport.IsActive);
+        var store = new StubStore { Sport = sport };
+        using var provider = CreateProvider(store);
+        var error = await Assert.ThrowsAsync<RequestValidationException>(() => provider.GetRequiredService<IMediator>()
+            .Send(new ActivateSportCommand(Guid.NewGuid(), sport.Id)));
+        Assert.Equal(ErrorCodes.InvalidSport, error.Code);
+        Assert.Equal(0, store.SaveCount);
+    }
+
     private static SportFormatInput[] CreateFormatInputs(Guid? id = null) => [new(id, "DEFAULT", "Default format", 1, id.HasValue ? "MODIFY" : "NEW")];
     private static SportFormatDetails[] CreateFormatDetails() => [SportFormatDetails.Create("DEFAULT", "Default format", 1)];
 
@@ -383,6 +447,7 @@ public sealed class SportTests
     {
         "create" => new CreateSportCommand(actorId, "NEW", "New name", CreateFormatInputs()),
         "update" => new UpdateSportCommand(actorId, sportId, "NEW", "New name", [new(null, "EXTRA", "Extra format", 2, "NEW")]),
+        "activate" => new ActivateSportCommand(actorId, sportId),
         _ => new DeactivateSportCommand(actorId, sportId)
     };
 
@@ -465,7 +530,7 @@ public sealed class SportTests
             ReadCount++;
             LastReadToken = cancellationToken;
             cancellationToken.ThrowIfCancellationRequested();
-            IReadOnlyList<Sport> items = Sport is not null && (!query.ActiveOnly || Sport.IsActive) ? [Sport] : [];
+            IReadOnlyList<Sport> items = Sport is not null && (!query.IsActive.HasValue || Sport.IsActive == query.IsActive.Value) ? [Sport] : [];
             return Task.FromResult(new PaginatedResult<Sport>(items, query.PageNumber, query.PageSize, items.Count));
         }
 

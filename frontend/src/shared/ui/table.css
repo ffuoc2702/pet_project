@@ -1,0 +1,81 @@
+.app-table-card .ant-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.app-table-cell-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+.app-table-cell-tooltip .ant-tooltip-inner {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 60dvh;
+  overflow-y: auto;
+}
+
+.app-table-card .ant-card-head {
+  background: color-mix(in srgb, var(--primary) 20%, var(--surface));
+}
+
+.app-table-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.app-table-toolbar-search {
+  flex: 0 0 50%;
+  min-width: 0;
+}
+.app-table-toolbar-search > * {
+  width: 100%;
+}
+.app-table-toolbar-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.app-table-toolbar-filters > * {
+  width: 180px;
+}
+.app-table-toolbar-options {
+  margin-inline-start: auto;
+}
+.app-table-border-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.app-table-no-horizontal .ant-table-thead > tr > th,
+.app-table-no-horizontal .ant-table-tbody > tr > td {
+  border-bottom: 0 !important;
+}
+.app-table-no-horizontal .ant-table-container {
+  border-top: 0 !important;
+}
+.app-table-no-vertical .ant-table-thead > tr > th::before {
+  display: none;
+}
+@media (max-width: 767px) {
+  .app-table-toolbar-search {
+    flex-basis: 100%;
+  }
+  .app-table-toolbar-filters {
+    flex: 1 0 160px;
+    min-width: 160px;
+  }
+  .app-table-toolbar-filters > * {
+    flex: 1;
+    min-width: 160px;
+  }
+  .app-table-toolbar-options {
+    margin-inline-start: 0;
+  }
+}

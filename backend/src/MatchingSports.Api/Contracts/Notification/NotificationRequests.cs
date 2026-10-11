@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MatchingSports.Shared;
 
 namespace MatchingSports.Api.Contracts;
 
 public class NotificationConfigRequest
 {
-    [StringLength(2000, ErrorMessage = "Mô tả không được vượt quá 2000 ký tự.")]
+    [StringLength(ResourceLimits.DescriptionMaxLength, ErrorMessage = "Mô tả không được vượt quá 200 ký tự.")]
     public string? Description { get; init; }
     public bool IsSendNow { get; init; }
     [Required(ErrorMessage = "Loại lịch là bắt buộc.")]

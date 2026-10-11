@@ -32,12 +32,12 @@ public sealed class WebFoundationTests
         var sport = Sport.Create("SPORT", "Original", [SportFormatDetails.Create("ONE", "Original format", 1)], "  Details  ");
         Assert.Equal("Details", sport.Description);
         Assert.Throws<ArgumentException>(() => sport.UpdateDetails("NEW", "Changed",
-            [SportFormatDetails.Create("TWO", "New format", 2)], new string('x', 2001)));
+            [SportFormatDetails.Create("TWO", "New format", 2)], new string('x', 201)));
         Assert.Equal("Original", sport.Name);
         Assert.Single(sport.Formats);
         Assert.Equal("Details", sport.Description);
         Assert.Null(ResourceDescription.Normalize("   "));
-        Assert.Throws<ArgumentException>(() => ResourceDescription.Normalize(new string('x', 4001), 4000));
+        Assert.Throws<ArgumentException>(() => ResourceDescription.Normalize(new string('x', 201)));
     }
 
     [Fact]
@@ -86,8 +86,8 @@ public sealed class WebFoundationTests
         Assert.Null(entity.BaseType);
         Assert.True(entity.FindProperty(nameof(UserPreferences.ConcurrencyToken))!.IsConcurrencyToken);
         Assert.Single(entity.FindPrimaryKey()!.Properties);
-        Assert.Equal(2000, db.Model.FindEntityType(typeof(Sport))!.FindProperty(nameof(Sport.Description))!.GetMaxLength());
-        Assert.Equal(4000, db.Model.FindEntityType(typeof(Listing))!.FindProperty(nameof(Listing.Description))!.GetMaxLength());
+        Assert.Equal(200, db.Model.FindEntityType(typeof(Sport))!.FindProperty(nameof(Sport.Description))!.GetMaxLength());
+        Assert.Equal(200, db.Model.FindEntityType(typeof(Listing))!.FindProperty(nameof(Listing.Description))!.GetMaxLength());
     }
 
     private static IMapper Mapper()

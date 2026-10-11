@@ -2,6 +2,7 @@
 using MatchingSports.Application.Abstractions;
 using MatchingSports.Domain.Entities;
 using MatchingSports.Domain.Enums;
+using MatchingSports.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -49,6 +50,8 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         builder.HasPostgresExtension("postgis");
 
         ConfigureCatalog(builder);
+        builder.Entity<Team>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
+        builder.Entity<Report>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
         var preferences = builder.Entity<UserPreferences>();
         preferences.ToTable("user_preferences");
         preferences.HasKey(x => x.UserId);
@@ -57,11 +60,11 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
         preferences.Property(x => x.ColorMode).HasMaxLength(10).IsRequired();
         preferences.Property(x => x.ThemePreset).HasMaxLength(20).IsRequired();
         preferences.Property(x => x.ConcurrencyToken).IsConcurrencyToken();
-        builder.Entity<Sport>().Property(x => x.Description).HasMaxLength(2000);
-        builder.Entity<SportFormat>().Property(x => x.Description).HasMaxLength(2000);
-        builder.Entity<Permission>().Property(x => x.Description).HasMaxLength(2000);
-        builder.Entity<Listing>().Property(x => x.Description).HasMaxLength(4000);
-        builder.Entity<NotificationConfig>().Property(x => x.Description).HasMaxLength(2000);
+        builder.Entity<Sport>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
+        builder.Entity<SportFormat>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
+        builder.Entity<Permission>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
+        builder.Entity<Listing>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
+        builder.Entity<NotificationConfig>().Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
         ConfigureIdentityAndProfiles(builder);
         ConfigureTeams(builder);
         TeamPersistenceConfiguration.Configure(builder);
@@ -201,7 +204,7 @@ public sealed class MatchingSportsDbContext(DbContextOptions<MatchingSportsDbCon
             entity.ToTable("roles");
             entity.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
             entity.Property(x => x.PermissionsInitialized).HasDefaultValue(false);
-            entity.Property(x => x.Description).HasMaxLength(500);
+            entity.Property(x => x.Description).HasMaxLength(ResourceLimits.DescriptionMaxLength);
             entity.Property(x => x.IsActive).HasDefaultValue(true).HasSentinel(true);
             entity.Property(x => x.IsDefaultForRegistration).HasDefaultValue(false);
             entity.Property(x => x.RegistrationDefaultInitialized).HasDefaultValue(false);

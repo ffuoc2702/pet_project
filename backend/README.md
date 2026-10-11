@@ -115,13 +115,16 @@ cờ này. Có thể chọn nhiều role mặc định hoặc không chọn role
 | GET /api/v1/sports/{sportId} | sports.read | Chi tiết một môn thể thao |
 | POST /api/v1/sports | sports.create | Tạo môn thể thao và danh sách formats |
 | PUT /api/v1/sports/{sportId} | sports.update | Cập nhật môn thể thao và danh sách formats |
+| POST /api/v1/sports/{sportId}/activate | sports.update | Kích hoạt lại môn thể thao |
+| POST /api/v1/sports/{sportId}/deactivate | sports.deactivate | Vô hiệu hóa môn thể thao |
 | DELETE /api/v1/sports/{sportId} | sports.deactivate | Vô hiệu hóa môn thể thao, giữ dữ liệu tham chiếu |
 
 Sport chuẩn hóa code bằng trim và uppercase, name bằng trim trong Domain.
 Code và name bắt buộc, giới hạn lần lượt 32 và 100 ký tự. Response có IsActive.
 DELETE đặt IsActive = false; gọi lại vẫn trả Sport đã vô hiệu hóa. PUT cập nhật
-code/name và formats, giữ trạng thái hoạt động của Sport. Danh sách mặc định chỉ lấy Sport đang hoạt động;
-truyền ActiveOnly=false để xem cả Sport đã vô hiệu hóa. Code hoặc name trùng
+code/name và formats, giữ trạng thái hoạt động của Sport. Danh sách mặc định trả
+cả hai trạng thái; isActive=true/false lọc Sport theo trạng thái tương ứng.
+Formats được trả đầy đủ, không lọc theo trạng thái của Sport. Code hoặc name trùng
 với Sport đang active trả 409 với DUPLICATE_RESOURCE (bỏ khoảng trắng hai đầu,
 không phân biệt hoa/thường). Sport không tồn tại trả 404 với SPORT_NOT_FOUND.
 
@@ -349,3 +352,7 @@ và worker [matching](../docs/matching.md).
 Chạy `bash ./scripts/demo.sh --run-id cv-demo-01` từ backend để tạo 50 người dùng,
 6 team và 15 kèo. Dùng `--mode test` để tạo/dọn database cô lập.
 Xem [hướng dẫn simulator](../docs/demo-simulator.md) về cấu hình và checkpoint.
+
+Kích hoạt sport giữ nguyên formats và yêu cầu ít nhất một format hoạt động.
+Nếu mã hoặc tên đã được sport hoạt động khác sử dụng, API trả 409 `DUPLICATE_RESOURCE`.
+Hai endpoint trạng thái không nhận actor trong body; actor lấy từ danh tính đã xác thực.

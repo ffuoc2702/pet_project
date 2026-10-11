@@ -33,3 +33,8 @@
   `PaginationTests` làm convention hiện có.
 
 Xem [convention query](conventions/queries.md) cho BaseQuery, mapping và filter.
+
+
+Sports list hỗ trợ `IsActive` nullable: không truyền trả cả hai trạng thái,
+true/false lọc đúng trạng thái trước count và phân trang. Formats của từng sport
+được trả đầy đủ; bộ lọc trạng thái chỉ áp dụng cho sport.

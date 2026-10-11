@@ -1,6 +1,6 @@
 import { routePath } from '@/shared/config/routes';
 import { AppPasswordInput } from '@/shared/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BellOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,7 +17,6 @@ import {
   AppInput,
   AppModal,
   AppSelect,
-  AppSkeleton,
   AppTable,
   AppTag,
   AppTooltip,
@@ -33,6 +32,12 @@ export default function UiShowcasePage() {
   const [modal, setModal] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (!loading) return;
+    const timer = window.setTimeout(() => setLoading(false), 1000);
+    return () => window.clearTimeout(timer);
+  }, [loading]);
   const rows = Array.from({ length: 12 }, (_, index) => ({
     id: index + 1,
     name: t('ui:tableName') + ' ' + (index + 1),
@@ -58,7 +63,9 @@ export default function UiShowcasePage() {
             <AppButton>{t('ui:secondary')}</AppButton>
             <AppButton danger>{t('ui:danger')}</AppButton>
             <AppButton disabled>{t('ui:disabled')}</AppButton>
-            <AppButton loading>{t('ui:loading')}</AppButton>
+            <AppButton loading={loading} onClick={() => setLoading(true)}>
+              {t('ui:loading')}
+            </AppButton>
             <AppTooltip title={t('ui:tooltip')}>
               <AppIconButton
                 aria-label={t('ui:tooltip')}
@@ -152,7 +159,6 @@ export default function UiShowcasePage() {
         </AppCard>
         <AppCard title={t('ui:empty')}>
           <AppEmpty />
-          <AppSkeleton />
         </AppCard>
       </div>
       <AppCard title={t('ui:data')}>
@@ -184,6 +190,14 @@ export default function UiShowcasePage() {
         onOk={() => setModal(false)}
       >
         {t('ui:demoBody')}
+        <AppSelect
+          aria-label={t('ui:choose')}
+          style={{ width: '100%' }}
+          options={[
+            { value: 'one', label: t('ui:primary') },
+            { value: 'two', label: t('ui:secondary') },
+          ]}
+        />
       </AppModal>
       <AppDrawer
         title={t('ui:demoTitle')}
@@ -191,6 +205,14 @@ export default function UiShowcasePage() {
         onClose={() => setDrawer(false)}
       >
         {t('ui:demoBody')}
+        <AppSelect
+          aria-label={t('ui:choose')}
+          style={{ width: '100%' }}
+          options={[
+            { value: 'one', label: t('ui:primary') },
+            { value: 'two', label: t('ui:secondary') },
+          ]}
+        />
       </AppDrawer>
     </PageContainer>
   );

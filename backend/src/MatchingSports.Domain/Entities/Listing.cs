@@ -62,7 +62,7 @@ public sealed class Listing : ConcurrentAuditableEntity
     private void ApplyValues(ListingValues values, DateTimeOffset now)
     {
         values.Validate(now);
-        Description = ResourceDescription.Normalize(values.Description, 4000);
+        Description = ResourceDescription.Normalize(values.Description);
         SportId = values.SportId; FormatId = values.FormatId; HostTeamId = values.HostTeamId; Mode = values.Mode;
         Title = values.Title.Trim(); Note = StringNormalizer.StartEndSpaceTrim(values.Note);
         LevelMin = values.LevelMin; LevelMax = values.LevelMax; OpenSlots = values.OpenSlots;

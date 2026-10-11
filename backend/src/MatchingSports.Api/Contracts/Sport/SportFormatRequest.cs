@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MatchingSports.Shared;
 
 namespace MatchingSports.Api.Contracts;
 
@@ -10,7 +11,7 @@ public sealed class SportFormatRequest : IValidatableObject
     [RegularExpression("^(NEW|MODIFY|DELETE)$", ErrorMessage = "Thao tác với thể thức phải là NEW, MODIFY hoặc DELETE.")]
     public string Action { get; init; } = null!;
 
-    [StringLength(2000, ErrorMessage = "Mô tả không được vượt quá 2000 ký tự.")]
+    [StringLength(ResourceLimits.DescriptionMaxLength, ErrorMessage = "Mô tả không được vượt quá 200 ký tự.")]
     public string? Description { get; init; }
     [StringLength(32, ErrorMessage = "Mã thể thức không được vượt quá 32 ký tự.")]
     public string? Code { get; init; }

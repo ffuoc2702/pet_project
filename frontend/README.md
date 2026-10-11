@@ -191,3 +191,22 @@ cần chờ API. Google Maps là tích hợp tùy chọn; tọa độ form có s
 Navigation bị hủy ngừng chờ ngay, không hủy query mà route khác đang dùng chung;
 queryFn vẫn nhận AbortSignal của TanStack Query. API thất bại chuyển tới error
 boundary có mã lỗi/đường dẫn quay về, không giữ loading vô hạn hoặc hiện form trống.
+
+Trang sports dùng toolbar tìm kiếm (50% chiều ngang desktop), dropdown trạng thái
+và bảng được bọc trong `AppCard` dùng class `app-table-card`. `status=active|inactive` nằm trong URL/cache key và gửi
+`isActive=true|false` tới API; trạng thái tất cả không gửi `isActive`.
+`AppTable` nhận `borders={{ horizontal, vertical }}` để cấu hình từng hướng độc lập; cấu hình viền không ảnh hưởng API.
+Nội dung text/link của ô bảng mặc định tối đa 3 dòng, vượt quá hiện `…` và
+tooltip đầy đủ. Cấu hình chung qua `maxCellLines`, riêng từng cột qua `maxLines`.
+
+Bố cục list dùng class `app-table-card` và `AppTableToolbar` từ
+`shared/ui/table-toolbar.tsx`, nhận các vùng `search`, `filters`, `options`.
+CSS responsive, bố cục body Card và
+đường viền nằm trong `shared/ui/table.css`, không khai báo selector theo feature.
+
+Cột trạng thái sports dùng `SportStatusSwitch` trên base `AppSwitch`.
+Bật gọi POST `/sports/{id}/activate` (sports.update), tắt gọi POST
+`/sports/{id}/deactivate` (sports.deactivate). Pending dùng overlay loading chung
+của root navigation, không hiện loading trong switch/button/table;
+không đổi checked trước khi API thành công, không retry mutation tự động.
+Sau thành công cập nhật cache detail và invalidate list để giữ đúng filter/phân trang.

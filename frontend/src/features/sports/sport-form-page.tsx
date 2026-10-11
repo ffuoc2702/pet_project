@@ -117,9 +117,9 @@ function Editor({ initial, id }: { initial: SportInput; id?: string }) {
         <Form.Item
           label={t('common:description')}
           name="description"
-          rules={[max(2000)]}
+          rules={[max(200)]}
         >
-          <AppTextArea rows={3} maxLength={2000} showCount />
+          <AppTextArea rows={3} maxLength={200} showCount />
         </Form.Item>
         <Form.List
           name="formats"
@@ -178,9 +178,9 @@ function Editor({ initial, id }: { initial: SportInput; id?: string }) {
                   <Form.Item
                     label={t('common:description')}
                     name={[field.name, 'description']}
-                    rules={[max(2000)]}
+                    rules={[max(200)]}
                   >
-                    <AppTextArea rows={2} maxLength={2000} />
+                    <AppTextArea rows={2} maxLength={200} showCount />
                   </Form.Item>
                   <Button
                     danger

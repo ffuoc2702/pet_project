@@ -1,4 +1,5 @@
 html {
+  scrollbar-gutter: stable;
   color-scheme: light;
   background: #f5f7fa;
 }
@@ -7,6 +8,7 @@ html[data-mode='dark'] {
   background: #101828;
 }
 body {
+  overflow-x: clip;
   margin: 0;
   font-family: Inter, system-ui, sans-serif;
   cursor: default;
@@ -48,6 +50,7 @@ body {
   background: var(--page-bg);
 }
 .app-shell > .ant-layout-sider {
+  transition-property: width, min-width, max-width, flex-basis;
   border-right: 1px solid var(--border);
   background: var(--surface);
   position: sticky;
@@ -85,8 +88,7 @@ body {
   font-weight: 650;
 }
 .main-content {
-  padding: 12px 12px 12px;
-  max-width: 1600px;
+  padding: 0 12px;
   width: 100%;
   margin: 0 auto;
   outline: none;
@@ -232,7 +234,8 @@ body {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    /* Position changes must be synchronous for Ant popup alignment measurements. */
+    transition: none !important;
   }
 }
 
@@ -243,6 +246,8 @@ body {
 }
 
 .theme-root {
+  position: relative;
+  overflow: clip;
   min-height: 100dvh;
   background: var(--page-bg);
   color: var(--text);

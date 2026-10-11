@@ -46,7 +46,7 @@ public sealed class Team : ConcurrentAuditableEntity
     {
         RequireActive();
         TeamRules.Require(!string.IsNullOrWhiteSpace(name) && name.Trim().Length <= 120
-            && (description is null || description.Length <= 2000) && (homeArea is null || homeArea.Length <= 150)
+            && (description is null || description.Length <= ResourceLimits.DescriptionMaxLength) && (homeArea is null || homeArea.Length <= 150)
             && (avatarUrl is null || avatarUrl.Length <= 2048), "Thông tin đội không hợp lệ.");
         Name = name.Trim(); Description = StringNormalizer.StartEndSpaceTrim(description);
         HomeArea = StringNormalizer.StartEndSpaceTrim(homeArea); AvatarUrl = StringNormalizer.StartEndSpaceTrim(avatarUrl);

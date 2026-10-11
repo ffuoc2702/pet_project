@@ -1,7 +1,8 @@
 import { Button, type ButtonProps } from 'antd';
-import { AppLoading } from './loading';
+import { useAppLoading } from './use-app-loading';
 export function AppButton({ loading = false, ...props }: ButtonProps) {
   const busy = typeof loading === 'boolean' ? loading : true;
+  useAppLoading(busy);
   return (
     <Button
       htmlType="button"
@@ -10,14 +11,8 @@ export function AppButton({ loading = false, ...props }: ButtonProps) {
         typeof props.children === 'string' ? props.children : undefined
       }
       {...props}
-      loading={
-        busy
-          ? {
-              ...(typeof loading === 'object' ? loading : {}),
-              icon: <AppLoading decorative />,
-            }
-          : false
-      }
+      disabled={busy ? true : props.disabled}
+      loading={false}
     />
   );
 }

@@ -11,6 +11,35 @@ namespace MatchingSports.Tests;
 public sealed class WebFoundationPersistenceTests
 {
     [RbacDatabaseFact]
+    public async Task DescriptionMigrationRejectsOversizedExistingContentWithoutTruncation()
+    {
+        var connection = new NpgsqlConnectionStringBuilder(Environment.GetEnvironmentVariable("MATCHINGSPORTS_RBAC_TEST_CONNECTION")!);
+        Assert.StartsWith("matchingsports_rbac_test_", connection.Database, StringComparison.Ordinal);
+        connection.Database = $"matchingsports_rbac_test_description_{Guid.NewGuid():N}";
+        var options = new DbContextOptionsBuilder<MatchingSportsDbContext>()
+            .UseNpgsql(connection.ConnectionString, postgres => postgres.UseNetTopologySuite()).Options;
+        await using var db = new MatchingSportsDbContext(options);
+        try
+        {
+            var migrations = db.Database.GetMigrations().ToArray();
+            await db.GetService<IMigrator>().MigrateAsync(migrations[^2]);
+            var sportId = Guid.NewGuid();
+            var oversized = new string('x', 201);
+            await db.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO sports (id, code, name, description) VALUES ({sportId}, 'DESCRIPTION_TEST', 'Existing sport', {oversized})");
+            await Assert.ThrowsAsync<PostgresException>(() => db.Database.MigrateAsync());
+            Assert.Equal(oversized, await db.Sports.Where(sport => sport.Id == sportId).Select(sport => sport.Description).SingleAsync());
+            var maximum = new string('x', 200);
+            await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE sports SET description = {maximum} WHERE id = {sportId}");
+            await db.Database.MigrateAsync();
+            Assert.Equal(maximum, await db.Sports.Where(sport => sport.Id == sportId).Select(sport => sport.Description).SingleAsync());
+            var error = await Assert.ThrowsAsync<PostgresException>(() =>
+                db.Database.ExecuteSqlInterpolatedAsync($"UPDATE sports SET description = {oversized} WHERE id = {sportId}"));
+            Assert.Equal(PostgresErrorCodes.StringDataRightTruncation, error.SqlState);
+        }
+        finally { await db.Database.EnsureDeletedAsync(); }
+    }
+
+    [RbacDatabaseFact]
     public async Task MigrationPreservesExistingResourcesAndPreferencesRejectConcurrentUpdates()
     {
         var connection = new NpgsqlConnectionStringBuilder(Environment.GetEnvironmentVariable("MATCHINGSPORTS_RBAC_TEST_CONNECTION")!);

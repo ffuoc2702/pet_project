@@ -2,6 +2,6 @@
 
 public sealed class GetSportsRequest : BaseRequest
 {
-    public bool ActiveOnly { get; init; } = true;
+    public bool? IsActive { get; init; }
     public string? SportCode { get; init; }
 }

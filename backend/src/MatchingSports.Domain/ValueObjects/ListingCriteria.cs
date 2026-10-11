@@ -39,7 +39,7 @@ public sealed record ListingValues(Guid SportId, Guid FormatId, Guid? HostTeamId
         MatchingRules.Require(OpenSlots > 0, "Số chỗ cần tuyển phải lớn hơn 0.");
         MatchingRules.Require(StartAt > now && CutoffAt > now && CutoffAt <= StartAt && DurationMinutes is >= 15 and <= 480, "Thời gian bắt đầu, thời lượng hoặc hạn đăng ký không hợp lệ.");
         MatchingRules.Require(Latitude is >= -90 and <= 90 && Longitude is >= -180 and <= 180, "Tọa độ không hợp lệ.");
-        _ = ResourceDescription.Normalize(Description, 4000);
+        _ = ResourceDescription.Normalize(Description);
         _ = MatchingRules.Text(Title, 160, "Tiêu đề");
         _ = MatchingRules.Text(AddressText, 255, "Địa điểm");
         MatchingRules.Require(Note is null || Note.Length <= 4000, "Ghi chú không được vượt quá 4000 ký tự.");

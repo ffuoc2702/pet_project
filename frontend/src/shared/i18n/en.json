@@ -24,11 +24,12 @@
     "code": "Code",
     "active": "Active",
     "inactive": "Inactive",
+    "sportStatus": "Status of {{name}}",
     "status": "Status",
     "actions": "Actions",
     "details": "Details",
     "edit": "Edit",
-    "create": "Create sport",
+    "create": "Create",
     "cancel": "Cancel",
     "formats": "Formats",
     "sideSize": "Players per side",
@@ -55,7 +56,11 @@
     "configureLocation": "Choose a location",
     "updated": "Updated",
     "skipToContent": "Skip to content",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "allStatuses": "All statuses",
+    "tableBorders": "Table borders",
+    "horizontalBorders": "Horizontal borders",
+    "verticalBorders": "Vertical borders"
   },
   "auth": {
     "login": "Sign in",

@@ -95,6 +95,13 @@ public sealed class Sport : AuditableEntity
 
     public void Deactivate() => IsActive = false;
 
+    public void Activate()
+    {
+        if (!Formats.Any(format => format.IsActive))
+            throw new ArgumentException("Phải còn ít nhất một thể thức đang hoạt động.", nameof(Formats));
+        IsActive = true;
+    }
+
     public ICollection<SportFormat> Formats { get; set; } = [];
     public ICollection<UserSportProfile> UserSportProfiles { get; set; } = [];
     public ICollection<Team> Teams { get; set; } = [];

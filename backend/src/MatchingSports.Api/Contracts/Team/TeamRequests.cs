@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MatchingSports.Domain.Enums;
+using MatchingSports.Shared;
 
 namespace MatchingSports.Api.Contracts;
 
 public class TeamDetailsRequest
 {
     [Required(ErrorMessage = "Tên đội là bắt buộc."), StringLength(120, ErrorMessage = "Tên đội tối đa 120 ký tự.")] public string Name { get; init; } = string.Empty;
-    [StringLength(2000, ErrorMessage = "Mô tả đội tối đa 2000 ký tự.")] public string? Description { get; init; }
+    [StringLength(ResourceLimits.DescriptionMaxLength, ErrorMessage = "Mô tả đội tối đa 200 ký tự.")] public string? Description { get; init; }
     [StringLength(150, ErrorMessage = "Khu vực tối đa 150 ký tự.")] public string? HomeArea { get; init; }
     [StringLength(2048, ErrorMessage = "Đường dẫn ảnh tối đa 2048 ký tự.")] public string? AvatarUrl { get; init; }
 }
