@@ -3,9 +3,13 @@ import { initializeSession, getSessionSnapshot } from '@/features/auth';
 import { getPreferences } from '@/features/preferences';
 import { waitForRouteData } from '@/shared/navigation/wait-for-route-data';
 import { queryClient } from '@/shared/api/query-client';
+import {
+  hasPermissions,
+  type RequiredPermissions,
+} from '@/shared/auth/permissions';
 
 export function createRouteLoader(
-  permission?: string,
+  permission?: RequiredPermissions,
   prepare?: LoaderFunction,
 ) {
   return async (args: LoaderFunctionArgs) => {
@@ -13,10 +17,7 @@ export function createRouteLoader(
     args.request.signal.throwIfAborted();
     const { session, error } = getSessionSnapshot();
     // RouteAccess presents auth/permission failures without fetching protected data.
-    if (
-      error ||
-      (permission && !session?.user.permissions.includes(permission))
-    )
+    if (error || !hasPermissions(session?.user.permissions || [], permission))
       return null;
     if (session) {
       await waitForRouteData(

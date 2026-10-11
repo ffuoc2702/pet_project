@@ -9,6 +9,7 @@ namespace MatchingSports.Application.Features.Role;
 public sealed record GetRolesQuery : BaseQuery<RoleDto>, IPermissionAuthorizedRequest
 {
     public Guid ActorUserId { get; init; }
+    public bool? IsActive { get; init; }
 
     IReadOnlyCollection<string> IPermissionAuthorizedRequest.RequiredPermissions => [PermissionCodes.ListRoles];
 }

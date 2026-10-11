@@ -7,6 +7,11 @@ Bộ UI custom trên Ant Design, tokens/theme, auth flows và quy tắc mở r�
 [docs/ui-base.md](docs/ui-base.md). Chạy dev và mở `/dev/ui` để xem component
 showcase; production không bật route này.
 
+Màn quản trị: `/users` (người dùng), `/roles` (vai trò), `/roles/matrix`
+(ma trận quyền theo role). Dùng chung cấu trúc bảng của Sports; menu và thao tác
+theo permission. Chi tiết API, filter, concurrency và lưu quyền:
+[docs/user-directory.md](../docs/user-directory.md).
+
 ## Chạy local
 
 Node 22.12+, Bash (Windows dùng Git Bash) và backend .NET 10:

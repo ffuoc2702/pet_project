@@ -1,6 +1,9 @@
 export type RouteId =
   | 'home'
   | 'sports'
+  | 'users'
+  | 'roles'
+  | 'roleMatrix'
   | 'sportNew'
   | 'sportDetail'
   | 'sportEdit'
@@ -18,13 +21,31 @@ export interface RouteDefinition {
   labelKey: string;
   parent?: RouteId;
   menuRoute?: RouteId;
-  permission?: string;
+  permission?: string | readonly string[];
   layout?: 'auth';
   developmentOnly?: boolean;
   resourceLabel?: { type: string; parameter: string };
 }
 export const routes = {
   home: { path: '/', labelKey: 'common:home' },
+  users: {
+    path: '/users',
+    labelKey: 'admin:users',
+    parent: 'home',
+    permission: 'users.list',
+  },
+  roles: {
+    path: '/roles',
+    labelKey: 'admin:roles',
+    parent: 'home',
+    permission: 'roles.list',
+  },
+  roleMatrix: {
+    path: '/roles/matrix',
+    labelKey: 'admin:matrix',
+    parent: 'roles',
+    permission: ['roles.list', 'permissions.list'],
+  },
   sports: {
     path: '/sports',
     labelKey: 'common:sports',

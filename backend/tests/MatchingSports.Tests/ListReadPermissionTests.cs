@@ -75,6 +75,7 @@ public sealed class ListReadPermissionTests
     [InlineData(typeof(SportController), nameof(SportController.UpdateSport), PermissionCodes.UpdateSports)]
     [InlineData(typeof(SportController), nameof(SportController.DeactivateSport), PermissionCodes.DeactivateSports)]
     [InlineData(typeof(RoleController), nameof(RoleController.GetRoles), PermissionCodes.ListRoles)]
+    [InlineData(typeof(UsersController), nameof(UsersController.GetUsers), PermissionCodes.ListUsers)]
     [InlineData(typeof(RoleController), nameof(RoleController.GetRole), PermissionCodes.ReadRoles)]
     [InlineData(typeof(PermissionController), nameof(PermissionController.GetPermissions), PermissionCodes.ListPermissions)]
     [InlineData(typeof(PermissionController), nameof(PermissionController.GetPermission), PermissionCodes.ReadPermissions)]

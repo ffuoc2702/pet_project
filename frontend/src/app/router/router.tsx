@@ -2,6 +2,8 @@ import { authPages } from '@/features/auth';
 import { sportsPages, loadSports, loadSport } from '@/features/sports';
 import { preferencesPage } from '@/features/preferences';
 import { locationPage } from '@/features/location';
+import { usersPage, loadUsers } from '@/features/users';
+import { rolesPages, loadRoles, loadRoleMatrix } from '@/features/roles';
 import { createRouteLoader } from './route-loader';
 import type { LoaderFunction } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom';
@@ -16,6 +18,9 @@ import { LoadingPage } from './loading-page';
 
 const pages: Record<RouteId, () => Promise<{ default: ComponentType }>> = {
   home: () => import('../layouts/home-page'),
+  users: usersPage,
+  roles: rolesPages.list,
+  roleMatrix: rolesPages.matrix,
   sports: sportsPages.list,
   sportNew: sportsPages.form,
   sportDetail: sportsPages.detail,
@@ -33,6 +38,9 @@ const pages: Record<RouteId, () => Promise<{ default: ComponentType }>> = {
     : async () => ({ default: ErrorPage }),
 };
 const prepareRoutes: Partial<Record<RouteId, LoaderFunction>> = {
+  users: loadUsers,
+  roles: loadRoles,
+  roleMatrix: loadRoleMatrix,
   sports: loadSports,
   sportDetail: loadSport,
   sportEdit: loadSport,

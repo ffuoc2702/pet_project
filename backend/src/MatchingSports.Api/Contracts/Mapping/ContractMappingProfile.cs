@@ -5,6 +5,7 @@ using MatchingSports.Application.Features.Permission;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
 using MatchingSports.Application.Features.Team;
+using MatchingSports.Application.Features.User;
 using MatchingSports.Application.Features.UserProfile;
 
 namespace MatchingSports.Api.Contracts;
@@ -45,6 +46,8 @@ public sealed class ContractMappingProfile : Profile
         CreateMap<GetSportsRequest, GetSportsQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());
         CreateMap<GetRolesRequest, GetRolesQuery>()
+            .ForMember(query => query.ActorUserId, option => option.Ignore());
+        CreateMap<GetUsersRequest, GetUsersQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());
         CreateMap<GetPermissionsRequest, GetPermissionsQuery>()
             .ForMember(query => query.ActorUserId, option => option.Ignore());

@@ -7,12 +7,16 @@ import { Result } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSession, refreshSession } from '@/features/auth';
 import { ApiErrorAlert } from '@/shared/ui/api-error-alert';
+import {
+  hasPermissions,
+  type RequiredPermissions,
+} from '@/shared/auth/permissions';
 
 export function RouteAccess({
   permission,
   children,
 }: {
-  permission?: string;
+  permission?: RequiredPermissions;
   children: React.ReactNode;
 }) {
   const { session, initialized, error } = useSession();
@@ -44,7 +48,7 @@ export function RouteAccess({
         }
       />
     );
-  if (!session.user.permissions.includes(permission))
+  if (!hasPermissions(session.user.permissions, permission))
     return <Result status="403" title="403" subTitle={t('common:forbidden')} />;
   return children;
 }

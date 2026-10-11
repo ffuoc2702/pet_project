@@ -8,6 +8,7 @@ await i18n.use(initReactI18next).init({
   defaultNS: 'common',
   ns: [
     'common',
+    'admin',
     'auth',
     'preferences',
     'location',

@@ -11,6 +11,8 @@ internal sealed class RoleRepository(MatchingSportsDbContext db) : IRoleReposito
     public async Task<PaginatedResult<Role>> ListAsync(GetRolesQuery query, CancellationToken cancellationToken)
     {
         var roles = db.Roles.AsNoTracking();
+        if (query.IsActive is { } active)
+            roles = roles.Where(role => role.IsActive == active);
         if (query.FromDate is { } fromDate)
             roles = roles.Where(role => role.UpdatedAt >= fromDate);
         if (query.ToDate is { } toDate)

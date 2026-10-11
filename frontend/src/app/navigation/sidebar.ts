@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { routes } from './routes';
 import type { RouteDefinition, RouteId } from './routes';
+import { hasPermissions } from '@/shared/auth/permissions';
 
 export interface SidebarNode {
   id: string;
@@ -19,6 +20,20 @@ export interface SidebarNode {
   children?: SidebarNode[];
 }
 export const sidebarTree: SidebarNode[] = [
+  {
+    id: 'admin',
+    labelKey: 'common:admin',
+    icon: createElement(TeamOutlined),
+    children: [
+      { id: 'users', routeId: 'users', icon: createElement(TeamOutlined) },
+      { id: 'roles', routeId: 'roles', icon: createElement(SettingOutlined) },
+      {
+        id: 'roleMatrix',
+        routeId: 'roleMatrix',
+        icon: createElement(SettingOutlined),
+      },
+    ],
+  },
   { id: 'home', routeId: 'home', icon: createElement(HomeOutlined) },
   {
     id: 'explore',
@@ -56,7 +71,7 @@ export function visibleSidebar(
       ? routes[node.routeId]
       : undefined;
     const permission = definition?.permission;
-    if (permission && !permissions.includes(permission)) return [];
+    if (!hasPermissions(permissions, permission)) return [];
     const children = node.children
       ? visibleSidebar(node.children, permissions)
       : undefined;

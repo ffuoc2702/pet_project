@@ -5,6 +5,7 @@ using MatchingSports.Application.Common;
 using MatchingSports.Application.Features.Permission;
 using MatchingSports.Application.Features.Role;
 using MatchingSports.Application.Features.Sport;
+using MatchingSports.Application.Features.User;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MatchingSports.Tests;
@@ -14,6 +15,7 @@ public sealed class MappingTests
     [Theory]
     [InlineData(typeof(GetSportsRequest), typeof(GetSportsQuery))]
     [InlineData(typeof(GetRolesRequest), typeof(GetRolesQuery))]
+    [InlineData(typeof(GetUsersRequest), typeof(GetUsersQuery))]
     [InlineData(typeof(GetPermissionsRequest), typeof(GetPermissionsQuery))]
     [InlineData(typeof(GetRolePermissionMatrixRequest), typeof(GetRolePermissionMatrixQuery))]
     public void ListRequestMappingPreservesInheritedFiltersAndDoesNotSupplyActor(Type requestType, Type queryType)
@@ -49,6 +51,17 @@ public sealed class MappingTests
             var filters = mapper.Map<GetSportsQuery>(new GetSportsRequest { IsActive = false, SportCode = "FOOTBALL" });
             Assert.False(filters.IsActive);
             Assert.Equal("FOOTBALL", filters.SportCode);
+        }
+        if (query is GetUsersQuery)
+        {
+            var filters = mapper.Map<GetUsersQuery>(new GetUsersRequest { Status = MatchingSports.Domain.Enums.UserStatus.SUSPENDED });
+            Assert.Equal(MatchingSports.Domain.Enums.UserStatus.SUSPENDED, filters.Status);
+        }
+        if (query is GetRolePermissionMatrixQuery)
+        {
+            var filters = mapper.Map<GetRolePermissionMatrixQuery>(new GetRolePermissionMatrixRequest { IsActive = false });
+            Assert.False(filters.IsActive);
+            Assert.False(mapper.Map<GetRolesQuery>(filters).IsActive);
         }
     }
 

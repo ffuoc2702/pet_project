@@ -176,6 +176,7 @@ public static class DependencyInjection
         services.AddScoped<IPublicProfileRepository, PublicProfileRepository>();
         services.AddScoped<IUserSportProfileRepository, UserSportProfileRepository>();
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+        services.AddScoped<IUserDirectoryRepository, UserDirectoryRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IAdminActionRepository, AdminActionRepository>();

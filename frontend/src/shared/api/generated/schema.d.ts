@@ -2231,6 +2231,7 @@ export interface paths {
     get: {
       parameters: {
         query?: {
+          IsActive?: boolean;
           Id?: string;
           SearchString?: string;
           FromDate?: string;
@@ -2370,6 +2371,7 @@ export interface paths {
     get: {
       parameters: {
         query?: {
+          IsActive?: boolean;
           Id?: string;
           SearchString?: string;
           FromDate?: string;
@@ -3879,6 +3881,51 @@ export interface paths {
         };
       };
     };
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/v1/users': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: {
+      parameters: {
+        query?: {
+          Status?: components['schemas']['UserStatus'];
+          Id?: string;
+          SearchString?: string;
+          FromDate?: string;
+          ToDate?: string;
+          PageNumber?: number;
+          PageSize?: number;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'text/plain': components['schemas']['UserListDtoPaginatedResponse'];
+            'application/json': components['schemas']['UserListDtoPaginatedResponse'];
+            'text/json': components['schemas']['UserListDtoPaginatedResponse'];
+          };
+        };
+      };
+    };
+    put?: never;
     post?: never;
     delete?: never;
     options?: never;
@@ -5503,6 +5550,38 @@ export interface components {
       preferredFormatIds: string[];
       bio?: string | null;
     };
+    UserListDto: {
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
+      /** Format: uuid */
+      createdBy?: string | null;
+      /** Format: uuid */
+      updatedBy?: string | null;
+      /** Format: uuid */
+      id?: string;
+      displayName?: string | null;
+      email?: string | null;
+      emailConfirmed?: boolean;
+      status?: components['schemas']['UserStatus'];
+      /** Format: date-time */
+      lastLoginAt?: string | null;
+      roles?: components['schemas']['UserListRoleDto'][] | null;
+    };
+    UserListDtoPaginatedResponse: {
+      data: components['schemas']['UserListDto'][] | null;
+      message?: string | null;
+      traceId: string | null;
+      correlationId: string | null;
+      pagination: components['schemas']['PaginationMetadata'];
+    };
+    UserListRoleDto: {
+      /** Format: uuid */
+      id?: string;
+      name?: string | null;
+      isActive?: boolean;
+    };
     UserPreferencesDto: {
       /** Format: date-time */
       createdAt?: string;
@@ -5584,6 +5663,8 @@ export interface components {
       traceId: string | null;
       correlationId: string | null;
     };
+    /** @enum {string} */
+    UserStatus: 'ACTIVE' | 'SUSPENDED' | 'DELETED';
     WebAuthTokenResponse: {
       accessToken?: string | null;
       tokenType?: string | null;
